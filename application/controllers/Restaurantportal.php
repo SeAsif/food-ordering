@@ -1,0 +1,151 @@
+<?
+/**
+* Iphone service for restaurant section
+* This class returns the any kind of restaurant related data
+* @author Mustafa Mahmood
+* @category Iphone Service
+*/
+class RestaurantPortal extends CI_Controller {
+
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->library('core/restaurant');
+		$this->load->library('core/user');
+		$this->load->library('form_validation');
+		$this->load->library('email');	
+		$this->load->helper( array('dropdown_helper') );
+		
+		if( $this->session->userdata('restaurant')== TRUE)
+		   redirect(base_url()."dashboard",true);
+		
+	}
+	
+/**
+.........................................................................................................
+									Start Restaurant Food Categories Section 
+.........................................................................................................
+*/	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function index()
+	{
+		$this->form_validation->set_rules('email', 'Username', 'required|trim');
+		$this->form_validation->set_rules('password', 'Password', 'required|trim');
+		
+		$errorsArray		=	array ();
+		$data["email"]	=	trim($this->input->post("email"));
+		$data["password"]	=	md5(trim($this->input->post("password")));
+		if ($this->form_validation->run() == FALSE)
+		{
+			//---------------errors stored in array------------------------//
+			$errorsArray['email']	=	form_error('Username');
+			$errorsArray['password']	=	form_error('Password');
+		}
+		else
+		{
+			$arrUser=$this->restaurant->login($data);
+			if ($arrUser	==	"Login_Error")
+			{
+				$errorsArray['Username']	=	"Sorry! You entered wrong username or password.";
+			}
+			else if ($arrUser	==	"Inactive") {
+				$errorsArray['Username']	=	"Sorry! Your account is suspended.";
+			}
+			else
+			{
+				$user_type = $this->session->userdata('type');
+				if ($user_type == "restaurant") {
+					redirect(base_url()."dashboard");
+				} else if ($user_type == "employee") {
+
+					if( $this->session->userdata('restaurant')== FALSE ) {
+						redirect(base_url()."StaffTracking");
+					} else {
+						redirect(base_url()."dashboard");
+					}
+				}
+
+				
+			
+			}
+		}
+		$data["errors"]	=	$errorsArray;
+		$this->load->view('restaurantportal/loginview',$data);
+		
+	}
+	
+	function verifyEmail()
+	{
+		$nCount=0;
+//		$this->form_validation->set_rules('emailAddress', 'Username', 'required|trim');
+		$data["email"] = trim($this->input->get_post("varia"));
+		$userType = "restaurantowner";
+		$arrUser = $this->user->verifyEmail($data,$userType);
+		echo $arrUser;	
+		
+	}
+	
+	function recoverview($id,$code)
+	{
+		$data = array();
+		$arrUser = array();
+		
+		$arrUser["id"] = $id;
+		$arrUser["security_code"] = $code;
+		
+		
+		if($_POST)
+		{
+			$arrUser["password"] = md5(trim($this->input->get_post("password")));
+			$confpass = md5(trim($this->input->get_post("confpass")));
+			$arrUser["id"] = $this->input->get_post("userid");
+			$arrUser["security_code"] = $this->input->get_post("codeid");
+			$userDetail = $this->user->getUserById($arrUser["id"]);
+			
+			if($userDetail[0]["security_code"] == $arrUser["security_code"])
+			{	
+				$this->form_validation->set_rules('password', 'Password', 'required|trim|matches[confpass]');
+				$this->form_validation->set_rules('confpass', 'Confirm Password', 'required|trim');
+				
+				if ($this->form_validation->run() == FALSE)
+				{	
+					$errorsArray['password']	=	form_error('password');
+					$data["flag"]=0;
+				}
+				else
+				{	
+					$arrUser["security_code"] = "";
+					$this->user->updateUser($arrUser);
+					
+					$successArray['password']	=	"Your Password hash been changed!!";
+					
+				}
+			}
+		}
+		
+		$data["errors"] = $errorsArray;
+		$data["successes"] = $successArray;
+		$data["arrUser"] = $arrUser;
+		$data["id"] = $id;
+		$data["code"] = $code;
+		
+		$this->load->view('restaurantportal/recoverview',$data);
+	}
+	
+
+/**
+.........................................................................................................
+									End Restaurant Food Categories Section
+.........................................................................................................
+*/	
+
+
+}
+
+
+/* End of file irestaurant.php */
+/* Location: ./system/application/controllers/irestaurant.php */
+?>

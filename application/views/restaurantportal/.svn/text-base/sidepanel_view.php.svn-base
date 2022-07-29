@@ -1,0 +1,45 @@
+<!-- Start Mid Left -->
+		<div class="mid-left">
+        	<div class="left-navi">
+            	<div class="glossymenu">
+                    <a class="menuitem dash-board" href="<?=base_url()."dashboard"?>" >Dash Board</a>
+                    <div class="order-new" style="display:none;"><a href="#">2 New Orders Received</a></div><br class="clear" />
+                    <a class="menuitem submenuheader restaurant" href="#" style="margin-top:0px;">Restaurant Info</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a href="<?=base_url()."restaurantsettings/basicinfo"?>" <?=($activemenu=="basicinfo")?'class="active"':""?>>Basic Info</a></li>
+                            <li><a href="<?=base_url()."restaurantsettings/basicfeatures"?>" <?=($activemenu=="basicfeatures")?'class="active"':""?>>Basic Features</a></li>
+                            <li><a href="<?=base_url()."restaurantsettings/logoslogan"?>" <?=($activemenu=="logoslogan")?'class="active"':""?>>Logo/ Slogan</a></li>
+                            <li><a href="<?=base_url()."restaurantsettings/mapandlocation"?>" <?=($activemenu=="mapandlocation")?'class="active"':""?>>Map &amp; Location</a></li>
+                            <li><a href="<?=base_url()."restauranttimings/operetionalhours"?>" <?=($activemenu=="operetionalhours")?'class="active"':""?>>Operational Hours</a></li>
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader orders" href="#" style="margin-top:0px;">Menu</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a href="<?=base_url()."restaurantcategory/managefoodcategories"?>" <?=($activemenu=="managefoodcategories")?'class="active"':""?>>Manage Food Categories</a></li>
+                            <li><a href="<?=base_url()."restaurantitem/managefooditems"?>" <?=($activemenu=="managefooditems")?'class="active"':""?>>Manage Food Items</a></li>
+                            <li><a href="<?=base_url()."restaurantvariant/variantitems"?>" <?=($activemenu=="variantitems")?'class="active"':""?>>Manage Food Variants</a></li>
+                            <li><a href="<?=base_url()."menutimings/menutiming"?>" <?=($activemenu=="menutiming")?'class="active"':""?>>Menu Timings</a></li>
+                        </ul>
+                    </div>
+                    <a class="menuitem account" href="<?=base_url()."restaurantsettings/changepassword"?>" >Account Settings</a>
+                    <?php /*?><div class="submenu">
+                        <ul>
+                            <li><a href="<?=base_url()."restaurantsettings/changepassword"?>" <?=($activemenu=="changepassword")?'class="active"':""?>>Change Password</a></li>
+                        </ul>
+                    </div><?php */?>
+                    <a class="menuitem orders" href="<?=base_url()."restaurantorders/paymentreport"?>" >
+                    Monthly Statements</a>
+                    <?php /*?><div class="submenu">
+                        <ul>
+                            <li><a href="<?=base_url()."restaurantorders/allorder/history"?>" <?=($activemenu=="ordernew")?'class="active"':""?>>Order History</a></li>
+                            <li><a href="<?=base_url()."restaurantorders/allorder"?>" <?=($activemenu=="allorder")?'class="active"':""?>>All Orders</a></li>
+                            <li><a href="<?=base_url()."restaurantorders/paymentreport"?>" <?=($activemenu=="orderreport")?'class="active"':""?>>Payment Report</a></li>                            
+                            <!--<li><a href="<?=base_url()."restaurantorders/ordersdetail"?>" <?=($activemenu=="ordersdetail")?'class="active"':""?>>Orders Detail</a></li>-->
+                        </ul>
+                    </div><?php */?>
+                </div>
+            </div>
+        </div>
+<!-- End Mid Left -->

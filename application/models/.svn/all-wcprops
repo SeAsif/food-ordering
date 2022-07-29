@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repos/starvved/!svn/ver/2/trunk/system/application/models
+END
+defaultvariant_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/starvved/!svn/ver/2/trunk/system/application/models/defaultvariant_model.php
+END
+restaurant_review_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/starvved/!svn/ver/2/trunk/system/application/models/restaurant_review_model.php
+END
+restaurant_favorites_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repos/starvved/!svn/ver/2/trunk/system/application/models/restaurant_favorites_model.php
+END
+order_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/starvved/!svn/ver/2/trunk/system/application/models/order_model.php
+END
+terminal_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/starvved/!svn/ver/2/trunk/system/application/models/terminal_model.php
+END
+user_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/starvved/!svn/ver/2/trunk/system/application/models/user_model.php
+END
+item_favorites_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/starvved/!svn/ver/2/trunk/system/application/models/item_favorites_model.php
+END
+airport_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/starvved/!svn/ver/2/trunk/system/application/models/airport_model.php
+END
+variant_item_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/starvved/!svn/ver/2/trunk/system/application/models/variant_item_model.php
+END
+menuitem_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/starvved/!svn/ver/2/trunk/system/application/models/menuitem_model.php
+END
+restauranttimings_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/starvved/!svn/ver/2/trunk/system/application/models/restauranttimings_model.php
+END
+menuitemvariantgroup_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repos/starvved/!svn/ver/2/trunk/system/application/models/menuitemvariantgroup_model.php
+END
+brand_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/starvved/!svn/ver/2/trunk/system/application/models/brand_model.php
+END
+admin_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/starvved/!svn/ver/2/trunk/system/application/models/admin_model.php
+END
+restaurant_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/starvved/!svn/ver/2/trunk/system/application/models/restaurant_model.php
+END
+order_item_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/starvved/!svn/ver/2/trunk/system/application/models/order_item_model.php
+END
+cart_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/starvved/!svn/ver/2/trunk/system/application/models/cart_model.php
+END
+payment_prefrences_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/repos/starvved/!svn/ver/2/trunk/system/application/models/payment_prefrences_model.php
+END
+restaurant_rating_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/starvved/!svn/ver/2/trunk/system/application/models/restaurant_rating_model.php
+END
+payment_history_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/starvved/!svn/ver/2/trunk/system/application/models/payment_history_model.php
+END
+menutimings_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/starvved/!svn/ver/2/trunk/system/application/models/menutimings_model.php
+END
+menuitemgroup_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/starvved/!svn/ver/2/trunk/system/application/models/menuitemgroup_model.php
+END
+menucategory_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/starvved/!svn/ver/2/trunk/system/application/models/menucategory_model.php
+END
+comission_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/starvved/!svn/ver/2/trunk/system/application/models/comission_model.php
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/starvved/!svn/ver/2/trunk/system/application/models/index.html
+END
+menuitemvariantcategory_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/repos/starvved/!svn/ver/2/trunk/system/application/models/menuitemvariantcategory_model.php
+END
+menuitemvariant_model.php
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/starvved/!svn/ver/2/trunk/system/application/models/menuitemvariant_model.php
+END

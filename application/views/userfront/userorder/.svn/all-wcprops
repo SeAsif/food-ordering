@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder
+END
+paymentinfo.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/paymentinfo.php
+END
+paypal_payment_success.php
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/paypal_payment_success.php
+END
+orderhistory.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/orderhistory.php
+END
+orderdetail.php
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/orderdetail.php
+END
+ordersuccess.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/ordersuccess.php
+END
+checkout.php
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/checkout.php
+END
+paypal.php
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/paypal.php
+END
+orderfail.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userorder/orderfail.php
+END

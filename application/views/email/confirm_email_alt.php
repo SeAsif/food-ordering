@@ -1,0 +1,9 @@
+	Hi <?=$firstName?>,
+	
+	Your order at <?=$restaurantName?> for  <?=$date?> has been Confirmed and will be prepared by <?=$deliveryTime?>.
+	
+	To remind you your order confirmation number is <?=$orderNumber?>. Please keep this with you at the time of pick-up.
+	
+	Thanks,
+	
+	Waive Team.

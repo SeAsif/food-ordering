@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant
+END
+restaurantmenu.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/restaurantmenu.php
+END
+yelpreviews.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/yelpreviews.php
+END
+restaurant_header.php
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/restaurant_header.php
+END
+itemdetail.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/itemdetail.php
+END
+restaurantinfo.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/restaurantinfo.php
+END
+reviews.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/reviews.php
+END
+addtocart.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/addtocart.php
+END
+additem.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/additem.php
+END
+restaurant_navigation.php
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userrestaurant/restaurant_navigation.php
+END

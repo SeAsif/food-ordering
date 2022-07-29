@@ -1,0 +1,331 @@
+<?php
+/**
+* Iphone service for restaurant section
+* This class returns the any kind of restaurant related data
+* @author Mustafa Mahmood
+* @category Iphone Service
+*/
+class RestaurantSettings extends Controller {
+
+	function RestaurantSettings()
+	{
+		parent::Controller();
+		$this->load->library('core/restaurant');
+		$this->load->library('core/user');		
+		$this->load->library('form_validation');	
+		$this->load->helper( array('dropdown_helper') );
+		if( $this->session->userdata('restaurant')== FALSE )
+		   redirect(base_url()."restaurantportal",true);
+	}
+	
+/**
+.........................................................................................................
+									Start Restaurant Settings Section 
+.........................................................................................................
+*/	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function index()
+	{
+		$data	=	array();
+//		$this->load->view('admin/terminals/index',$data);
+	}
+
+	function basicinfo()
+	{
+		$data	=	array();
+		$data["activemenu"]	=	"basicinfo";
+		
+		$restaurantArr = $this->session->userdata('restaurant');
+		if ($_POST)
+		{
+			$this->form_validation->set_rules('restaurant_name', 'Restaurant Name', 'trim|required');
+			$this->form_validation->set_rules('restaurant_details', 'Restaurant Details', 'trim|required|max_length[1000]');
+			$this->form_validation->set_rules('delivery_time_before', 'Before Delivery Order display time', 'trim|required');
+			$this->form_validation->set_rules('city_tax', 'City Tax', 'trim|numeric|callback_checktax');
+			$this->form_validation->set_rules('state_tax', 'State Tax', 'trim|numeric|callback_checktax');
+			
+			$restaurantArr["restaurant_name"]	=	$this->input->post("restaurant_name");
+			$restaurantArr["restaurant_details"]	=	$this->input->post("restaurant_details");
+			$restaurantArr["delivery_time_before"]	=	$this->input->post("delivery_time_before");
+			$restaurantArr["restaurant_citytax"]	=	$this->input->post("city_tax");
+			$restaurantArr["restaurant_statetax"]	=	$this->input->post("state_tax");
+			
+			if ($this->form_validation->run() == FALSE)
+			{
+				$this->form_validation->set_error_delimiters('<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> <strong>Alert:</strong> ', '</p>');
+				
+				$errorsArray['restaurant_name']	=	form_error('restaurant_name');
+				$errorsArray['restaurant_details']	=	form_error('restaurant_details');
+				$errorsArray['delivery_time_before']	=	form_error('delivery_time_before');
+				$errorsArray['city_tax']	=	form_error('city_tax');
+				$errorsArray['state_tax']	=	form_error('state_tax');
+				
+				$data["errors"]=$errorsArray;
+			}
+			else
+			{
+				//update here
+				$this->restaurant->updateRestaurant($restaurantArr);
+
+				$data["success"]=array("msg"=>"Updated Successfully");
+				
+				$this->session->set_userdata("restaurant",$restaurantArr);
+			}
+		}
+				
+		$data["restaurant"]	=	$restaurantArr;
+		$this->load->view('restaurantportal/restaurant/basicinfo',$data);
+	
+	}	
+	function basicfeatures()
+	{
+		$data	=	array();
+		$data["activemenu"]	=	"basicfeatures";
+		$restaurantArr = $this->session->userdata('restaurant');
+		if ($_POST)
+		{
+			$restaurantArr["take_out"]	=	($this->input->post("take_out")?$this->input->post("take_out"):"No");
+			$restaurantArr["dine_in"]	=	($this->input->post("dine_in")?$this->input->post("dine_in"):"No");
+//			$restaurantArr["legal_sea_food"]	=	($this->input->post("legal_sea_food")?$this->input->post("legal_sea_food"):"No");
+			$restaurantArr["proximity_to_gate"]	=	($this->input->post("proximity_to_gate")?$this->input->post("proximity_to_gate"):"0");
+			$restaurantArr["location_security"]	=	($this->input->post("location_security")?$this->input->post("location_security"):"Post");
+
+			//update here
+			$data["success"]=array("msg"=>"Updated Successfully");
+			$this->restaurant->updateRestaurant($restaurantArr);
+
+			$this->session->set_userdata("restaurant",$restaurantArr);
+			
+		}
+		$data["restaurant"]	=	$restaurantArr;
+		$this->load->view('restaurantportal/restaurant/basicfeatures',$data);
+	
+	}	
+	function logoslogan()
+	{
+		$data	=	array();
+		$data["activemenu"]	=	"logoslogan";
+
+		$restaurantArr = $this->session->userdata('restaurant');
+		
+		if ($_POST)
+		{
+			//print_r ($_POST);
+			$logoUpload	=	$this->input->post("logoupload");
+			if ($logoUpload	==	"logoupload")
+			{
+				$config['upload_path'] = $this->config->item('restaurant_image_path');
+				$config['allowed_types'] = 'gif|jpg|png';
+				$config['max_size']	= '2048';
+				$config['max_width']  = '1024';
+				$config['max_height']  = '768';
+				$config['file_name']=md5(uniqid(rand(), true))."_".str_replace(" ","_",$_FILES['logo']['name']);
+				
+				$this->load->library('upload', $config);
+			
+				if ( ! $this->upload->do_upload('logo'))
+				{
+					$this->form_validation->set_error_delimiters('<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> <strong>Alert:</strong> ', '</p>');
+					$error = array('error' => $this->upload->display_errors());
+					$data['errors']=$error;
+				}	
+				else
+				{
+					
+					$config1['image_library'] = 'gd2';
+					$config1['source_image'] = $this->config->item('restaurant_image_path')."/".$config['file_name'];
+					$config1['new_image'] = $this->config->item('restaurant_logo_path').$config['file_name'];
+					$config1['maintain_ratio'] = TRUE;
+					$config1['width'] = 123;
+					$config1['height'] = 120;
+					
+					$this->load->library('image_lib');
+
+					$this->image_lib->initialize($config1);
+					
+					$this->image_lib->resize();
+					if ( ! $this->image_lib->resize())
+					{
+						echo $this->image_lib->display_errors();
+					}
+
+					$config2['image_library'] = 'gd2';
+					$config2['source_image'] = $this->config->item('restaurant_image_path')."/".$config['file_name'];
+					$config2['new_image'] = $this->config->item('restaurant_logo_thumb_path').$config['file_name'];
+
+					$config2['maintain_ratio'] = TRUE;
+					$config2['width'] = 38;
+					$config2['height'] = 38;
+					
+					$this->image_lib->initialize($config2);
+					
+					$this->image_lib->resize();
+										
+					$restaurantArr["templogo"]	=	$config['file_name'];
+				}
+			
+			}
+			else
+			{
+//				$this->form_validation->set_rules('restaurant_slogan', 'Restaurant Slogan', 'trim|required');
+				$restaurantArr["restaurant_slogan"]	=	$this->input->post("restaurant_slogan");
+/*				if ($this->form_validation->run() == FALSE)
+				{
+					$this->form_validation->set_error_delimiters('<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> <strong>Alert:</strong> ', '</p>');
+					$errorsArray['restaurant_slogan']	=	form_error('restaurant_slogan');
+					$data["errors"]=$errorsArray;
+				}
+				else
+				{
+*/				
+					$logo	=	$this->input->post("logo");
+					if ($logo!="")
+						$restaurantArr["logo"]	=	$logo;
+					
+					//update here
+					$this->restaurant->updateRestaurant($restaurantArr);
+
+					$this->session->set_userdata("restaurant",$restaurantArr);
+
+					$data["success"]=array("msg"=>"Updated Successfully");
+
+					
+//				}
+				
+			}
+		}
+
+		$data["restaurant"]	=	$restaurantArr;
+		$this->load->view('restaurantportal/restaurant/logoslogan',$data);
+	
+	}	
+
+	function mapandlocation()
+	{
+		$data	=	array();
+		$data["activemenu"]	=	"mapandlocation";
+		$restaurantArr = $this->session->userdata('restaurant');
+		if ($_POST)
+		{
+			$this->form_validation->set_rules('address', 'Restaurant Address', 'trim|required');
+			$restaurantArr["address"]	=	$this->input->post("address");
+			if ($this->form_validation->run() == FALSE)
+			{
+				$this->form_validation->set_error_delimiters('<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> <strong>Alert:</strong> ', '</p>');
+
+				$errorsArray['address']	=	form_error('address');
+				$data["errors"]=$errorsArray;
+			}
+			else
+			{
+				//update here
+				$this->restaurant->updateRestaurant($restaurantArr);
+
+				$this->session->set_userdata("restaurant",$restaurantArr);
+				$data["success"]=array("msg"=>"Updated Successfully");
+				
+			}
+			
+		}
+		$data["restaurant"]	=	$restaurantArr;
+		$this->load->view('restaurantportal/restaurant/mapandlocation',$data);
+	
+	}	
+	
+	/*
+	* @method This method will check if admin is logged in
+	* @params no parameter
+	*/
+	function logout()
+	{
+		//session_destroy();
+		$this->session->sess_destroy();
+		
+		redirect("restaurantportal");
+	}
+	
+
+	function changepassword()
+	{
+		$data	=	array();
+		$data["activemenu"]	=	"changepassword";
+		$errorsArray	=	array();
+
+		$email = $this->session->userdata('email');
+		
+		if ($_POST)
+		{
+			$this->form_validation->set_rules('currentpassword', 'Current Password', 'required|trim');
+			$this->form_validation->set_rules('Password', 'New Password', 'required|trim|matches[ConfirmPassword]');
+			$this->form_validation->set_rules('ConfirmPassword', 'Confirm New Password', 'required|trim');
+	
+			$data["email"]	=	trim($email);
+			$data["password"]	=	md5(trim($this->input->post("currentpassword")));
+			
+			if ($this->form_validation->run() == FALSE)
+			{
+				$errorsArray['currentpassword']	=	form_error('currentpassword');
+				$errorsArray['Password']	=	form_error('Password');
+				$errorsArray['ConfirmPassword']	=	form_error('ConfirmPassword');
+			}
+			else
+			{
+				$arrUser=$this->restaurant->login($data);
+				if ($arrUser	==	"Login_Error")
+				{
+					$errorsArray['Username']	=	"Sorry! You entered wrong password.";
+				}
+				else
+				{
+					$userInfo["id"]	=	$arrUser["restaurant"]["user_id"]	;
+					$userInfo["password"]	=	md5(trim($this->input->post("ConfirmPassword")));
+					$result	=	$this->user->updateUser($userInfo);
+					if ($result	==	"RECORD_UPDATED")
+						$data["success"]=array("msg"=>"Password changed successfully.");
+					else
+						$errorsArray['Error']	=	"Sorry! You entered wrong password.";
+					
+
+					//redirect(base_url()."restaurantcategory/managefoodcategories");
+				}
+			}
+		}
+		
+		$data["errors"]	=	$errorsArray;
+		
+		$this->load->view('restaurantportal/accountsettings/changepassword',$data);
+	
+	}	
+	function checktax($str)
+	{
+		if($str < 1 && $str != 0)
+		{
+			$this->form_validation->set_message('checktax', 'The %s field should be in percentage. Cannot be less than 1');
+			return FALSE;
+		}
+		else if($str > 100)
+		{
+			$this->form_validation->set_message('checktax', 'The %s field should be less than 100.');
+			return FALSE;
+		}
+		else
+		{
+			return TRUE;
+		}
+	}
+/**
+.........................................................................................................
+									End Restaurant Settings Section 
+.........................................................................................................
+*/	
+
+
+}
+
+
+/* End of file irestaurant.php */
+/* Location: ./system/application/controllers/irestaurant.php */
+?>

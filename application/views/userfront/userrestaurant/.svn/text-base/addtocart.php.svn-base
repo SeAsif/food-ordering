@@ -1,0 +1,366 @@
+<link href="<?=base_url()?>css/frontstyle.css" rel="stylesheet" type="text/css" />
+<link type="text/css" href="<?=base_url()?>css/cupertino/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
+
+<style type="text/css">
+
+body { background:none !important; border:0px;}
+
+</style>
+
+<script type="text/javascript" src="<?=base_url()?>js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/jquery-ui-1.8.6.custom.min.js"></script>
+
+<script language="javascript">
+<?PHP
+if (isset($success["msg"]))
+{
+?>
+	var successMgs	=	'<?=$success["msg"]?>';
+
+<?
+}
+else
+{
+?>
+var successMgs	=	'';
+
+<?PHP
+}
+?>
+var base_url	=	"<?=base_url()?>";
+	if (successMgs!="")
+	{
+		var objRef = parent.window;
+		objRef.refreshItemPage(successMgs);
+		
+
+	}
+function submitForm()
+{
+	document.forms.frmAddItem.submit();
+	parent.closeOrderPickup();
+}
+function validateRestaurant(prev_name , new_name)
+{
+//	forgotPass	=	nPassId;
+//	PassId	=	id;
+//	document.getElementById('newrestaurant').value=new_name;
+//	document.getElementById('prevrestaurant').value=prev_name;
+	$('#newrestaurant').html(new_name);
+	$('#prevrestaurant').html(prev_name);
+	
+	$('#validation').dialog('open');
+	return false;
+}
+function openSign(nSignId)
+{
+	signId	=	nSignId;
+	$('#signin-message').dialog('open');
+	return false;
+}
+
+	$(function(){
+		// Dialog	( Start Edit Variant Popup Window Here )
+		$('#signin-message').dialog({
+			autoOpen: false,
+			modal: true,
+			width: 560
+		});
+
+	});
+
+function addItemToFavorites(restaurantId,itemId,userId)
+{
+	$.ajax({ type: "POST", url: base_url+"irestaurant/addFavoriteItem", data: "restaurant_id="+restaurantId+"&"+"item_id="+itemId+"&"+"user_id="+userId+"", success: function(addFavoriteRestaurant){ 
+		//alert(addFavoriteRestaurant);
+		var status="";
+		var obj = jQuery.parseJSON(addFavoriteRestaurant);
+		$.each(obj, function() {
+			
+			status=obj.response;
+			favid=obj.insert_id;
+			
+			
+		});
+		
+		if (status=="RECORD_ADDED")
+		{
+			
+			//$("#rating-add-fav").remove();
+			$("#rating-add-fav").html('<a href="javascript:void(null);"  onclick="removeItemFavorites('+favid+','+itemId+','+restaurantId+','+userId+')" class="itemfav">Remove From Fav</a>');
+		}
+		else
+		{
+			openSign(0);			
+		}
+	}//end function
+	});	
+}
+
+function removeItemFavorites(favId,itemId,restaurantId,userId)
+{
+	$.ajax({ type: "POST", url: base_url+"irestaurant/delFavoriteItem/"+favId, data: "", success: function(removeItemFavorites){ 
+		//alert(addFavoriteRestaurant);
+		var status="";
+		var obj = jQuery.parseJSON(removeItemFavorites);
+		$.each(obj, function() {
+			status=obj.response;
+			
+		});
+		
+		if (status=="RECORD_DELETED")
+		{
+			//$("#rating-add-fav").remove();
+			$("#rating-add-fav").html('<a href="javascript:void(null);" class="itemfav" onclick="addItemToFavorites('+restaurantId+','+itemId+','+userId+')">Add to Favorites</a>');
+		}
+		else
+		{
+		
+		}
+	}//end function
+	});	
+
+}
+
+</script>
+<script type="text/javascript">
+			$(function(){
+				// Dialog	( Start Edit Variant Popup Window Here )
+				$('#validation').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 426,
+					
+					buttons: {
+						"OK": function() { 
+							//$(this).dialog("close");
+							//var id=$("#resturant_id").val();
+							//$("#variant").val(Variant);
+							$.ajax({ type: "POST", url: base_url+"irestaurant/resetShoppingCart", success: function(response){ 
+							//	if(response=='RECORD_DELETED')
+							//	{
+								//	alert(response);	
+									document.forms.frmAddItem.submit();
+									$('#validation').dialog('close');
+								//	alert(response);
+									
+								//	document.location.href=document.location.href;
+									
+							//	}
+							//	else{
+								//	alert(response);
+							//		$('#validation').dialog('close');
+									
+								//	}
+								}
+								
+							});							
+	
+						}, 
+						"Cancel": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+					
+				});
+
+			});
+		
+ </script>			
+<!-- Start Forgot passwrod process Window Here -->
+
+<div id="validation" title="Verification" style="display:none;">
+	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+      <tr>
+        <td style="padding-bottom: 10px; width: 596px; font-size:12px; padding-top:10px;" colspan="2">
+        	Are you sure you want to add items from <span id="newrestaurant"></span> restaurant?
+           <strong> This operation will reset your cart from <span id="prevrestaurant"></span> restaurant. </strong>
+        </td>
+      </tr>
+      <tr>
+        <td>
+         <!--   <input type="text" value="" name="restaurantId" id="emailAddress" style="width:200px; padding:3px;" class="txt-field01"> 
+            <input type="text" name="newrestaurant" id="newrestaurant">
+            <input type="text" name="prevrestaurant" id="prevrestaurant"> -->
+        </td>
+     </tr>
+    </table>
+</div>
+<!-- End Forgot passwrod process Window Here -->
+
+
+
+<?
+if( $this->session->userdata('id')== "")
+{
+?>
+
+<!-- Start Signin Popup Window Here -->
+<div id="signin-message" title="Signin" style="display:none;">
+	<?PHP
+        $this->load->view("userfront/signin");
+    ?>
+</div>
+<?
+}
+?>
+
+<?PHP
+//	$attributes	=	array("id"=>"frmAddItem","name"=>"frmAddItem")
+$attributes = array('id' => 'frmAddItem','name' => 'frmAddItem');
+echo form_open(base_url().'userrestaurant/addtocart/'.$item["id"],$attributes);
+?>
+<div class="add-item">
+<div class="popcont">
+	<?PHP
+    if (count($success))
+    {
+    ?>
+    <div class="ui-widget">
+        <div class="ui-state-highlight ui-corner-all" style="width:90%; margin-bottom: 20px; padding: 0 .7em;"> 
+            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+            <strong><?=$success["msg"]?></strong></p>
+        </div>
+    </div>
+    <?PHP
+    }
+    ?>
+    <?PHP
+    if (count($errors))
+    {
+    ?>
+    <br/>
+    <div class="ui-widget">
+        <div class="ui-state-error ui-corner-all" style="width:90%; margin-bottom:20px; padding:5px;"> 
+            <?PHP
+            foreach ($errors as $error)
+            {
+                echo $error;
+            }
+            ?>
+            
+        </div>
+        
+    </div>
+    <?PHP
+    } //print_r($item);
+    ?>
+
+	<h4><?=$item["item_name"]?></h4>
+	<h5>Starting from: <strong>$<?=$item["item_price"]?></strong></h5>
+    <p><?=$item["item_description"]?></p>
+    
+    <div class="extraCont">
+    	<?PHP
+		$variantCount	=	0;
+        foreach ($itemdetail as $itemdet)
+		{
+			$data["GroupDetail"]	=	$itemdet["GroupDetail"];	
+			$data["VariantNumber"]	=	$variantCount;	
+			
+			if ($itemdet["GroupDetail"]["selection"]	==	"slider")
+			{
+				$this->load->view('userfront/userrestaurant/varaint/slider',$data);
+			
+			}
+			else if ($itemdet["GroupDetail"]["selection"]	==	"multiple")
+			{
+				$this->load->view('userfront/userrestaurant/varaint/multiple',$data);
+			}
+			else if ($itemdet["GroupDetail"]["selection"]	==	"single")
+			{
+				$this->load->view('userfront/userrestaurant/varaint/single',$data);
+			}
+			
+			$variantCount++;
+		?>
+        <?PHP
+        }
+		?>
+        
+        <input type="hidden" value="<?=count($itemdetail)?>" name="variantcount" />
+        <div class="extraWrap">
+            <h1>Special Instructions <span class="font11" style="color:#FF0000;">(may not apply if requires extra cost)</span></h1>
+            <textarea name="instructions" cols="2" rows="2" class="itemTxtarea"></textarea>
+        </div>
+    </div>
+    
+    <div class="extraWrap">
+        <table width="96%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+		    	<h1>Quantity</h1>
+                <input name="quantity" type="text" class="itemTxtfield" value="1"/>
+            </td>
+            <td>
+            <?
+			$arrSearchCriteria	=	$this->session->userdata('search_criteria');
+			$restaurantId = $this->session->userdata('restaurantID');
+            if($arrSearchCriteria['pickup_time_hour']=="")
+			{
+			?>
+           <a class="add-btn" href="javascript:void(null);" onclick="parent.orderPickUp(0);">Add to Cart</a>
+            <?
+            }
+			else if ($restaurantId != $item["restaurant_id"] && $restaurantId != "")
+			{
+			?>
+            <a class="add-btn" href="javascript:void(null);" onclick="validateRestaurant('<?=$restaurant_name_prev?>' , '<?=$restaurant_name?>');">Add to Cart</a>
+            <?
+			}
+		   else{
+			?>
+           <a class="add-btn" href="javascript:void(null);" onclick="frmAddItem.submit();">Add to Cart</a> 
+            
+			<?
+			}
+			?>
+            <br class="clear" />    
+                <div id="rating-add-fav">
+                            <?PHP
+				            if( $this->session->userdata('id'))
+							{
+								
+								$return	=	array_search($item["id"],$favItemIDs);
+								
+								if(gettype ($return)	==	"integer")
+								{
+								?>
+                <a href="javascript:void(null);" onclick="removeItemFavorites(<?=$favIDs[$return]?>,<?=$item["restaurant_id"]?>,<?=$item["id"]?>,<?=$userId?>);" class="itemfav">Remove From Fav</a>
+								
+								<?
+								}else{
+							?>	                            
+            	
+                <a href="javascript:void(null);" onclick="addItemToFavorites(<?=$item["restaurant_id"]?>,<?=$item["id"]?>,<?=$userId?>);" class="itemfav">Add To Favorites</a>
+                			<?
+                            	}
+							}
+							else
+							{
+							?>
+                <a href="javascript:void(null);" onclick="openSign(0);" class="itemfav">Add To Favorites</a>
+							<?
+							}	
+							?>	
+                </div>            
+            </td>
+          </tr>
+        </table>
+
+    </div>
+</div>
+
+
+</div>
+</form>
+<table width="100%" border="0" cellspacing="2" cellpadding="0" class="ajax-loader" style="display:none;">
+  <tr>
+    <td><img src="<?=base_url()?>/images/ajax-loader.gif" alt="loader" /></td>
+  </tr>
+</table>
+<script language="javascript">
+attachedGroups	=	'<?=$attachedGroups?>';
+</script>
+
+

@@ -1,0 +1,433 @@
+<?PHP
+$this->load->view("userfront/header_view");
+?>
+ 
+<!-- Start Menu Popups -->
+<script language="javascript" src="<?=base_url()?>js/frontfunctions.js"></script>
+<script language="javascript">
+var url	=	'<?=base_url()?>userrestaurant/addtocart/';
+function refreshItemPage()
+{
+	document.location.href	=	document.location.href;
+}
+function openItem(nItemId)
+{
+	itemId	=	nItemId;
+	var pageFrame = document.getElementById('itemIframe'); 
+	
+	pageFrame.src 	=	url+nItemId;
+		
+	$('#dialog-message').dialog('open');
+	return false;
+}
+</script>
+
+<script type="text/javascript">
+	$(function() {
+		$( "#flight_date" ).datepicker();
+	});
+
+	$(function(){
+		// Dialog	( Start Edit Variant Popup Window Here )
+		$('#dialog-message').dialog({
+			autoOpen: false,
+			modal: true,
+			width: 560
+		});
+
+	});
+</script>
+
+<!-- End Menu Popups -->
+
+<!--................. Start Menu Tool Tip ..............-->
+<link rel="stylesheet" href="<?=base_url()?>css/jquery.tooltip.css" />
+<script src="<?=base_url()?>js/jquery.tooltip.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function() {
+$('#set1 *').tooltip();
+});
+
+$(function() {
+$('#set2 *').tooltip();
+});
+</script>
+<!--................. End Menu Tool Tip ..............-->
+
+
+<!-- <script type="text/javascript" src="<?=base_url()?>js/frontfunctions.js"></script> -->
+<!-- Start Tool Tip -->
+
+<!-- <script type="text/javascript" src="<?=base_url()?>js/front/tipster.js"></script> -->
+<!-- The data section you edit. Feel free to make this an external file too if you want. -->
+<!--<script type="text/javascript">
+var docTips = new TipObj('docTips');
+with (docTips)
+{
+
+template = '<table cellpadding="1" cellspacing="0" width="%2%" border="0">' +
+  '<tr><td><table cellpadding="3" cellspacing="0" width="100%" border="0">' +
+  '<tr><td class="tipClass">%3%</td></tr></table></td></tr></table>';
+
+
+
+ tips.view = new Array(14, 5, 40, 'Views');
+
+}
+	function showTips(price,item_name, item_detail )
+	{
+		docTips.tips.sitename = new Array(14, -2, 150, '<table width="368" border="0" cellpadding="1" cellspacing="0"><tbody><tr><td><table width="100%" border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="tipClass toolTop" style="padding:18px 0px 20px 20px;">'+item_name+'<br /><h2>Basic Price: $'+price+'</h2><p>'+item_detail+'</p></td></tr></tbody></table></td></tr></tbody></table>');
+		docTips.show('sitename');
+	}
+</script>-->
+
+<!-- Start Tool Tip -->
+
+
+<div id="docTipsLayer" style="position: absolute; z-index: 10000; visibility: hidden; left: 300px; top: 815px; width: auto; opacity: 0;">
+	
+</div>
+
+
+
+    	<div class="crum-menu">
+        	<a href="<?=base_url()?>home">Home</a><span>&gt;</span>
+        	<a href="<?=base_url()?>usersearch/searchresult">Search Result</a><span>&gt;</span>
+            Restaurant Menu
+        </div>
+		<div class="cont-wrap">
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-top.jpg" alt="top" border="0" /></div>
+        	<div class="rest-mid">
+				 <?PHP
+                 $this->load->view("userfront/userrestaurant/restaurant_header");
+                 ?>
+            <!-- Start Restaurant Menu and Cart -->
+	            <div class="rest-mid-cont">
+                	
+                <!-- Start Left Cart Section -->
+                    <div class="cart-wrap">
+                    	<h3>Your Cart <a href="javascript:void(null);" onclick="resetShoppingCart();">Clear Cart</a></h3>
+                        <div class="qty-wrap">
+                            <span class="qty">QTY</span>
+                            <span class="item-name">Item Name</span>
+                            <span class="item-price">($)</span>
+                        </div>
+                        <?PHP
+						if (count($cartItems) > 0)
+						{
+							$grandTotal	=	0;
+							$totalCityTax = 0;
+							$totalStateTax = 0;
+							foreach ($cartItems as $cartItem)
+							{
+						?>
+                        <div class="cart-item">
+                        	<span class="cart-arrow">
+                            	<a href="javascript:void(null);" onclick="increaseQuantity(<?=$cartItem["id"]?>);" title="Increase Quantity" style="line-height:3px;">
+                                	<img src="<?=base_url()?>images/front/add-cart.png" alt="Add Product" />
+                                </a>
+                                <br class="clear" />
+                            	<a href="javascript:void(null);" onclick="decreaseQuantity(<?=$cartItem["id"]?>);" title="Decrease Quantity" style="line-height:10px;">
+	                            	<img src="<?=base_url()?>images/front/remov-cart.png" alt="Remove Product" />
+                                </a>
+                            </span>
+                            <span class="cart-num font11"><?=$cartItem["quantity"]?></span>
+                            <span class="cart-itemName font11" id="set2">
+								<a href="javascript:void(null);" title="<table width='368' border='0' cellpadding='1' cellspacing='0'><tbody><tr><td><table width='100%' border='0' cellpadding='0' cellspacing='0'><tbody><tr><td class='toolTop' style='padding:18px 0px 20px 20px;'><?=$cartItem["item_name"]?><br /><h2>Basic Price: $<?=$cartItem["totalprice"]?></h2><p><?=$cartItem["item_description"]?></p></td></tr></tbody></table></td></tr></tbody></table>">
+								<?=substr($cartItem["item_name"],0,13)?>
+                                </a>
+                            </span>
+                            <?php $english_format_number = number_format($cartItem["totalprice"], 2, '.', '');?>
+                            <span class="cart-itemPrice">$<?=$english_format_number?></span>
+                            <span class="cart-itemDel">
+                            	<a href="javascript:void(null);" onclick="deleteItem(<?=$cartItem["id"]?>);" title="Delete Item"><img src="<?=base_url()?>images/front/del.png" alt="del" border="0" /></a>
+                            </span>
+                        </div>
+                        <?PHP
+								
+								$totalCityTax = $totalCityTax + $cartItem["city_tax"];
+								$totalStateTax = $totalStateTax + $cartItem["state_tax"];
+								$grandTotal	=	$grandTotal+$cartItem["totalpricewithtax"];
+							}
+						?>
+                        <br class="clear" />
+                        <?php $english_format_number = number_format($totalCityTax, 2, '.', '');?>
+                        <p>Total City Tax: <strong>$<?=$english_format_number?></strong></p>
+                        
+                        <?php $english_format_number = number_format($totalStateTax, 2, '.', '');?>
+                        <p>Total State Tax: <strong>$<?=$english_format_number?></strong></p>
+                        
+                        <?php $english_format_number = number_format($grandTotal, 2, '.', '');?>
+                        <p>Total: <strong>$<?=$english_format_number?></strong></p>
+                        <?PHP
+                        }//end if (count($cartItems) > 0)
+						else
+						{
+						?>
+                        	<br class="clear" />
+                        	<div class="ui-widget" style="margin-top:10px;">
+                                <div class="ui-state-error ui-corner-all" style="padding:10px;">
+		                            Cart Is Empty
+                                </div>
+                        	</div>
+                        <?PHP
+						}
+                        ?>
+ <form action="<?=base_url();?>userrestaurant/restaurantmenu/<?=$restaurantId?>" method="post">
+                        
+                        <div class="orderForm">
+                        	<h3>Order Type</h3>
+                            
+                        <? if($errors > 1)
+						{
+						?>
+                            <div class="ui-widget" style="margin-top:10px;">
+                                <div class="ui-state-error ui-corner-all" style="padding:10px;">
+		                           <?
+								   foreach($errors as $error)
+								   		echo $error;
+								   ?>
+                                </div>
+                        	</div>
+                         
+                        <?
+                        }?>    
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td>
+                                	<table width="73%" border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td style="width:13%;"><input name="order_type" type="radio" value="TakeAway" checked="checked" /></td>
+                                        <td>Take Away</td>
+                                        <td style="width:13%;"><input name="order_type" type="radio" value="TakeAway" /></td>
+                                        <td>Dine In</td>
+                                      </tr>
+                                    </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="padding-top:12px;">
+                                	<strong>Flight Date:</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="padding-top:6px;"><input name="flight_date" type="text" class="txt-field" id="flight_date" value="<?=$arrReturn["flight_date"]?>"/></td>
+                              </tr>
+                              <tr>
+                                <td style="padding-top:12px;">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                      <!--<tr>
+                                        <td style="width:10%;"><input name="btn" type="radio" value="" checked="checked" /></td>
+                                        <td>Terminal / Airline</td>
+                                        <td style="width:10%;"><input name="btn" type="radio" value="" /></td>
+                                        <td>Flight Number</td>
+                                      </tr>-->
+                                    </table>
+                                </td>
+                              </tr>
+<!--                              <tr>
+                                <td style="padding-top:12px;">
+                                	<input name="fld" type="text" class="txt-field02" style="background-image:none; width:252px;" value="eg: US7555" />
+                                </td>
+                              </tr>
+-->                              
+                              <tr>
+                                <td style="padding-top:14px;">
+                                	<strong>Flight Time:</strong><input type="hidden" name="order_time" value="<?=$order_time?>" />
+                                    <input type="hidden" name="name" value="<?=$restaurantInfo["restaurant_name"]?>" />
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="padding-top:6px;"><select name="flight_time_hour" class="combowd float-left" style="width:78px; margin-right:10px;">
+                                  <option value="">HH</option>
+                                  <?PHP
+                                        for ($i=1;$i<=12;$i++)
+										{
+										
+										?>
+                                  <option value="<?=$i?>" <?=($arrReturn["flight_time_hour"] == $i)?'selected="selected"':''?>>
+                                    <? if($i<10) echo 0;?><?=$i?>
+                                  </option>
+                                  <?PHP
+                                        }
+										?>
+                                </select>
+                                  <select name="flight_time_minute" class="combowd float-left" style="width:80px; margin-right:10px;">
+                                    <option value="">MM</option>
+                                    <?PHP
+                                        for ($i=0;$i<60;$i++)
+										{
+										?>
+                                    <option value="<?=$i?>" <?=($arrReturn["flight_time_minute"] == $i)?'selected="selected"':''?>>
+                                      <? if($i<10) echo 0;?><?=$i?>
+                                    </option>
+                                    <?PHP
+										$i+=4;
+                                        }
+										?>
+                                  </select>
+                                  <select name="flight_time_type" class="combowd float-left" style="width:78px;">
+                                    <option value="AM" <?=($arrReturn["flight_time_type"] == "AM")?'selected="selected"':''?>>AM</option>
+                                    <option value="PM" <?=($arrReturn["flight_time_type"] == "PM")?'selected="selected"':''?>>PM</option>
+                                  </select></td>
+                              </tr>
+                              <tr>
+                                <td style="padding-top:20px;">
+		                        	<h3>Order Pickup Time:</h3>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="padding-top:5px;"><select name="pickup_time_hour" class="combowd float-left" style="width:78px; margin-right:10px;">
+                                  <option value="">HH</option>
+                                  <?PHP
+                                        for ($i=1;$i<=12;$i++)
+										{
+										?>
+                                  <option value="<?=$i?>" <?=($arrReturn["pickup_time_hour"] == $i)?'selected="selected"':''?>>
+                                    <? if($i<10) echo 0;?><?=$i?>
+                                  </option>
+                                  <?PHP
+                                        }
+										?>
+                                </select>
+                                  <select name="pickup_time_minute" class="combowd float-left" style="width:80px; margin-right:10px;">
+                                    <option value="">MM</option>
+                                    <?PHP
+                                        for ($i=0;$i<60;$i++)
+										{
+										?>
+                                    <option value="<?=$i?>" <?=($arrReturn["pickup_time_minute"] == $i)?'selected="selected"':''?>>
+                                      
+									  <? if($i<10) echo 0;?><?=$i?>
+                                    </option>
+                                    <?PHP
+										$i+=4;
+                                        }
+										?>
+                                  </select>
+                                  <select name="pickup_time_type" class="combowd float-left" style="width:78px;">
+                                    <option value="AM" <?=($arrReturn["pickup_time_type"] == "AM")?'selected="selected"':''?>>AM</option>
+                                    <option value="PM" <?=($arrReturn["pickup_time_type"] == "PM")?'selected="selected"':''?>>PM</option>
+                                  </select>
+                                  <span class="font11" style="padding-top:6px; display:block; float:left;">
+                                    min <em><strong style="color:#ffd800;"><?=$restaurantInfo["delivery_time_before"]?>min</strong></em> before actual flight time</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="padding-top:25px;">
+<!--                                	<input name="btn" type="button" class="add-btn" value="Checkout" onc />-->
+									
+                                   	<!--	<a href="<?=base_url();?>userrestaurant/restaurantmenu/<?=$restaurantId?>" class="add-btn">Checkout</a> -->
+                                    <input name="add-btn" type="submit" class="add-btn" value="Checkout" />
+                                     
+                                </td>
+                              </tr>
+                            </table>
+                        </div>
+       </form>                 
+                    </div>
+                <!-- End Left Cart Section -->
+
+                <!-- Start Right Menu Section -->
+                    <div class="menu-wrap">
+
+                    <!-- Start Menu Popup -->
+                    	<div id="dialog-message" title="Item Details">
+                            <iframe width="526" height="640" style="background:#000; padding-top:10px;" allowtransparency="true" frameborder="0" id="itemIframe" name="itemIframe">
+                                <!--<script type="text/javascript">
+                                    document.location = "<?=base_url()?>userrestaurant/additem";
+                                </script>
+                                <noscript>
+                                    Your browser doesn't appear to support frames.  Please see the 
+                                    <a href="<?=base_url()?>userrestaurant/additem">non-framed version</a> of this page.
+                                </noscript> 
+                                -->
+                            </iframe>
+                        </div>
+                    <!-- End Menu Popup -->
+
+                    <?PHP
+					$oldCategoryName	=	"";
+					$nCount	=	0;
+				//	print_r ($items);
+					if (count($items) > 0)
+					{
+						?>
+						<div class="rest-Itemwrap">
+						<h2><?=$items[0]["category_name"]?></h2>
+
+                        <?PHP
+						$nCount	=	0;
+						$nCounter = 0;
+						foreach($items as $item)
+						{
+							$nNext	=	$nCount+1;
+						?>
+								
+                                <?php /*?>-------------------- Start Old Menu Tool Tip ----------------->
+								<div class="menu-Itemwrap" <? if ($nCounter%2 != 0){?>style="margin-right:0px;"<? }?> onclick="openItem(<?=$item["id"]?>);" onmouseover="showTips('<?=$item["item_price"]?>','<?=$item["item_name"]?>','<?=$item["item_description"]?>');" onmouseout="docTips.hide()">
+									<span>
+										<?=substr($item["item_name"],0,23)?>
+									</span>
+									<strong>$<?=$item["item_price"]?></strong>
+								</div>
+								<?php */?>
+
+
+                                <div class="menu-Itemwrap" <? if ($nCounter%2 != 0){?>style="margin-right:0px;"<? }?> onclick="openItem(<?=$item["id"]?>);" id="set1">
+									<a href="javascript:void(null);" title="<table width='368' border='0' cellpadding='1' cellspacing='0'><tbody><tr><td><table width='100%' border='0' cellpadding='0' cellspacing='0'><tbody><tr><td class='toolTop' style='padding:18px 0px 20px 20px;'><?=$item["item_name"]?><br /><h2>Basic Price: $<?=$item["item_price"]?></h2><p><?=$item["item_description"]?></p></td></tr></tbody></table></td></tr></tbody></table>">
+                                        <span>
+                                            <?=substr($item["item_name"],0,28)?>
+                                        </span>
+                                        <strong>$<?=$item["item_price"]?></strong>
+                                    </a>
+								</div>
+
+						<?PHP
+							if ($items[$nNext]["category_name"] ==	$item["category_name"])
+							{
+								$nCounter++;
+							}
+							else if ($items[$nNext]["category_name"] !=	$item["category_name"])
+							{
+                                if (isset($items[$nNext]))
+								{
+						?>
+								</div>                    
+								<br class="clear" />
+								<div class="rest-Itemwrap">
+								<h2><?=$items[$nNext]["category_name"]?></h2>
+						<?PHP	
+								}//end if (isset($items[$nNext]))
+								$nCounter =0;
+							}							
+							//menu-Itemwrap01
+						?>
+						                        
+                        <?PHP
+							$nCount	++;
+							
+						}//end foreach
+						?>
+                        </div>                    
+                        <br class="clear" />
+
+                        <?PHP
+
+					}//end if (count($items) > 0)
+					?>
+                        <br class="clear" />
+                    </div>
+                <!-- End Right Menu Section -->
+
+                </div>
+            <!-- End Restaurant Menu and Cart -->
+
+            </div>
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-bottom.jpg" alt="top" border="0" /></div>
+        </div>
+
+
+<?PHP
+$this->load->view("userfront/footer_view");
+?>

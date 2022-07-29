@@ -1,0 +1,394 @@
+<script>
+function login()
+{
+	user=document.getElementById('user').value;
+	pass=document.getElementById('pass').value;
+	userType='user';
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/login", data: "email="+user+"&"+"password="+pass+"&"+"usertype="+userType+"", success: function(login){ 
+		//alert(addFavoriteRestaurant);
+		var status="";
+		var obj = jQuery.parseJSON(login);
+		$.each(obj, function() {
+			
+			status=obj.error;
+			
+		});
+		
+			document.getElementById("password_error").style.display="none";
+			document.getElementById("error").style.display="none";
+			document.getElementById("email_error").style.display="none";
+			document.getElementById("email_password").style.display="none";
+			document.getElementById("error_guest").style.display="none";
+			document.getElementById("error_email").style.display="none";
+					
+		if (status=="Login_Error")
+		{
+			document.getElementById("error").style.display="block";
+			
+		}
+		else if (status=="Email_Required")
+		{
+			document.getElementById("email_error").style.display="block";
+			
+		}
+		else if (status=="Password_Required")
+		{
+			document.getElementById("password_error").style.display="block";
+			
+		}
+		else if (status=="Email_Password")
+		{
+			document.getElementById("email_password").style.display="block";
+
+		}
+		else
+		{
+			document.location.href=document.location.href;		
+		}
+	}//end function
+	});	
+	
+}
+function keyCheck(e)
+{
+  var code;
+  if (!e) var e = window.event;
+  if (e.keyCode) code = e.keyCode;
+  else if (e.which) code = e.which;
+  if(code == 13)
+  {
+   login(); 
+  } 
+}
+
+function keyCheck2(e)
+{
+  var code;
+  if (!e) var e = window.event;
+  if (e.keyCode) code = e.keyCode;
+  else if (e.which) code = e.which;
+  if(code == 13)
+  {
+   login_guest(); 
+  } 
+}
+
+function login_guest()
+{
+	guest_email2=document.getElementById('guest_email').value;
+	guest_email_conf2=document.getElementById('guest_email_conf').value;
+	phone2=document.getElementById('phone').value;
+	
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/login_guest", data: {guest_email:guest_email2 , guest_email_conf:guest_email_conf2 , phone:phone2}, success: function(data){ 
+		//alert(addFavoriteRestaurant);
+		var status="";
+		var obj = jQuery.parseJSON(data);
+
+		$.each(obj, function() {
+			
+			status=obj.error;
+			
+		});
+
+			document.getElementById("password_error").style.display="none";
+			document.getElementById("error").style.display="none";
+			document.getElementById("email_error").style.display="none";
+			document.getElementById("email_password").style.display="none";
+			document.getElementById("error_guest").style.display="none";
+			document.getElementById("error_email").style.display="none";
+		
+		if (status=="Match_Error")
+		{
+			document.getElementById("error_guest").style.display="block";
+			
+		}
+		else if (status=="Validation_Error")
+		{
+			document.getElementById("error_email").style.display="block";
+			
+		}
+		else
+		{
+			document.location.href=document.location.href;		
+		}
+	}//end function
+	});	
+	
+}
+
+</script>
+
+
+<script language="javascript">
+var base_url = '<?=base_url();?>';
+function forgotPassword(nPassId)
+{
+	forgotPass	=	nPassId;
+	PassId	=	nPassId;
+	
+	$('#forgot_pass').dialog('open');
+	return false;
+}
+
+var base_url = '<?=base_url();?>';
+function forgotMsg(nPassId)
+{
+	forgotMsg	=	nPassId;
+	$('#forgot_msg').dialog('open');
+	return false;
+}
+
+var base_url = '<?=base_url();?>';
+function forgotMsgFail(nPassId)
+{
+	forgotMsgFail	=	nPassId;
+	$('#forgot_msg_fail').dialog('open');
+	return false;
+}
+
+</script>
+
+
+<!-- Start Dialog Popups -->
+<script type="text/javascript">
+			$(function(){
+				// Dialog	( Start Edit Variant Popup Window Here )
+				$('#forgot_pass').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 300,
+					buttons: {
+						"Submit": function() { 
+							//$(this).dialog("close"); 
+							var Email=$("#emailAddress").val();
+							//$("#variant").val(Variant);
+							$.ajax({ type: "POST", url: base_url+"home/verifyEmail/", data: "varia="+Email, success: function(response){ 
+								if(response=='Email_Sent')
+								{
+									$('#forgot_msg').dialog('open');
+								//	alert(response);
+									
+								//	document.location.href=document.location.href;
+									
+								}
+								else
+									$('#forgot_msg_fail').dialog('open');
+								//	alert(response);
+								
+															
+							}
+								
+							});							
+	
+						}, 
+						"Cancel": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+					
+				});
+
+			});
+
+			$(function(){
+				// Dialog	( Start Edit Variant Popup Window Here )
+				$('#forgot_msg').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 300,
+					
+					buttons: {
+						"Ok": function() { 
+							$('#forgot_pass').dialog("close"); 
+							$(this).dialog("close"); 
+						} 
+					}
+					
+				});
+
+			});
+
+			$(function(){
+				// Dialog	( Start Edit Variant Popup Window Here )
+				$('#forgot_msg_fail').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 300,
+					
+					buttons: {
+						"Ok": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+					
+				});
+
+			});
+		</script>
+<!-- End Dialog Popups -->
+
+
+
+
+<!-- Start Forgot passwrod process Window Here -->
+<div id="forgot_pass" title="Forgot Password" style="display:none;">
+	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+      <tr>
+        <td style="padding-bottom: 10px; width: 596px; font-size:12px; padding-top:10px;" colspan="2">
+        	Email Address
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <input type="text" value="" name="emailAddress" id="emailAddress" style="width:200px; padding:3px;" class="txt-field01">
+            <input type="hidden" value="yes" name="add">
+        </td>
+     </tr>
+    </table>
+</div>
+<!-- End Forgot passwrod process Window Here -->
+
+<!-- Start Forgot passwrod Email Msg -->
+<div id="forgot_msg" title="Forgot Password" style="display:none;">
+	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+      <tr>
+        <td style="padding-bottom: 10px; width: 596px; font-size:12px; padding-top:10px;" colspan="2">
+        	<strong>Please See Your Email Address security code has been sent to you. Thank You!!</strong>
+        </td>
+      </tr>
+    </table>
+</div>
+<!-- End Forgot passwrod Email Msg -->
+
+<!-- Start Forgot passwrod Email Not Sent Msg -->
+<div id="forgot_msg_fail" title="Forgot Password" style="display:none;">
+	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+      <tr>
+        <td style="padding-bottom: 10px; width: 596px; font-size:12px; padding-top:10px;" colspan="2">
+        	<strong>Email Not Sent</strong>
+        </td>
+      </tr>
+    </table>
+</div>
+<!-- End Forgot passwrod Email Not Sent Msg -->
+
+
+
+
+<!-- Start Error Success Msg -->
+        <br/>
+        <div class="ui-widget" id="error" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Username or password is invalid              
+            </div>
+            
+        </div>
+        <div class="ui-widget" id="email_password" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Email and password is Required!!                
+            </div>
+            
+        </div>
+        <div class="ui-widget" id="email_error" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Email field is Required!!                
+            </div>
+            
+        </div>
+        <div class="ui-widget" id="password_error" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Password field is Required!!                 
+            </div>
+            
+        </div>
+        <div class="ui-widget" id="error_guest" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Email addresses does not match                
+            </div>
+            
+        </div>
+        <div class="ui-widget" id="error_email" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Email address is not valid. Please Enter valid email address                
+            </div>
+            
+        </div>
+
+        <br class="clear" />
+<!-- End Error Success Msg -->
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="signin">
+<tr>
+<td style="border-right:solid 1px #d5d5d5; padding-right:20px; vertical-align:top; width:4%;">
+    <form method="post" id="signin-form">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td style="padding-bottom:5px;">Email:</td>
+      </tr>
+      <tr>
+        <td><input name="user" id="user" onkeypress="keyCheck(event);" type="text" class="signinfld" /></td>
+      </tr>
+      <tr>
+        <td style="padding-bottom:5px;">Password:</td>
+      </tr>
+      <tr>
+        <td><input name="pass" id="pass" type="password" onkeypress="keyCheck(event);" class="signinfld" /></td>
+      </tr>
+      <tr>
+        <td>
+            <a class="add-btn" href="javascript:void(null);" style="float:left;" onclick="javascript:login();">
+                Sign In
+            </a>
+            <span style="padding-left:15px; display:block; float:left;">
+                <a href="javascript:void(null);" onclick="forgotPassword(0);">Forgot <br />Password?</a>
+            </span>
+            <br class="clear" /><br />
+            <span>
+                <a class="font11" href="<?=base_url()."useraccount/createaccount"?>" style="text-decoration:none; font-weight:normal;">
+                    Click here to signup to get and enjoy <strong>Starvved</strong> experience.
+                </a>
+            </span>
+        </td>
+      </tr>
+    </table>
+    </form>
+</td>
+<td style="padding-left:20px; width:48%;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td style="padding-bottom:5px;">Email: <span style="color:#FF0000;">*</span></td>
+      </tr>
+      <tr>
+        <td><input id="guest_email" type="text" onkeypress="keyCheck2(event);" class="signinfld" /></td>
+      </tr>
+      <tr>
+        <td style="padding-bottom:5px;">Retype Email: <span style="color:#FF0000;">*</span></td>
+      </tr>
+      <tr>
+        <td><input id="guest_email_conf" type="text" onkeypress="keyCheck2(event);" class="signinfld" /></td>
+      </tr>
+      <tr>
+        <td style="padding-bottom:5px;">Mobile Phone:</td>
+      </tr>
+      <tr>
+        <td><input id="phone" type="text" class="signinfld" /></td>
+      </tr>
+      <tr>
+        <td>
+            <a class="add-btn" href="javascript:void(null);" style="float:left;" onclick="javascript:login_guest();">
+                Proceed as Guest
+            </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <span class="font11" style="text-decoration:none; font-weight:normal; color:#0065B4;">
+                <span style="color:#FF0000;">*</span>Email address is needed to allow Starvved<br /> to send you a confirmation for your order.<br /> Phone number is optional.
+            </span>
+        </td>
+      </tr>
+    </table>
+</td>
+</tr>
+</table>

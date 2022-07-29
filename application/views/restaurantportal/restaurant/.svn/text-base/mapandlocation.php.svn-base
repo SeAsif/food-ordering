@@ -1,0 +1,64 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+echo form_open(base_url().'restaurantsettings/mapandlocation');
+?>
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>Map &amp; Location</h1>
+            <?PHP
+            if (count($success))
+			{
+			?>
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                    <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <strong><?=$success["msg"]?></strong></p>
+                </div>
+            </div>
+            <?PHP
+            }
+			?>
+            <?PHP
+            if (count($errors))
+			{
+			?>
+            <br/>
+            <div class="ui-widget">
+                <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+                	<?PHP
+                    foreach ($errors as $error)
+					{
+						echo $error;
+					}
+					?>
+                    
+                </div>
+                
+            </div>
+            <?PHP
+            }
+			?>
+            <br/>
+            <div class="slogan-left">
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><strong>Edit Address</strong></td>
+                  </tr>
+                  <tr>
+                    <td>
+                    	<input name="address" type="text" class="txt-field" value="<?=$restaurant["address"]?>"                         style="width:350px;" />
+                    </td>
+                  </tr>
+                </table>
+            </div>
+            <div class="save-btn">
+                <input name="Save" type="image" src="<?=base_url()?>images/save.jpg" style="margin-right:10px;" />
+                <!--<input name="Cancel" type="image" src="<?=base_url()?>images/cancel.jpg" style="margin-right:10px;" />-->
+            </div>
+        </div>
+<!-- End Mid Right -->
+</form>
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

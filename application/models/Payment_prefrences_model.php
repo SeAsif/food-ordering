@@ -1,0 +1,74 @@
+<?
+/**
+* Menu Item Model
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Restaurants
+* 
+*/
+class Payment_prefrences_model extends CI_Model
+{
+	function __construct() {
+        parent::__construct();
+    }
+
+	/**
+		Add	user Payment Prefrences
+	*/
+	function addUserPaymentPrefrences($arrInfo)
+	{
+      	$this->db->insert("user_payment_pref", $arrInfo);  
+		return $this->db->insert_id();
+	}
+
+	
+	/**
+		Update
+	*/
+	function updatePaymentPrefrences($arrInfo)
+	{
+		$this->db->where(array("id"=>$arrInfo["id"]));
+		
+		$this->db->set($arrInfo); 
+		$this->db->update('user_payment_pref');
+	}
+
+	/**
+		Update
+	*/
+	function updatePaymentPrefrencesOnAdd($arrInfo)
+	{
+		$this->db->where(array("user_id"=>$arrInfo["user_id"]));
+		$this->db->set($arrInfo); 
+		$this->db->update('user_payment_pref');
+	}
+	/**
+		Delete
+	*/
+	function deletePaymentPrefrences($arrInfo)
+	{
+		$this->db->where('id',$arrInfo["id"]);
+		$this->db->delete('user_payment_pref'); 		
+	}
+
+
+	/**
+	* @method This method will return User's Payment Prefrences 
+	* @params User Id will be passed as parameter
+	*/
+	function getUserPrefrencesByUserId($userId)
+	{
+		$this->db->where(array('user_id'=>$userId));
+		$query=$this->db->get("user_payment_pref");
+		// Declare Array to pass data
+		$list = array();
+		foreach ($query->result_array() as $row)
+		{
+			$list[]	=	$row;
+		}		
+		// Return Array
+		return $list;
+	}
+
+}
+?>

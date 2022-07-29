@@ -1,0 +1,109 @@
+<?php
+
+class Page extends Controller {
+
+	function Page()
+	{
+		parent::Controller();
+		$this->load->library('email');
+		$this->load->library('form_validation');
+	}
+	
+	function aboutus()
+	{
+		$this->load->view('userfront/page/aboutus',$data);
+	}
+	
+	function contactus()
+	{
+		$data = array();
+		$data["emailSend"] = "false";
+		$adminemail	=	$this->config->item("adminEmail");
+		$infoemail	=	$this->config->item("infoEmail");
+		
+		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|trim');
+		$this->form_validation->set_rules('name', 'Name', 'required|trim');
+//		$this->form_validation->set_rules('feedback', 'Feedback', 'required|trim');
+		
+		$contact["name"] = $this->input->get_post('name');
+		$contact["email"] = $this->input->get_post('email');
+		$contact["phone"] = $this->input->get_post('phone');
+		$contact["feedback"] = $this->input->get_post('feedback');
+		
+		if($_POST)
+		{
+			if ($this->form_validation->run() == FALSE)
+			{
+				$errorsArray['name']	=	form_error('name');
+				$errorsArray['email']	=	form_error('email');
+//				$errorsArray['feedback']	=	"Feedback is Empty.";
+				$data["errors"] = $errorsArray;
+				$data["flag"]=0;
+			}
+			else
+			{	
+				$config['wordwrap'] = TRUE;
+				$config['smtp_host'] = 'localhost';
+				$this->email->initialize($config);
+				
+				$this->email->from($adminemail, 'Tranistgrub Team');
+				$this->email->to($infoemail);
+				$this->email->subject('feedback');
+				
+				$this->email->message('
+					Hi 
+					
+					'.$contact["name"].' has contacted with email address : '.$contact["email"].' and
+					Phone Numebr : '.$contact["phone"].' and feedback was
+					
+					'.$contact["feedback"].'
+					
+					
+					Thanks,
+					
+					Stavved Team
+					');
+				
+					$this->email->set_alt_message('
+					Hi 
+					
+					'.$contact["name"].' has contacted with email address : '.$contact["email"].' and
+					Phone Numebr : '.$contact["phone"].' and feedback was
+					
+					'.$contact["feedback"].'
+					
+					
+					Thanks,
+					
+					Starvved Team.
+					');
+					
+					$data["emailSend"] = "true";
+				//	echo base_url().'home/recoverview/',$arrUser->id.'/',$arrUser->security_code;
+					$this->email->send();
+		
+				//	echo "Thanks for sending your feedback we will contact to you Soon. Thank You!!";
+				
+			}
+		}
+///////////////////////////////////////////////////////////////////
+		
+		$data["contact"] = $contact;
+
+		$this->load->view('userfront/page/contactus',$data);
+	}
+
+	function refundandcancelationpolicy()
+	{
+		$this->load->view('userfront/page/refundandcancelationpolicy',$data);
+	}
+	function privacystatement()
+	{
+		$this->load->view('userfront/page/privacystatement',$data);
+	}
+	
+
+}
+
+/* End of file welcome.php */
+/* Location: ./system/application/controllers/welcome.php */

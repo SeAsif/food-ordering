@@ -1,0 +1,562 @@
+
+<link href="<?=base_url()?>css/style.css" rel="stylesheet" type="text/css" />
+<link type="text/css" href="<?=base_url()?>css/cupertino/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
+<script type="text/javascript" src="<?=base_url()?>js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/jquery-ui-1.8.6.custom.min.js"></script>
+
+<script language="javascript">
+var attachedGroups;
+var base_url = '<?=base_url();?>';
+function addCategory(nItemId)
+{
+	addCategories	=	nItemId;
+	$('#add_new_category').dialog('open');
+	return false;
+}
+var groupsAvailable;
+<?PHP
+if (isset($success["msg"]))
+{
+?>
+	var successMgs	=	'<?=$success["msg"]?>';
+
+<?
+}
+else
+{
+?>
+var successMgs	=	'';
+
+<?PHP
+}
+?>
+
+	if (successMgs!="")
+	{
+		var objRef = parent.window;
+		objRef.refreshItemPage(successMgs);
+
+	}
+
+$(document).ready(function()
+		{
+			//attachedGroups
+			
+			groupsAvailable = attachedGroups.split(',');
+
+			$("#check_all").click(function()	
+			{			
+				$("input[name=VariantGroup[]]").each(function()
+					{
+						this.checked = "checked";
+					});
+			});					
+
+			$("#uncheck_all").click(function()				
+			{
+				$("input[name='VariantGroup[]']").each(function()
+				{
+					this.checked = "";
+				});
+			});					
+			
+			
+			$("#add_item").click(function()				
+			{
+				
+				$('#added_group').val(selectedItems.join(','));	
+				$('#frmAddItem').submit();
+
+			});
+
+			$("#attach_to_item").click(function()				
+			{
+				$("input[name='VariantGroup[]']:checked").each(function() {
+
+					
+					
+					if (jQuery.inArray($(this).val(), groupsAvailable)	==	-1)
+					{
+						groupsAvailable.push($(this).val());
+						selectedItems.push($(this).val());
+
+						$("#selected_food_variants").append('<tr class="attached_groups_'+$(this).val()+'"><td style="width:93%;">'+$(this).attr('title')+'</td><td align="center" style="padding-left:0px;"><a href="javascript:void(null);" onclick="removeGroup('+$(this).val()+','+<?=(isset($item["id"])?$item["id"]:0)?>+');"><img src="<?=base_url()?>/images/delete.png" alt="img" border="0" /></a></td></tr>');
+						
+					}
+				
+				});
+			});
+			
+		});
+
+function deSelectAll()
+{
+
+}
+
+	var selectedItems = new Array();
+function attachToItem()
+{
+	
+//	alert (groupsAvailable.length);
+}
+function getGroups()
+{
+//	alert (document.getElementById("menu_variant_item_category").value);
+	var category_id	;
+	category_id	=	$("#menu_variant_item_category").val();
+
+/*$.post('ajax/test.html', function(data) {
+  $('.result').html(data);
+});
+*/	
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurantvariants/getVariantGroups", data: "category_id="+category_id+"", success: function(variantGroups){ 
+	
+		if (variantGroups=="No_Record_Found")
+		{
+			$(".variant_group_name").remove();
+			$("#tableVariantGroup").append('<tr class="variant_group_name"><td style="width:93%;">Sorry! No record found</td>               <td></td></tr>');
+		}
+		else
+		{
+			var obj = jQuery.parseJSON(variantGroups);
+			$(".variant_group_name").remove();
+			$.each(obj, function() {
+				  //append new row in tableVariantGroup
+				  $("#tableVariantGroup").append('<tr class="variant_group_name"><td style="width:93%;">'+this.group_name+'</td>               <td><input name="VariantGroup[]" id="VariantGroup" type="checkbox" value="'+this.id+'" title="'+this.group_name+'" /></td></tr>');
+			 });		
+		}
+	}//end function
+	});	
+}
+
+function removeGroup(nGroupId,nItemId)
+{//	addCategories	=	nItemId;
+	var removeGroupId = nGroupId;
+	var removeItemId = nItemId;
+//	category_id	=	$("#menu_variant_item_category").val();
+//onclick="removeGroup(<?=$variantGroup["id"]?>);
+	$.ajax({ type: "POST", url: "<?=base_url()?>restaurantitem/deleteFoodVariant", data: {varia: removeGroupId , varia2: removeItemId},success: function(response){if(response == 'RECORD_DELETED')
+							{
+							//	alert(response);
+								$(".attached_groups_"+removeGroupId).remove();
+								
+								selectedItems.pop(removeItemId);
+								groupsAvailable.pop(removeGroupId);
+							
+							//	document.location.href=document.location.href;
+							}
+						//	else
+							//	alert(response);
+					
+	
+						}
+			
+		  			});	
+
+}
+
+
+</script>
+<!-- Start Dialog Popups -->
+<script type="text/javascript">
+$(function(){
+
+				// Dialog	( Start Delete Popup Window Here )
+				$('#add_new_category').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 490,
+					height: 180,
+					buttons: {
+						"Save": function() { 
+							var Variant=$("#category_name").val();
+							
+							$.ajax({ type: "POST", url: base_url+"restaurantitem/addFoodVariant/", data: "varia="+Variant, success: function(response){ 
+								if(response=='RECORD_ADDED')
+								{
+								$("#add_new_category").dialog("close"); 
+								//	alert(response);
+								//	document.location.href=document.location.href;
+									$.ajax({
+											url: base_url+"restaurantitem/getFoodCategories",
+											success: function( data ) 
+											{
+												var obj = jQuery.parseJSON(data);
+												
+												//terminal1
+												$('#category_id') .find('option') .remove() ;
+												//terminal2
+												
+												$.each(obj, function() 
+												{
+													  
+													  $("#category_id").append('<option value="'+this.id+'" >'+this.category_name+'</option>');
+													  
+												});				
+											}
+										});
+								//	alert(response);
+								//	$(this).dialog("close"); 
+								}
+								else
+									alert(response);
+															
+							}
+								
+							});			
+						}, 
+						"Cancel": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+	
+});
+</script>
+<!-- End Dialog Popups -->
+
+
+<!-- Start Add New Variant Category Window Here -->
+<div id="add_new_category" title="Add Category">
+	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+      <tr>
+        <td style="padding-bottom: 10px; width: 400px; font-size:12px; padding-top:10px;" colspan="2">
+        	Creat New Food Category
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <input type="text" value="" name="category_name" id="category_name" style="width:200px; padding:3px;" class="txt-field01">
+            <input type="hidden" value="yes" name="add">
+        </td>
+  <!--      <td>
+        	<a onclick="document.categoryform.submit();" class="global-link" title="Add" href="javascript:void(null);">
+            	<span>Add</span>
+            </a>
+        </td> -->
+      </tr>
+    </table>
+</div>
+<!-- End Add New Variant Category Window Here -->
+
+
+
+
+
+
+
+<style type="text/css">
+
+body { background:0px none !important;}
+
+</style>
+
+<?PHP
+//	$attributes	=	array("id"=>"frmAddItem","name"=>"frmAddItem")
+$attributes = array('id' => 'frmAddItem','name' => 'frmAddItem');
+echo form_open(base_url().'restaurantitem/addItem/'.$item["id"],$attributes);
+?>
+<div class="add-item">
+	<?PHP
+    if (count($success))
+    {
+    ?>
+    <div class="ui-widget">
+        <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+            <strong><?=$success["msg"]?></strong></p>
+        </div>
+    </div>
+    <?PHP
+    }
+    ?>
+    <?PHP
+    if (count($errors))
+    {
+    ?>
+    <br/>
+    <div class="ui-widget">
+        <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+            <?PHP
+            foreach ($errors as $error)
+            {
+                echo $error;
+            }
+            ?>
+            
+        </div>
+        
+    </div>
+    <?PHP
+    }
+    ?>
+<div style="float:left; width:493px;">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="width:80%;">
+                Item Name
+            </td>
+            <td>
+                Start Price
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-top:0px;">
+            	<input type="hidden" name="added_group" id="added_group" />
+                <input name="item_name" id="item_name" type="text" class="txt-field" style="width:250px;" value="<?=$item["item_name"]?>" />
+            </td>
+            <td style="padding-top:0px;">
+                <input name="item_price" id="item_price" type="text" class="txt-field" style="width:100px;" value="<?=$item["item_price"]?>" />
+            </td>
+          </tr>
+          <tr>
+            <td style="width:80%;">
+                State Tax (%)
+            </td>
+            <td>
+                City Tax (%)
+            </td>
+          </tr>
+          <tr>
+            <td style="padding-top:0px;">
+            	
+                <input name="statetax" id="statetax" type="text" class="txt-field" style="width:100px;" value="<?=$item["item_statetax"]?>" />
+            </td>
+        
+            <td style="padding-top:0px;">
+            	
+                <input name="citytax" id="citytax" type="text" class="txt-field" style="width:100px;" value="<?=$item["item_citytax"]?>" />
+            </td>
+         </tr>      
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td style="width:50%;">
+                Item Description
+            </td>
+            <td align="right">
+                <span class="font11 font-red" style="padding-right:2px;">Max 250 Character</span>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding-top:0px;">
+                <textarea name="item_description" id="item_description" cols="5" rows="5" class="txtarea" style="width:493px;"><?=$item["item_description"]?></textarea>
+            </td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <table width="35%" border="0" cellspacing="0" cellpadding="0" class="td-spacing">
+          <tr>
+            <td>Served:</td>
+            <td><input name="serve_type" type="radio" value="Hot" <?=($item["serve_type"]	==	"Hot")?'checked="checked"':''?> /></td>
+            <td><span class="gray-span">Hot</span></td>
+            <td><input name="serve_type" type="radio" value="Cold" <?=($item["serve_type"]	==	"Cold")?'checked="checked"':''?>/></td>
+            <td><span class="gray-span">Cold</span></td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <table width="25%" border="0" cellspacing="0" cellpadding="0" class="td-spacing">
+          <tr>
+            <td>Travelable:</td>
+            <td><input name="travelable" type="checkbox" value="Yes" <?=($item["travelable"]	==	"Yes")?'checked="checked"':''?> /></td>
+            <td><span class="gray-span">Yes</span></td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <table width="32%" border="0" cellspacing="0" cellpadding="0" class="td-spacing">
+          <tr>
+            <td>Liquid Contains:</td>
+            <td><input name="liquid_contain" type="checkbox" value="Yes" <?=($item["liquid_contain"]	==	"Yes")?'checked="checked"':''?>/></td>
+            <td><span class="gray-span">Yes</span></td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <table width="75%" border="0" cellspacing="0" cellpadding="0" class="td-spacing">
+          <tr>
+            <td>Basic Taste:</td>
+            <td><input name="basic_taste" type="radio" value="Spicy" <?=($item["basic_taste"]	==	"Spicy")?'checked="checked"':''?> /></td>
+            <td><span class="gray-span">Spicy</span></td>
+            <td><input name="basic_taste" type="radio" value="Salty" <?=($item["basic_taste"]	==	"Salty")?'checked="checked"':''?>/></td>
+            <td><span class="gray-span">Salty</span></td>
+            <td><input name="basic_taste" type="radio" value="Sweet" <?=($item["basic_taste"]	==	"Sweet")?'checked="checked"':''?>/></td>
+            <td><span class="gray-span">Sweet</span></td>
+            <td><input name="basic_taste" type="radio" value="Sour" <?=($item["basic_taste"]	==	"Sour")?'checked="checked"':''?>/></td>
+            <td><span class="gray-span">Sour</span></td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <table width="75%" border="0" cellspacing="0" cellpadding="0" class="td-spacing">
+          <tr>
+            <td>Menu Timigs:</td>
+          </tr>
+          <tr>
+            <td style="padding-top:6px !important;"><input type="hidden" value="<?=$attached_menu_timings?>" name="attached_menu_timings" />
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="timings">
+                  <tr>
+                <?PHP
+			//	print_r($available_menu_timings);
+				$nCount	=	1;
+				$arrattached_menu_timings	=	explode(",",$attached_menu_timings);
+				if (count($available_menu_timings) > 0)
+				{
+                foreach ($available_menu_timings as $menu_timing)
+				{
+				if ($nCount%2)
+					echo "</tr><tr>";
+				?>
+                    <td><input name="menu_timing_id[]" type="checkbox" value="<?=$menu_timing["id"]?>" <? if (in_array($menu_timing["id"],$arrattached_menu_timings)){?> checked="checked"<? } ?> /></td>
+                    <td><span class="gray-span"><?=$menu_timing["menu_timing_day"]?> <span class="font11"><?=$menu_timing["menu_timing_name"]?></span></span></td>
+                <?PHP
+				$nCount++;
+                }//end foreach
+				}
+				else
+				{
+				?>
+                <td colspan="2">N/A</td>
+                <?PHP
+				}
+				?>
+                  </tr>
+                </table>
+            </td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:25px;">Food Category</td>
+  </tr>
+  <tr>
+    <td style="padding:0px;">
+    	<?=getFoodCategoryDropDown($categorylist,$item["category_id"],'class="combwd01 float-left" style="width:374px;"')?>
+        <!--<select name="menu" class="combwd01 float-left" style="width:372px;"></select>-->
+        <strong class="float-left" style="padding:5px 10px 0px 10px;">Or</strong>
+        <a href="javascript:void(null);" onclick="addCategory(0);" class="global-link">
+        <span style="color:#0D73DA !important;">Add New</span></a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:15px;">Available Food Variants</td>
+  </tr>
+  <tr>
+    <td style="padding:0px;">
+	    <?=getVariantItemCategory($menu_item_variant_category,$selected["menu_item_variant_category"],'class="combwd01 float-left" style="width:493px;" id="menu_variant_item_category" onchange="getGroups();"')?>
+        <br class="clear" />
+        <div class="select-variant">
+        	<table width="100%" border="0" cellspacing="2" cellpadding="0" id="tableVariantGroup">
+            </table>
+        </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+                <a href="javascript:void(null);" id="check_all">Select All / </a>
+                <a href="javascript:void(null);" id="uncheck_all">Deselect</a>
+            </td>
+            <td>
+                <a href="javascript:void(null);" class="global-link float-right" id="attach_to_item">
+                <span style="color:#0D73DA !important;">Attach to Item</span></a>
+            </td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        Selected Food Variants
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:0px;">
+        <div class="select-variant">
+        	<table width="100%" border="0" cellspacing="2" cellpadding="0" id="selected_food_variants">
+            	<?PHP
+			//	print_r($menu_item_variant);
+			//	print_r($attached_variant_groups);
+			//	echo $item["id"];
+				$groupIds	=	array();
+                foreach ($attached_variant_groups as $variantGroupDetail)
+				{
+					$variantGroup	=	$variantGroupDetail["GroupDetail"];
+					$groupIds[]	=	$variantGroup["id"];
+				?>
+              <tr class="attached_groups_<?=$variantGroup["id"]?>">
+                <td style="width:93%;" id="variantGroupName"><?=$variantGroup["group_name"]?></td>
+                <td align="center" style="padding-left:0px;">
+                	<a href="javascript:void(null);" onclick="removeGroup(<?=$variantGroup["id"]?>,<?=$item["id"]?>);"><img src="<?=base_url()?>/images/delete.png" alt="img" border="0" /></a>
+                </td>
+              </tr>
+              <?PHP
+              	}
+				$attachedGroups	=	implode(",",$groupIds)
+			  ?>
+            </table>
+        </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+        <a href="javascript:void(null);" class="global-link float-left" style="margin-right:5px;" id="add_item">
+        <?php
+        if($type == "edit")
+		{
+		?><span style="color:#0D73DA !important;">Update</span></a>
+        <a href="javascript:void(null)" onclick="parent.closeEditItemDialog();" class="global-link float-left">
+        <span style="color:#0D73DA !important;">Cancel</span></a>
+        <?
+        }
+		else
+		{
+		?>
+        	<span style="color:#0D73DA !important;">Add Item</span></a>
+            <a href="javascript:void(null)" onclick="parent.closeItemDialog();" class="global-link float-left">
+        <span style="color:#0D73DA !important;">Cancel</span></a>
+        <?
+        }
+		?>    
+        
+    </td>
+  </tr>
+</table>
+</div>
+
+
+</div>
+</form>
+<table width="100%" border="0" cellspacing="2" cellpadding="0" class="ajax-loader" style="display:none;">
+  <tr>
+    <td><img src="<?=base_url()?>/images/ajax-loader.gif" alt="loader" /></td>
+  </tr>
+</table>
+<script language="javascript">
+attachedGroups	=	'<?=$attachedGroups?>';
+</script>
+
+

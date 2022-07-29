@@ -1,0 +1,43 @@
+
+<link href="<?=base_url()?>css/style.css" rel="stylesheet" type="text/css" />
+<link type="text/css" href="<?=base_url()?>css/cupertino/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
+
+<style type="text/css">
+
+body { background:0px none !important;}
+
+</style>
+
+
+<div class="add-item">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td colspan="3" style="padding-bottom:7px; padding-top:0px;">
+            <table width="100%" border="0" cellspacing="2" cellpadding="0">
+              <tr>
+                <td style="width:50%;">
+                	<strong><?=$variantGroup["group_name"]?></strong>
+                	<span style="padding-left:10px;">(<?=($variantGroup["required"]=="Yes")?"Required":"Not Required"?> / <?=$variantGroup["selection"]?>)</span>
+                </td>
+              </tr>
+            </table>
+        </td>
+      </tr>
+      <tr>
+      <?PHP
+	  $nCount	=	1;
+      foreach ($variantItems as $variantItem)
+	  {
+	  	if (($nCount%4)	==	0)
+		echo "</tr><tr>";
+	  ?>
+        <td>
+            <?=$variantItem["name"]?> <span style="padding-left:5px;">($<?=$variantItem["price"]?>)</span>
+        </td>
+      <?PHP
+	  	$nCount++;
+	  }
+      ?>
+      </tr>
+    </table>
+</div>

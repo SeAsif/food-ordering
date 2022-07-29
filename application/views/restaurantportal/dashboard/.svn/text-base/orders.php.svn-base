@@ -1,0 +1,251 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+?>
+<script language="javascript">
+var path='<?=base_url();?>';
+</script>
+
+<!--................. Start Orders Drop Menu ..............-->
+<script src="<?=base_url()?>js/drop-menu.js" type="text/javascript"></script>
+<!--................. End Orders Drop Menu ..............-->
+
+<script>
+	$(function() {
+		$( "#accordion" ).accordion({ collapsible: true, hide: true, active:false });
+		$( "#accordion1" ).accordion({ collapsible: true, hide: true, active:false });
+	});
+</script>
+
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<div class="dash-board-top">
+                <h1>
+                    Dash Board
+                </h1>
+                <div class="date-time"><strong><?=date("l, M dS , Y")?>&nbsp;<span><?=date("h:i A")?></span></strong></div>
+            </div>
+            <br class="clear" />
+            <div class="ctgry-table">
+			<h1 style="font-size:16px; border-bottom:0px none; margin-bottom:0px;">New Orders</h1>
+			<div class="order-hed" style="width:706px;">
+                	<span class="orderCode font13">Order Code</span>
+                    <span class="orderStatus font14">Status</span>
+                    <span class="orderType font13">Type</span>
+                    <span class="orderReceived font13">Received On</span>
+                    <span class="orderDelivery font13">Pickup Time</span>
+                    <span class="orderTotal font13">Total</span>
+                    <span class="orderTotal font13">Tax</span>
+                    <span class="orderTgb font13">TGB<br />Commission</span>
+                    <span class="netAmount font13">Net<br />Receivable</span>
+                </div>
+
+                      <?PHP
+					  $nCount	=	$ncounter1;
+					  if ($total_neworders_count>0)
+					  {
+//					  print_r ($order);
+                      ?>
+
+            <div id="accordion">
+
+                      <?PHP
+						  foreach ($neworders as $order)
+						  {
+//					  print_r ($order);
+                      ?>
+
+            	<div class="orderRow">
+                	<a href="" class="orderCode"><?=$order["order_code"]?></a>
+                    <span class="orderStatus" style="padding-top:3px;">
+						<? if ($order["order_status"]=="Delivered")
+							echo "<img src='".base_url()."images/delivered.png' alt='mark' border='0' title='Delivered' />";
+							else if ($order["order_status"]=="Unpaid")
+							echo "<img src='".base_url()."images/newest.png' alt='mark' border='0' title='Unpaid' />";
+							else if ($order["order_status"]=="Pending")
+							echo "<img src='".base_url()."images/under-process.png' alt='mark' border='0' title='Pending'/>";
+							else if ($order["order_status"]=="Rejected")
+							echo "<img src='".base_url()."images/rejected.png' alt='mark' border='0' title='Rejected' />";
+							else if ($order["order_status"]=="Confirmed")
+							echo "<img src='".base_url()."images/delivered.png' alt='mark' border='0' title='Confirmed' />";
+                        ?>
+                    </span>
+                    <span class="orderType" style="padding-top:7px;">
+                    	<?=$order["order_type"]?>
+                    </span>
+                    <span class="orderReceived">
+                    	<?=date("m/d/Y",strtotime($order["stamp"]))?><? echo"<br />";?>
+                        <?=date("h:i A",strtotime($order["stamp"]))?>
+                    </span>
+                    <span class="orderDelivery">
+                    	<?=date("m/d/Y",strtotime($order["delivery_time"]))?><? echo"<br />";?>
+                        <?=date("h:i A",strtotime($order["delivery_time"]))?>
+                    </span>
+                    <span class="orderTotal" style="padding-top:7px;">
+                    <?php $english_format_number = number_format($order["totalprice"], 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                    
+                    <span class="orderTotal" style="padding-top:7px;">
+                    <?php $totalTax = $order["city_tax"] + $order["state_tax"]?>
+                    <?php $english_format_number = number_format($totalTax, 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                    
+                    <span class="orderTgb" style="padding-top:7px;">
+                    <?php $english_format_number = number_format($order["tgb_comission"], 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                    <span class="netAmount" style="padding-top:7px;">
+                    <?php $net = $order["totalprice"]-$order["tgb_comission"];
+				//	$net = $net + $totalTax;
+					$english_format_number = number_format($net, 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                </div>
+                <iframe allowtransparency="true" frameborder="0" width="706" height="492" style="background:0px none;" id="itemIframe" name="itemIframe" src="<?=base_url()?>restaurantorders/ordersdetail/<?=$order["id"]?>">
+							<noscript>
+							Your browser doesn't appear to support frames.  Please see the <a href="<?=base_url()?>restaurantitem/addItem">non-framed version</a> of this page.
+							</noscript> 
+                            </iframe>
+
+                      <?PHP
+						  $nCount++;
+						  }
+                      ?>
+
+            </div>
+                      <?PHP
+						 }
+						 else
+						 {
+							echo '<div style="float:left; padding:10px;">Sorry! No orders found.</div>';
+						 }
+					?>
+             <br class="clear" />       
+			<h1 style="font-size:16px; border-bottom:0px none; margin-bottom:0px; padding-top:30px;">Order History</h1>
+
+			<div class="order-hed" style="width:706px;">
+                	<span class="orderCode font13">Order Code</span>
+                    <span class="orderStatus font14">
+                    	Status
+                    </span>
+                    <span class="orderType font13">
+                    	Type
+                    </span>
+                    <span class="orderReceived font13">
+                    	Received On
+                    </span>
+                    <span class="orderDelivery font13">
+                    	Pickup Time
+                    </span>
+                    <span class="orderTotal font13">
+                    	Total
+                    </span>
+                     <span class="orderTotal font13">
+                    	Tax
+                    </span>
+                    <span class="orderTgb font13">
+                    	TGB<br />Comission
+                    </span>
+                    <span class="netAmount font13">
+                    	Net<br />Receivable
+                    </span>
+                </div>
+
+                      <?PHP
+					  $nVar	=	$nCount;
+					  $nCount	=	$ncounter;
+					  if ($total_historyorders_count>0)
+					  {
+//					  print_r ($order);
+                      ?>
+
+            <div id="accordion1">
+
+                      <?PHP
+						  foreach ($historyorders as $order)
+						  {
+//					  print_r ($order);
+                      ?>
+
+            	<div class="orderRow">
+                	<a href="" class="orderCode"><?=$order["order_code"]?></a>
+                    <span class="orderStatus" style="padding-top:3px;">
+						<? if ($order["order_status"]=="Delivered")
+							echo "<img src='".base_url()."images/delivered.png' alt='mark' border='0' />";
+							else if ($order["order_status"]=="Unpaid")
+							echo "<img src='".base_url()."images/newest.png' alt='mark' border='0' />";
+							else if ($order["order_status"]=="Pending")
+							echo "<img src='".base_url()."images/under-process.png' alt='mark' border='0' />";
+							else if ($order["order_status"]=="Rejected")
+							echo "<img src='".base_url()."images/rejected.png' alt='mark' border='0' />";
+							else if ($order["order_status"]=="Confirmed")
+							echo "<img src='".base_url()."images/delivered.png' alt='mark' border='0' />";
+                        ?>
+                    </span>
+                    <span class="orderType" style="padding-top:7px;">
+                    	<?=$order["order_type"]?>
+                    </span>
+                    <span class="orderReceived">
+                    	<?=date("m/d/Y",strtotime($order["stamp"]))?><? echo"<br />";?>
+                        <?=date("h:i A",strtotime($order["stamp"]))?>
+                    </span>
+                    <span class="orderDelivery">
+                    	<?=date("m/d/Y",strtotime($order["delivery_time"]))?><? echo"<br />";?>
+                        <?=date("h:i A",strtotime($order["delivery_time"]))?>
+                    </span>
+                    <span class="orderTotal" style="padding-top:7px;">
+                    <?php $english_format_number = number_format($order["totalprice"], 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                    
+                    <span class="orderTotal" style="padding-top:7px;">
+                    <?php $totalTax = $order["city_tax"] + $order["state_tax"]?>
+                    <?php $english_format_number = number_format($totalTax, 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                    
+                    
+                    <span class="orderTgb" style="padding-top:7px;">
+                    <?php $english_format_number = number_format($order["tgb_comission"], 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                    <span class="netAmount" style="padding-top:7px;">
+                    <?php $net = $order["totalprice"]-$order["tgb_comission"];
+				//	$net = $net + $totalTax;
+					$english_format_number = number_format($net, 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                </div>
+                <iframe allowtransparency="true" frameborder="0" width="706" height="492" style="background:0px none;" id="itemIframe" name="itemIframe" src="<?=base_url()?>restaurantorders/ordersdetail/<?=$order["id"]?>/history">
+							<noscript>
+							Your browser doesn't appear to support frames.  Please see the <a href="<?=base_url()?>restaurantitem/addItem">non-framed version</a> of this page.
+							</noscript> 
+                            </iframe>
+
+                      <?PHP
+						  $nCount++;
+						  $nVar++;
+						  }
+                      ?>
+
+            </div>
+                      <?PHP
+						 }
+						 else
+						 {
+							echo '<div style="float:left; padding:10px;">Sorry! No orders found.</div>';
+						 }
+					?>
+             <br class="clear" />       
+                    
+          </div>
+            <br class="clear" />
+            
+            </div>
+		<!-- End Mid Right -->
+
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

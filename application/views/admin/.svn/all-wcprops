@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/starvved/!svn/ver/2/trunk/system/application/views/admin
+END
+header_view.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/starvved/!svn/ver/2/trunk/system/application/views/admin/header_view.php
+END
+login_view.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/starvved/!svn/ver/2/trunk/system/application/views/admin/login_view.php
+END
+dashboard.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/starvved/!svn/ver/2/trunk/system/application/views/admin/dashboard.php
+END
+footer_view.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/starvved/!svn/ver/2/trunk/system/application/views/admin/footer_view.php
+END

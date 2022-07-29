@@ -1,0 +1,97 @@
+<?
+		$this->load->view( 'admin/header_view');
+
+?>
+		<script src="<?=base_url()?>js/admin/jquery.min.js"></script>
+		<script src="<?=base_url()?>js/admin/jquery.Jcrop.js"></script>
+		<link rel="stylesheet" href="<?=base_url()?>css/admin/jquery.Jcrop.css" type="text/css" />
+		<link rel="stylesheet" href="<?=base_url()?>css/admin/demos.css" type="text/css" />
+
+		<script language="Javascript">
+
+			// Remember to invoke within jQuery(window).load(...)
+			// If you don't, Jcrop may not initialize properly
+			jQuery(document).ready(function(){
+
+				jQuery('#cropbox').Jcrop({
+					onChange: showCoords,
+					onSelect: showCoords
+					<?
+					if ($restaurantDetail["coordinate_x1"]!="" && $restaurantDetail["coordinate_x2"]!="" && $restaurantDetail["coordinate_y1"]!="" && $restaurantDetail["coordinate_y2"]!="")
+					{
+					?>
+					,setSelect: [ <?=$restaurantDetail["coordinate_x1"]?>, <?=$restaurantDetail["coordinate_y1"]?>, <?=$restaurantDetail["coordinate_x2"]?>, <?=$restaurantDetail["coordinate_y2"]?>]
+					<?
+					}
+					?>
+				});
+
+			});
+
+			// Our simple event handler, called from onChange and onSelect
+			// event handlers, as per the Jcrop invocation above
+			function showCoords(c)
+			{
+				jQuery('#x').val(c.x);
+				jQuery('#y').val(c.y);
+				jQuery('#x2').val(c.x2);
+				jQuery('#y2').val(c.y2);
+				jQuery('#w').val(c.w);
+				jQuery('#h').val(c.h);
+			};
+
+		</script>
+			<div class="trl-menu">
+	<? 
+	if(isset($breadcrumbs))
+	{
+			echo $breadcrumbs;
+	}
+	?>
+                
+            </div>
+            <br class="clear" />
+            <div id="outer">
+                <div>
+                  <div align="center" style="color:#FF0000">
+					<?
+					 if(isset($errors))  	
+					 {
+					   if (is_array($errors) && count($errors) > 0)
+					   {
+						   foreach ($errors as $error)
+						   {
+							echo $error;
+						   }
+					   }
+					 } 
+					?>                                    
+                  </div>    
+	<div align="center">
+
+		<h1>Select image coordinates for <?=$restaurantDetail["restaurant_name"]?></h1>
+		<!-- This is the form that our event handler fills -->
+	  <?=form_open(base_url().'adminrestaurant/setupcordinates/'.$restaurant_id)?>
+      
+			<label>X1 <input type="text" size="4" id="x" name="x1" value="<?=$restaurantDetail["coordinate_x1"]?>" /></label>
+			<label>Y1 <input type="text" size="4" id="y" name="y1" value="<?=$restaurantDetail["coordinate_y1"]?>" /></label>
+			<label>X2 <input type="text" size="4" id="x2" name="x2" value="<?=$restaurantDetail["coordinate_x2"]?>" /></label>
+			<label>Y2 <input type="text" size="4" id="y2" name="y2" value="<?=$restaurantDetail["coordinate_y2"]?>" /></label>
+			<label>W <input type="text" size="4" id="w" name="w" value="<?=$restaurantDetail["width"]?>" /></label>
+			<label>H <input type="text" size="4" id="h" name="h" value="<?=$restaurantDetail["height"]?>"/></label>
+            <br />
+            <br />
+            <input type="submit" value="Save" class="btn" style="float:none;" />
+	  </form>	
+
+		<!-- This is the image we're attaching Jcrop to -->
+	  <img src="<?=base_url()?>uploads/terminals/<?=$restaurantDetail["terminal_image"]?>" id="cropbox"/>
+
+
+	</div>
+	</div>
+	</div>		
+	<?
+		$this->load->view( 'admin/footer_view');
+
+?>

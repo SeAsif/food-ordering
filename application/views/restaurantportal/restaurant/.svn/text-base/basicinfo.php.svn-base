@@ -1,0 +1,81 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+
+echo form_open(base_url().'restaurantsettings/basicinfo');
+?>
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>Basic Info</h1>
+            <?PHP
+            if (count($success))
+			{
+			?>
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                    <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <strong><?=$success["msg"]?></strong></p>
+                </div>
+            </div>
+            <?PHP
+            }
+			?>
+            <?PHP
+            if (count($errors))
+			{
+			?>
+            <br/>
+            <div class="ui-widget">
+                <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+                	<?PHP
+                    foreach ($errors as $error)
+					{
+						echo $error;
+					}
+					?>
+                    
+                </div>
+                
+            </div>
+            <?PHP
+            }
+			?>
+            <br/>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><strong class="fnt-size">Restaurant Name</strong></td>
+              </tr>
+              <tr>
+                <td style="padding-top:5px;"><input name="restaurant_name" type="text" class="txt-field" value="<?=$restaurant["restaurant_name"]?>" /></td>
+              </tr>
+              <tr>
+                <td><strong class="fnt-size">Display orders pending in Minutes</strong></td>
+              </tr>
+              <tr>
+                <td style="padding-top:5px;"><input name="delivery_time_before" type="text" class="txt-field" value="<?=$restaurant["delivery_time_before"]?>" />
+                  <input name="city_tax" type="hidden" class="txt-field" value="<?=$restaurant["restaurant_citytax"]?>" />
+                  <input name="state_tax" type="hidden" class="txt-field" value="<?=$restaurant["restaurant_statetax"]?>" /></td>
+              </tr>
+              
+              <tr>
+                <td style="padding-top:20px;">
+                	<strong class="fnt-size">About Restaurant</strong>
+                    <span class="max-wrdz">Max 1000 Characters</span>                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:5px;">
+                	<textarea name="restaurant_details" cols="5" rows="5" class="txtarea"><?=$restaurant["restaurant_details"]?></textarea>                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:20px;">
+                	<input name="btm" type="image" src="<?=base_url()?>images/save.jpg" style="margin-right:10px;" />
+                	<!--<input name="btm1" type="image" src="<?=base_url()?>images/cancel.jpg" style="margin-right:10px;" />
+                	<input name="btm2" type="image" src="<?=base_url()?>images/preview.jpg" />-->                </td>
+              </tr>
+            </table>
+</div>
+<!-- End Mid Right -->
+</form>
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

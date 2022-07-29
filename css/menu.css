@@ -1,0 +1,94 @@
+/* CSS Document */
+
+a{
+	outline:0px none;
+	border:0px none;
+}
+.glossymenu{
+	margin: 0px 0;
+	padding: 0;
+	width: 226px; /*width of menu*/
+	font-family:Tahoma;
+}
+
+.glossymenu a.menuitem{
+	width:204px;
+	border-top:solid 1px #65b1fd;
+	border-bottom:solid 1px #439cf6;
+	padding:10px;
+	color:#FFFFFF;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	font-weight:bold;
+	display:block;
+	position:relative;
+}
+
+
+
+.glossymenu a.menuitem .statusicon{ /*CSS for icon image that gets dynamically added to headers*/
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	display:none;
+	border: none;
+}
+
+.glossymenu a:hover.menuitem{
+}
+.glossymenu a:focus.menuitem{
+	color:#135ea3;
+}
+
+.glossymenu div.submenu{ /*DIV that contains each sub menu*/
+
+	width:227px;
+}
+
+.glossymenu div.submenu ul{ /*UL of each sub menu*/
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.glossymenu div.submenu ul li{
+	width:224px;
+	list-style:none;
+}
+
+.glossymenu div.submenu ul li a{
+	display:block;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+	font-weight:bold;
+	color:#fff;
+	text-decoration:none;
+	background-image:url(../images/bullet.jpg);
+	background-repeat:no-repeat;
+	background-position:15px 11px;
+	border-top:solid 1px #8dd0ff;
+	border-bottom:1px solid #45a2ff;
+	padding-top:6px;
+	padding-bottom:6px;
+	padding-left:30px;
+	margin:0px;
+}
+
+.glossymenu div.submenu ul li a:hover{
+	background-image:url(../images/bullet-over.png);
+	background-repeat:no-repeat;
+	background-position:15px 11px;
+	color:#1779d4;
+}
+
+.glossymenu div.submenu ul li a.active{
+	background-image:url(../images/bullet-over.jpg);
+	background-repeat:no-repeat;
+	background-position:15px 11px;
+	background-color:#fff;
+	border-top:1px solid #fff;
+	border-bottom:1px solid #45a2ff;
+	color:#1779d4;
+	width:195px;
+}
+

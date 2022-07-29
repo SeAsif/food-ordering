@@ -1,0 +1,122 @@
+<?php
+/**
+* Iphone service for restaurant section
+* This class returns the any kind of restaurant related data
+* @author Mustafa Mahmood
+* @category Iphone Service
+*/
+class DashBoard extends Controller {
+
+	function DashBoard()
+	{
+		parent::Controller();
+		$this->load->library('core/restaurant');
+		$this->load->library('core/order');
+		$this->load->library('core/orderitem');
+		$this->load->library('form_validation');	
+		$this->load->helper( array('dropdown_helper') );
+		$this->load->library('pagination');
+		
+		if( $this->session->userdata('restaurant')== FALSE )
+		   redirect(base_url()."restaurantportal",true);
+	}
+	
+/**
+.........................................................................................................
+									Start Restaurant Dash Board Section 
+.........................................................................................................
+*/	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function index()
+	{
+		$data	=	array();
+		$filters	=	array("order_status"=> "All","sortby"=>"order.id");
+		
+		$nHours	=	24;
+
+		$restaurantArr = $this->session->userdata('restaurant');
+//		var_dump($restaurantArr);
+		$restaurantID	=	$restaurantArr["id"];
+		
+		$filters["delivery_time"]	=	date("Y-m-d H:i:s");
+		$filters["current_time"]	=	date("Y-m-d H:i:s",time() - ($nHours*3600));
+
+		$filters["restaurant_id"]	=	$restaurantID	;
+		
+		$per_page	=	$this->config->item("PER_PAGE");
+		
+		$filters["count"]	=	"No";
+
+		$data["ncounter"]	=	1;
+		$data["ncounter"]	=	$data["ncounter"]+$this->uri->segment(3);
+		
+		$orders	=	$this->order->getOrders($filters,$per_page, $this->uri->segment(3));
+	//	print_r($orders);
+		$ordersNew	=	array();
+
+		foreach ($orders as $order)
+		{
+			$order["items"]	=	$this->orderitem->getOrderItemWithVariants(array("order_id"=>$order["id"]),"No");
+			$ordersNew[]	=	$order;
+		}
+		$data["historyorders"]=$ordersNew;
+		
+		$filters["count"]	=	"Yes";
+		$data["total_historyorders_count"]	=	$total	=	$this->order->getOrders($filters);
+
+
+		$orderFilter["restaurant_id"]	=	$restaurantID	;
+		$orderFilter["order_status"]	=	"All";
+		$orderFilter["isdashboard"]	=	"Yes";
+		$nTimeBefore	=	$restaurantArr["delivery_time_before"];
+		$orderFilter["delivery_time"]	=	date("Y-m-d H:i:s",time() +  $nTimeBefore*60);
+		$orderFilter["current_time"]	=	date("Y-m-d H:i:s");
+
+
+		$orderFilter["restaurant_id"]	=	$restaurantID	;
+		
+		$per_page	=	$this->config->item("PER_PAGE");
+		
+		$filters["count"]	=	"No";
+
+		$data["ncounter1"]	=	1;
+		$data["ncounter1"]	=	$data["ncounter1"]+$this->uri->segment(3);
+		
+		$orders	=	$this->order->getOrders($orderFilter,$per_page, $this->uri->segment(3));
+		
+		$ordersNew1	=	array();
+
+		foreach ($orders as $order)
+		{
+			$order["items"]	=	$this->orderitem->getOrderItemWithVariants(array("order_id"=>$order["id"]),"No");
+			$ordersNew1[]	=	$order;
+		}
+		$data["neworders"]=$ordersNew1;
+		
+		$orderFilter["count"]	=	"Yes";
+		$data["total_neworders_count"]	=	$total	=	$this->order->getOrders($orderFilter);
+		
+//		print_r($data);
+		
+		
+		$this->load->view('restaurantportal/dashboard/orders',$data);
+	}
+
+
+
+/**
+.........................................................................................................
+									End Restaurant Dash Board Section
+.........................................................................................................
+*/	
+
+
+}
+
+
+/* End of file irestaurant.php */
+/* Location: ./system/application/controllers/irestaurant.php */
+?>

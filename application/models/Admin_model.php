@@ -1,0 +1,52 @@
+<?
+/**
+* Menu Item Model
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Restaurants
+* 
+*/
+class Admin_model extends CI_Model
+{
+	function __construct() {
+        parent::__construct();
+    }
+
+	/**
+	* @method This method will return User's Payment Prefrences 
+	* @params User Id will be passed as parameter
+	*/
+	function login($arrInfo)
+	{
+		
+		$this->db->where(array('admin_email'=>$arrInfo['email']));
+		$this->db->where(array('admin_pass'=>$arrInfo['password']));
+		
+		$query=$this->db->get("admin");
+		// Declare Array to pass data
+		$list = array();
+//		$this->session->sess_destroy();
+		// $this->session->unset_userdata('fullname');
+		// $this->session->unset_userdata('email');
+		// $this->session->unset_userdata('id');
+		// $this->session->unset_userdata('type');
+		// $this->session->unset_userdata('restaurant');
+
+		if ($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			$sessionData["email"]=$arrInfo['email'];
+			$sessionData["id"]=$row->admin_id;
+			$sessionData["type"]="admin";
+			$this->session->set_userdata('admin_session',$sessionData);
+		//	$this->session->get("type");
+			$list	=	$sessionData;
+		}else
+		{		
+			$list = "Login_Error";
+			return $list;
+		}
+	}
+
+}
+?>

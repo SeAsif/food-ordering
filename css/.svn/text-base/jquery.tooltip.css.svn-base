@@ -1,0 +1,14 @@
+#tooltip {
+	position: absolute;
+	z-index: 3000;
+	width:368px;
+	height:147px;
+	overflow:hidden;
+	background-image:url(../images/front/tooltip.png);
+	background-repeat:no-repeat;
+	color:#FFFFFF;
+	font-size:14px;
+	font-weight:bold;
+	float:left;
+}
+#tooltip h3, #tooltip div { margin: 0; }

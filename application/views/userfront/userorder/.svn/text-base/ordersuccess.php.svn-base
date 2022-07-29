@@ -1,0 +1,107 @@
+<?PHP
+$this->load->view("userfront/header_view");
+?>
+
+<!-- Start Menu Popups -->
+
+<script language="javascript">
+var url	=	'<?=base_url()?>userorder/orderdetail/';
+function refreshItemPage()
+{
+	document.location.href	=	document.location.href;
+}
+function openItem(nItemId)
+{
+	itemId	=	nItemId;
+	var pageFrame = document.getElementById('itemIframe'); 
+	
+	pageFrame.src 	=	url+nItemId;
+		
+	$('#dialog-message').dialog('open');
+	return false;
+}
+</script>
+
+<script type="text/javascript">
+	$(function(){
+		// Dialog	( Start Edit Variant Popup Window Here )
+		$('#dialog-message').dialog({
+			autoOpen: false,
+			modal: true,
+			width: 920
+		});
+
+	});
+
+	
+</script>
+
+<!-- End Menu Popups -->
+
+
+<!-- Start Menu Popup -->
+    <div id="dialog-message" title="Order Detail">
+        <iframe allowtransparency="true" frameborder="0" width="870" height="590" style="background:0px none; padding-top:10px;" id="itemIframe" name="itemIframe" >
+        </iframe>
+    </div>
+<!-- End Menu Popup -->
+
+    	<div class="crum-menu">
+        	<a href="<?=base_url()?>home">Home</a><span>&gt;</span>
+            Order History
+        </div>
+		<div class="cont-wrap">
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-top.jpg" alt="top" border="0" /></div>
+        	<div class="rest-mid">
+
+            <!-- Start Restaurant Head -->
+				<div class="account-hed">
+                	<h1>Order Success</h1>
+                </div>
+            <!-- End Restaurant Head -->
+				<br class="clear" />
+            <!-- Start Content Section -->
+				<div class="account">
+                
+                <!-- Start Order Success If User Login -->
+                <?
+                	if($orderStatus=="Pending")
+					{
+				?>
+                	<div class="orderSuccess">
+                    	<h2>Order Number: <?=$orderCode?></h2>
+                        <h1>Order Confirmed Successfully</h1>
+                        <p>
+                        	You can view your order details by 
+                            <a href="javascript:void(null);" onclick="openItem(<?=$orderId?>);">clicking here</a> or 
+                            <a href="<?=base_url()?>">continue shopping</a>
+                        </p>
+                    </div>
+                <?
+                	}else{
+					?>
+                	<div class="orderSuccess">
+                    	<h2>Order Number: <?=$orderCode?></h2>
+                        <h1>Sorry! We were unable to process your order</h1>
+                        <p>
+                        	Please try again 
+                            <a href="<?=base_url()?>">click here</a> 
+                        </p>
+                    </div>
+				<?	
+					}
+				?>    
+                <!-- End Order Success If User Login -->
+
+                <!-- Start Order Success If Guest Login -->
+                <!-- End Order Success If Guest Login -->
+              </div>
+				<!-- End Content Section -->
+
+            </div>
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-bottom.jpg" alt="top" border="0" /></div>
+        </div>
+
+<?PHP
+$this->load->view("userfront/footer_view");
+?>

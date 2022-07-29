@@ -1,0 +1,340 @@
+
+<link href="<?=base_url()?>css/frontstyle.css" rel="stylesheet" type="text/css" />
+<link type="text/css" href="<?=base_url()?>css/cupertino/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
+<script type="text/javascript" src="<?=base_url()?>js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/jquery-ui-1.8.6.custom.min.js"></script>
+
+<script language="javascript">
+var attachedGroups;
+var addCategory	;
+function addCategory(nItemId)
+{
+	addCategory	=	nItemId;
+	$('#add_new_category').dialog('open');
+	return false;
+}
+var groupsAvailable;
+<?
+if (isset($success["msg"]))
+{
+?>
+	var successMgs	=	'<?=$success["msg"]?>';
+
+<?
+}
+else
+{
+?>
+var successMgs	=	'';
+
+<?
+}
+?>
+
+	if (successMgs!="")
+	{
+		var objRef = parent.window;
+		objRef.refreshItemPage(successMgs);
+
+	}
+
+$(document).ready(function()
+		{
+			//attachedGroups
+			
+			groupsAvailable = attachedGroups.split(',');
+
+			$("#check_all").click(function()	
+			{			
+				$("input[name=VariantGroup[]]").each(function()
+					{
+						this.checked = "checked";
+					});
+			});					
+
+			$("#uncheck_all").click(function()				
+			{
+				$("input[name='VariantGroup[]']").each(function()
+				{
+					this.checked = "";
+				});
+			});					
+			
+			
+			$("#add_item").click(function()				
+			{
+				
+				$('#added_group').val(selectedItems.join(','));	
+				$('#frmAddItem').submit();
+
+			});
+
+			$("#attach_to_item").click(function()				
+			{
+				$("input[name='VariantGroup[]']:checked").each(function() {
+					if (jQuery.inArray($(this).val(), groupsAvailable)	==	-1)
+					{
+						groupsAvailable.push($(this).val());
+						selectedItems.push($(this).val());
+						
+						$("#selected_food_variants").append('<tr><td style="width:93%;">'+$(this).attr('title')+'</td><td align="center" style="padding-left:0px;"><a href="javascript:void(null);" onclick="removeGroup('+$(this).val()+');"><img src="<?=base_url()?>/images/delete.png" alt="img" border="0" /></a></td></tr>');
+						
+					}
+				
+				});
+			});
+			
+		});
+
+function deSelectAll()
+{
+
+}
+
+	var selectedItems = new Array();
+function attachToItem()
+{
+	
+//	alert (groupsAvailable.length);
+}
+function getGroups()
+{
+//	alert (document.getElementById("menu_variant_item_category").value);
+	var category_id	;
+	category_id	=	$("#menu_variant_item_category").val();
+
+/*$.post('ajax/test.html', function(data) {
+  $('.result').html(data);
+});
+*/	
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurantvariants/getVariantGroups", data: "category_id="+category_id+"", success: function(variantGroups){ 
+	
+		if (variantGroups=="No_Record_Found")
+		{
+			$(".variant_group_name").remove();
+			$("#tableVariantGroup").append('<tr class="variant_group_name"><td style="width:93%;">Sorry! No record found</td>               <td></td></tr>');
+		}
+		else
+		{
+			var obj = jQuery.parseJSON(variantGroups);
+			$(".variant_group_name").remove();
+			$.each(obj, function() {
+				  //append new row in tableVariantGroup
+				  $("#tableVariantGroup").append('<tr class="variant_group_name"><td style="width:93%;">'+this.group_name+'</td>               <td><input name="VariantGroup[]" id="VariantGroup" type="checkbox" value="'+this.id+'" title="'+this.group_name+'" /></td></tr>');
+			 });		
+		}
+	}//end function
+	});	
+}
+
+</script>
+<!-- Start Dialog Popups -->
+<script type="text/javascript">
+$(function(){
+
+				// Dialog	( Start Delete Popup Window Here )
+				$('#add_new_category').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Save": function() { 
+							$(this).dialog("close"); 
+						}, 
+						"Cancel": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+	
+});
+</script>
+<!-- End Dialog Popups -->
+
+<style type="text/css">
+
+body { background:0px none !important;}
+
+</style>
+
+<?
+//	$attributes	=	array("id"=>"frmAddItem","name"=>"frmAddItem")
+$attributes = array('id' => 'frmAddItem','name' => 'frmAddItem');
+echo form_open(base_url().'userrestaurant/addItem/'.$item["id"],$attributes);
+?>
+<div class="add-item">
+<div class="popcont">
+	<?
+    if (isset($success["msg"]))
+    {
+    ?>
+    <div class="ui-widget">
+        <div class="ui-state-highlight ui-corner-all" style="margin-bottom: 20px; padding: 0 .7em;"> 
+            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+            <strong><?=$success["msg"]?></strong></p>
+        </div>
+    </div>
+    <?
+    }
+    ?>
+    <?
+    if (isset($errors) && count($errors))
+    {
+    ?>
+    <br/>
+    <div class="ui-widget">
+        <div class="ui-state-error ui-corner-all" style="margin-bottom:20px; padding: 0 .7em;"> 
+            <?
+            foreach ($errors as $error)
+            {
+                echo $error;
+            }
+            ?>
+            
+        </div>
+        
+    </div>
+    <?
+    }
+    ?>
+
+	<h4>Chiken Cutlet Hot Sub</h4>
+	<h5>Starting from: ₦12</h5>
+    <p>Feta cheese, kashar-"Turkish cheese", egg, cucumber, tomato,<br />olives and jelly.</p>
+    
+    <div class="extraCont">
+        <div class="extraWrap">
+            <h1>Would You Like Any Extras?</h1>
+            <div class="extraItem">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Cheese
+                    </td>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Onion
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Black Olives
+                    </td>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Anchovies
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Mushrooms
+                    </td>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Ground Beef
+                    </td>
+                  </tr>
+                </table>
+            </div>
+        </div>
+        <div class="extraWrap">
+            <h1>Choose a Size <span>(Required)</span></h1>
+            <div class="extraItem">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Small (7inch)
+                    </td>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Med (12 inch) <span>$10</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Large (15 inch) <span>$15</span>
+                    </td>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Family (22 inch) <span>$20</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:50%;">
+                        <input name="radia" type="radio" value="" class="float-left radio" />
+                        Double(25 inch) <span>$25</span>
+                    </td>
+                    <td style="width:50%;">
+                    </td>
+                  </tr>
+                </table>
+            </div>
+        </div>
+        <div class="extraWrap">
+            <h1>How Much Spicy?</h1>
+            <div class="extraItem">
+                <div class="itemBar-wrap">
+                    <span>Low</span>
+                    <a href="#">Elegant</a>
+                    <a href="#" class="selected">Elegant</a>
+                    <a href="#">Elegant</a>
+                    <a href="#">Elegant</a>
+                    <a href="#">Elegant</a>
+                    <span class="itemBarLeft">Max</span>
+                </div>
+            </div>
+        </div>
+        <div class="extraWrap">
+            <h1>How Much Cooked?</h1>
+            <div class="extraItem">
+                <div class="itemBar-wrap" style="width:314px; padding-top:0px;">
+                    <span>Rare</span>
+                    <a href="#" class="selected">&nbsp;</a>
+                    <a href="#">&nbsp;</a>
+                    <a href="#">&nbsp;</a>
+                    <span class="itemBarLeft">Well Done</span>
+                </div>
+            </div>
+        </div>
+        <div class="extraWrap">
+            <h1>Speical Instructions <span class="font11" style="color:#FF0000;">(may not apply if requires extra cost)</span></h1>
+            <textarea name="area" cols="2" rows="2" class="itemTxtarea"></textarea>
+        </div>
+    </div>
+    
+    <div class="extraWrap">
+        <table width="96%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>
+		    	<h1>Quantity</h1>
+                <input name="fld" type="text" class="itemTxtfield" />
+            </td>
+            <td>
+            	<a class="add-btn" href="#">Add to Cart</a><br class="clear" />
+            	<!-- <a href="#" class="itemfav">Add To Favorites</a> -->
+            </td>
+          </tr>
+        </table>
+
+    </div>
+</div>
+
+
+</div>
+</form>
+<table width="100%" border="0" cellspacing="2" cellpadding="0" class="ajax-loader" style="display:none;">
+  <tr>
+    <td><img src="<?=base_url()?>/images/ajax-loader.gif" alt="loader" /></td>
+  </tr>
+</table>
+<script language="javascript">
+attachedGroups	=	'<?=$attachedGroups?>';
+</script>
+
+

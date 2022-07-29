@@ -1,0 +1,191 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core
+END
+payment_prefrences.php
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/payment_prefrences.php
+END
+cart.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/cart.php
+END
+restaurant_rating.php
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/restaurant_rating.php
+END
+terminals.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/terminals.php
+END
+menuitemgroup.php
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/menuitemgroup.php
+END
+comission.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/comission.php
+END
+menuitemvariantcategory.php
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/menuitemvariantcategory.php
+END
+brands.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/brands.php
+END
+restaurant_favorites.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/restaurant_favorites.php
+END
+paypalfunctions.php
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/paypalfunctions.php
+END
+restaurant_timings.php
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/restaurant_timings.php
+END
+menuitemvariantgroup.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/menuitemvariantgroup.php
+END
+expresscheckout_core.php
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/expresscheckout_core.php
+END
+airport_core.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/airport_core.php
+END
+orderitem.php
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/orderitem.php
+END
+payment_history.php
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/payment_history.php
+END
+menu_timings.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/menu_timings.php
+END
+admin_core.php
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/admin_core.php
+END
+menucategory.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/menucategory.php
+END
+airports.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/airports.php
+END
+lphp.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/lphp.php
+END
+profile_core.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/profile_core.php
+END
+menuitemvariant.php
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/menuitemvariant.php
+END
+restaurant_review.php
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/restaurant_review.php
+END
+defaultvariant.php
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/defaultvariant.php
+END
+order.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/order.php
+END
+user.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/user.php
+END
+item_favorites.php
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/item_favorites.php
+END
+authorize_core.php
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/authorize_core.php
+END
+menuitem.php
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/menuitem.php
+END
+restaurant.php
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/starvved/!svn/ver/2/trunk/system/application/libraries/core/restaurant.php
+END

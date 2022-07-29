@@ -1,0 +1,102 @@
+<?PHP
+/**
+* Restaurants Library
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Menu
+* 
+*/
+
+	class OrderItem {
+
+		private $_obj;
+		
+		/**
+		* @method constructor		
+		*/
+		function OrderItem()
+		{
+			$this->_obj =& get_instance();
+			$this->_obj->load->model('order_item_model');	
+			$this->_obj->load->model('cart_model');	
+		//	$this->_obj->load->library('core/cart');	
+		}
+		
+		/**
+		* @method This method will add resturants reviews
+		* @params array of review
+		*/
+		function addOrder($arrInfo)
+		{
+/*			$list=$this->_obj->item_favorites_model->addItemFavorites($arrInfo);
+			$arrInfoItem['order_id']=$list;
+			$arrInfoItem['session_id']=$this->session->userdata("session_id");
+			$updateList=$this->_obj->cart_model->updateCartItem($arrInfoItem);
+			$updateListDetail=$this->_obj->cart_model->updateCartItemDetail($arrInfoItem);
+			if($list!="" && $list!=0)
+			{
+				$list_return["response"]="RECORD_ADDED";
+				$list_return["insert_id"]=$list;
+				
+			}
+			else
+			{
+				$list_return["response"]="RECORD_NOT_ADDED";
+				$list_return["insert_id"]=0;
+			}	
+			return $list_return;
+*/			
+		}
+		
+		function getOrderItems($orderFilter)
+		{
+			$list=$this->_obj->order_item_model->getOrderItems($orderFilter);
+			return $list;
+			
+		}
+
+		function getOrderItemWithVariants($orderFilter,$withVariants="Yes")
+		{
+			$list=$this->_obj->order_item_model->getOrderItemWithVariants($orderFilter,$withVariants);
+			return $list;
+			
+		}
+		
+		function getOrderItemById($Id)
+		{
+			return $this->_obj->order_item_model->getOrderItemById($Id);
+		}
+		
+		function updateOrderItem($arrInfo)
+		{
+			return $this->_obj->order_item_model->updateOrderItem($arrInfo);
+		}
+		function getOrderItemByOrderId($Id)
+		{
+			return $this->_obj->order_item_model->getOrderItemByOrderId($Id);
+		}
+		function increaseQuantity($arrInfo)
+		{
+			$city_tax = $arrInfo["city_tax"] / $arrInfo["quantity"];
+			$state_tax = $arrInfo["state_tax"] / $arrInfo["quantity"];
+			$arrInfo["quantity"] = $arrInfo["quantity"] + 1;
+			$arrInfo["totalprice"] = $arrInfo["quantity"] * $arrInfo["price"]; 
+			$arrInfo["city_tax"] = $arrInfo["city_tax"] + $city_tax;
+			$arrInfo["state_tax"] = $arrInfo["state_tax"] + $state_tax;
+			$arrInfo["totalpricewithtax"] = $arrInfo["city_tax"] + $arrInfo["state_tax"] + $arrInfo["totalprice"]; 
+			$this->_obj->order_item_model->updateOrderItem($arrInfo);
+		
+		}
+		function decreaseQuantity($arrInfo)
+		{
+			$city_tax = $arrInfo["city_tax"] / $arrInfo["quantity"];
+			$state_tax = $arrInfo["state_tax"] / $arrInfo["quantity"];
+			$arrInfo["quantity"] = $arrInfo["quantity"] - 1;
+			$arrInfo["totalprice"] = $arrInfo["quantity"] * $arrInfo["price"]; 
+			$arrInfo["city_tax"] = $arrInfo["city_tax"] - $city_tax;
+			$arrInfo["state_tax"] = $arrInfo["state_tax"] - $state_tax;
+			$arrInfo["totalpricewithtax"] = $arrInfo["city_tax"] + $arrInfo["state_tax"] + $arrInfo["totalprice"]; 
+			$this->_obj->order_item_model->updateOrderItem($arrInfo);
+		}
+	}
+?>

@@ -1,0 +1,28 @@
+        <div class="extraWrap">
+            <h1><?=$GroupDetail["group_name"]?>&nbsp;<?=($GroupDetail["required"]=="Yes")?"<span>(Required)</span>":""?></h1>
+            <span style="color:#FF0000; display:block; float:left; padding-bottom:5px;">
+				<?=$variantInfo["varianterrors"][$VariantNumber]?>
+            </span>
+            <div class="extraItem">
+            	<input type="hidden" value="<?=$GroupDetail["required"]?>" name="variantrequired_<?=$VariantNumber?>" />
+            	<input type="hidden" value="multiple" name="varianttype_<?=$VariantNumber?>" />                
+            	<input type="hidden" value="<?=$GroupDetail["id"]?>" name="variantgroup_<?=$VariantNumber?>" />
+					<?PHP
+					$nCount	=	0;
+					
+                    foreach ($GroupDetail["variant"] as $varaintItem)
+					{
+					?>
+						<div class="multi">
+                            <input type="checkbox" value="<?=$varaintItem["id"]?>" class="float-left radio" name="variant_name_<?=$VariantNumber.$nCount?>" <?PHP if (in_array($varaintItem["id"],$variantInfo["variantdata"][$VariantNumber]))echo 'checked="checked"';?>/>
+                            <?=$varaintItem["name"]?>
+                        </div>
+                    <?PHP
+						$nCount++;
+					}//end foreach ($GroupDetail["variant"] as $varaintItem)
+					
+					?>
+                    <input type="hidden" name="variant_item_count_<?=$VariantNumber?>" value="<?=$nCount?>" />
+
+            </div>
+        </div>

@@ -1,0 +1,208 @@
+<?PHP
+$this->load->view("userfront/header_view");
+?>
+
+<!-- Start Menu Popups -->
+
+<script language="javascript">
+var url	=	'<?=base_url()?>userrestaurant/itemdetail/';
+function refreshItemPage()
+{
+	document.location.href	=	document.location.href;
+}
+function openItem(nItemId)
+{
+	itemId	=	nItemId;
+	var pageFrame = document.getElementById('itemIframe'); 
+	
+	pageFrame.src 	=	url+nItemId;
+		
+	$('#dialog-message').dialog('open');
+	return false;
+}
+</script>
+
+<script language="javascript" type="text/javascript">
+	$(function()
+	{
+		// Dialog	( Start Edit Variant Popup Window Here )
+		$('#dialog-message').dialog({
+			autoOpen: false,
+			modal: true,
+			width: 560
+		});
+
+	}
+	);
+
+	
+</script>
+
+<!-- End Menu Popups -->
+
+
+<!-- Start Menu Popup -->
+    <div id="dialog-message" title="Item Details">
+        <iframe allowtransparency="true" frameborder="0" width="526" height="590" style="background:0px none; padding-top:10px;" id="itemIframe" name="itemIframe" allowtransparency="true" frameborder="0">
+        </iframe>
+    </div>
+<!-- End Menu Popup -->
+
+    	<div class="crum-menu">
+        	<a href="<?=base_url()?>home">Home</a><span>&gt;</span>
+            <a href="<?=base_url()?>usersearch/searchresult">Search Result</a><span>&gt;</span>
+            <?
+			if($this->session->userdata('restaurantId'))
+			{
+			?>
+            <a href="<?=base_url()?>userrestaurant/restaurantmenu/<?=$this->session->userdata('restaurantId')?>">Restaurant Menu</a><span>&gt;</span>
+            <?
+			}
+			?>
+            Check Out
+        </div>
+		<div class="cont-wrap">
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-top.jpg" alt="top" border="0" /></div>
+        	<div class="rest-mid">
+
+            <!-- Start Restaurant Head -->
+				<div class="account-hed">
+                	<h1>Checkout</h1>
+                </div>
+            <!-- End Restaurant Head -->
+				<br class="clear" />
+             
+             <? if($errors > 1)
+			{
+			?>
+				<div class="ui-widget" style="margin-top:10px;">
+					<div class="ui-state-error ui-corner-all" style="padding:10px;">
+					   <?
+					   foreach($errors as $error)
+							echo $error;
+					   ?>
+                       <a href="<?=base_url()?>userrestaurant/restaurantmenu/<?=$this->session->userdata('restaurantId')?>"><strong>Click Here to Reconfirm!</strong></a>
+					</div>
+				</div>
+			 
+			<?
+			}?>       
+                
+			<?PHP
+            if (count($cartItems) > 0)
+			{
+			?>
+            <!-- Start Content Section -->
+				<div class="account">
+                	<div class="about-info">
+                    	<h2 style="margin-bottom:0px;">Review and Submit</h2>
+                    </div>
+                    <?PHP
+					$grandTotal	=	0;
+					$totalCityTax = 0;
+					$totalStateTax = 0;
+                    foreach ($cartItems as $cartItem)
+					{
+					?>
+                    	<div class="Italiano-Piza">
+                        	<h3><?=$cartItem["item_name"]?></h3>
+                            <p><?=$cartItem["item_description"]?></p>
+                            	<a href="javascript:void(null);" onclick="openItem(<?=$cartItem["id"]?>);">View Details</a>
+                                	<div class="qty-price" style="width:173px;">
+                                	<table border="0" cellspacing="0" cellpadding="0" style="min-width:173px;">
+                                          <tr>
+                                            <td>Qty: <strong><?=$cartItem["quantity"]?></strong></td>
+                                            <td style="padding:2px 10px 0px 10px;">
+                                            <img src="<?=base_url()?>images/front/Review-sprtr.gif" alt="sprtr" /></td>
+                                           <?php $english_format_number = number_format($cartItem["totalprice"], 2, '.', '');?>
+
+                                            <td>Price: <strong>$<?=$english_format_number?></strong></td>
+                                          </tr>
+                                        </table>
+                                </div>       
+                        </div>
+					<?PHP
+						$totalCityTax = $totalCityTax + $cartItem["city_tax"];
+						$totalStateTax = $totalStateTax + $cartItem["state_tax"];
+						$grandTotal	=	$grandTotal+$cartItem["totalpricewithtax"];
+                    }//end foreach ($cartItems as $cartItem)
+					?>
+                        	
+          
+          <form id="checkoutform" action="<?=$this->config->item('SITE_HTTPS');?>" method="post">
+          <input type="hidden" name="restaurant_id"  value="<?=$this->session->userdata('restaurantId')?>"/>
+          
+          <?
+          if($this->session->userdata('guest_email')!="" && $this->session->userdata('id')=="")
+		  {
+		  ?>
+          <input type="hidden" name="order_email"  value="<?=$this->session->userdata('guest_email')?>"/>
+          <input type="hidden" name="order_phone"  value="<?=$this->session->userdata('phone')?>"/>
+          <?
+          }else{
+		  ?>
+          <input type="hidden" name="order_email"  value=""/>
+          <input type="hidden" name="order_phone"  value=""/>
+		  <?
+		  }
+		  ?>
+          <input type="hidden" name="order_cost"  value="<?=$grandTotal?>"/>
+          <input type="hidden" name="user_id"  value="<?=$this->session->userdata("id")?>"/>
+          <?
+		  	
+			if( $this->session->userdata('id')== "" && $this->session->userdata('guest_email')=="")
+			{
+		 ?>
+          <a href="javascript:void(null);" onclick="openSign(0);" class="add-btn float-left" style="padding:6px 25px 6px 25px;">Next</a>
+         
+         <?
+		 		
+			}else
+			{
+		  ?>
+          <a href="javascript:void(null);" class="add-btn float-left" style="padding:6px 25px 6px 25px;" onclick="document.getElementById('checkoutform').submit();">Next</a>
+    	<?
+        	}
+		?>      
+          
+	                       <label style="display:block; padding:4px 0px 0px 10px; float:left;">
+                            	<input name="box" type="checkbox" value="Yes" /> Add this order in my favorite
+                           </label>
+                            </form>  
+                            <?php // $english_format_number = number_format($grandTotal, 2, '.', '');?> 
+                            <div class="taxTotal">
+                            <?php $english_format_number = number_format($totalCityTax, 2, '.', '');?>
+                                <span>Total City Tax : $<?=$english_format_number?></span><br />
+                                
+                           <?php $english_format_number = number_format($totalStateTax, 2, '.', '');?>     
+                                <span>Total State Tax: $<?=$english_format_number?></span><br class="clear" />
+                                
+                           <?php $english_format_number = number_format($grandTotal, 2, '.', '');?>     
+                                <span>Total : $<?=$english_format_number?></span>
+                            </div>
+                </div>
+            <!-- End Content Section -->
+                    <?PHP
+                    }//end if (count($cartItems) > 0)
+                    else
+                    {
+                    ?>
+                    <div class="ui-widget" style="width:846px; float:left; padding-left:28px;">
+                        <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+                            <strong>Sorry Cart is empty.</strong>
+                        </div>
+                    </div>
+                    <?PHP
+                    }
+                    ?>
+                    
+                    <br class="clear" />
+                    <!--<a href="<?=base_url()."userorder/ordersuccess"?>" style="font-size:20px; padding-left:50px;">Order Success</a>-->
+
+            </div>
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-bottom.jpg" alt="top" border="0" /></div>
+        </div>
+
+<?PHP
+$this->load->view("userfront/footer_view");
+?>

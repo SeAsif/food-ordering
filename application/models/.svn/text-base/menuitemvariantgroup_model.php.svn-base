@@ -1,0 +1,164 @@
+<?
+/**
+* Variant Items Model
+* This is a model class for variant items
+* @author Mustafa Mahmood
+* @category Menu
+* 
+*/
+class MenuItemVariantGroup_Model extends Model
+{
+	/**
+	 * Enter description here...
+	 *
+	 * @return Page_Model
+	 */
+	function MenuItemVariantGroup_Model()
+	{
+		parent::Model();
+	}
+	/*
+	Add		
+	*/
+	function addNewMenuItemVariantGroup($arrInfo)
+	{
+      	$this->db->insert("menu_variant_group", $arrInfo);  
+		return $this->db->insert_id();
+	}
+
+	/*
+	Update
+	*/
+	function updateMenuItemVariantGroup($arrInfo)
+	{
+		$this->db->where(array("id"=>$arrInfo["id"]));
+		
+		$this->db->set($arrInfo); 
+		$this->db->update('menu_variant_group');
+	}
+
+	/*
+	Delete
+	*/
+	function deleteMenuItemVariantGroup($arrInfo)
+	{
+		$this->db->where('id',$arrInfo["id"]);
+		$this->db->delete('menu_variant_group'); 		
+	}
+	
+	function getVariantItemGroups($restaurantId,$filters=NULL,$count="No",$limit = NULL, $offset = NULL)
+	{
+		if ($restaurantId!=NULL)
+			$this->db->where(array('restaurant_id'=>$restaurantId));
+
+		if (isset($filters["category_id"]))
+			$this->db->where(array('category_id'=>$filters["category_id"]));
+
+		if (isset($filters["status"]) && $filters["status"]	==	"All")
+		{
+		}
+		else if(isset($filters["status"]))
+			$this->db->where(array('status'=>$filters["status"]));
+		else
+			$this->db->where(array('status'=>'Active'));
+		
+		
+		$this->db->limit($limit, $offset);
+
+		if (isset($filters["sortby"]))
+			$this->db->orderby($filters["sortby"], "desc");
+		else
+			$this->db->orderby("id", "desc");
+		
+		$query=$this->db->get("menu_variant_group");
+
+		// Declare Array to pass data
+		$list = array();
+		
+		if ($count	==	"Yes")		
+		{
+			return $query->num_rows();
+		}
+		else
+		{
+			foreach ($query->result_array() as $row)
+			{
+				$list[]	=	$row;
+			}		
+			// Return Array
+			return $list;
+		}
+	}
+	/**
+	* @method returns variants against group id
+	* @params This method will take group id as param
+	*/
+	function getMenuItemVariantGroupByCategoryId($catId)
+	{
+		$this->db->where(array('category_id'=>$catId));
+
+		$this->db->where(array('status'=>'Active'));
+		
+		$query=$this->db->get("menu_variant_group");
+
+		// Declare Array to pass data
+		$list = array();
+		
+		foreach ($query->result() as $row)
+		{
+			$list[]	=	$row;
+		}		
+		// Return Array
+		return $list;
+	}
+
+	/**
+	* @method returns variants against group id
+	* @params This method will take group id as param
+	*/
+	function getMenuItemVariantGroupById($Id)
+	{
+		$this->db->where(array('id'=>$Id));
+
+		$this->db->where(array('status'=>'Active'));
+		
+		$query=$this->db->get("menu_variant_group");
+
+		// Declare Array to pass data
+		$list = array();
+		
+		foreach ($query->result() as $row)
+		{
+			$list[]	=	$row;
+		}		
+		// Return Array
+		return $list;
+	}
+	function listMenuItemDetails($id)
+	{
+		$query = $this->db->query("
+		SELECT
+		o.variant_id , m.name , g.group_name
+		FROM
+		order_item_detail o , menu_variant m , menu_variant_group g
+		WHERE
+		o.order_item_id = '".$id."'
+		AND
+		o.variant_id = m.id
+		AND
+		m.group_id = g.id
+		");
+		// Declare Array to pass data
+		$list = array();
+		
+		foreach ($query->result_array() as $row)
+		{
+			$list[]	=	$row;
+		}		
+		// Return Array
+		return $list;
+		
+	}
+
+}
+?>

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/repos/starvved/!svn/ver/2/trunk/system/application/views/restaurantportal/restaurantorders
+END
+orders.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/starvved/!svn/ver/2/trunk/system/application/views/restaurantportal/restaurantorders/orders.php
+END
+reports.php
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/repos/starvved/!svn/ver/2/trunk/system/application/views/restaurantportal/restaurantorders/reports.php
+END
+ordersdetail.php
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/repos/starvved/!svn/ver/2/trunk/system/application/views/restaurantportal/restaurantorders/ordersdetail.php
+END
+detail.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/starvved/!svn/ver/2/trunk/system/application/views/restaurantportal/restaurantorders/detail.php
+END
+allorder.php
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repos/starvved/!svn/ver/2/trunk/system/application/views/restaurantportal/restaurantorders/allorder.php
+END

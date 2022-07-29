@@ -1,0 +1,96 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+
+echo form_open(base_url().'restaurantsettings/basicfeatures');
+?>
+
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>Basic Features</h1>
+            <?PHP
+            if (count($success))
+			{
+			?>
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                    <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <strong><?=$success["msg"]?></strong></p>
+                </div>
+            </div>
+            <?PHP
+            }
+			?>
+            <?PHP
+            if (count($errors))
+			{
+			?>
+            <br/>
+            <div class="ui-widget">
+                <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+                	<?PHP
+                    foreach ($errors as $error)
+					{
+						echo $error;
+					}
+					?>
+                    
+                </div>
+                
+            </div>
+            <?PHP
+            }
+			?>
+            <br/>
+            <div class="futr-left">
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td><img src="<?=base_url()?>images/take-out.jpg" alt="take-out" /></td>
+                    <td><strong>Take Out</strong></td>
+                    <td><input name="take_out" type="checkbox" value="Yes" <?=($restaurant["take_out"]=="Yes")?'checked="checked"':''?> /></td>
+                  </tr>
+                  <tr>
+                    <td><img src="<?=base_url()?>images/dine-in.jpg" alt="dine-in" /></td>
+                    <td><strong>Dine In</strong></td>
+                    <td><input name="dine_in" type="checkbox" value="Yes" <?=($restaurant["dine_in"]=="Yes")?'checked="checked"':''?> /></td>
+                  </tr>
+                  <tr>
+                    <td><img src="<?=base_url()?>images/gate.jpg" alt="gate" /></td>
+                    <td><strong>Proximity to Gate</strong></td>
+                    <td><input name="proximity_to_gate" type="text" value="<?=$restaurant["proximity_to_gate"]?>" class="txt-field" style="width:60px; padding:3px;" />
+                    <strong>Meters</strong></td>
+                  </tr>
+                </table>
+          </div>
+            <div class="futr-right">
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td><img src="<?=base_url()?>images/post-security.jpg" alt="post-security" /></td>
+                    <td><strong>Post Security</strong></td>
+                    <td><input name="location_security" type="radio" value="Post" <?=($restaurant["location_security"]=="Post")?'checked="checked"':''?> /></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td><img src="<?=base_url()?>images/pre-security.jpg" alt="pre-security" /></td>
+                    <td><strong>Pre Security</strong></td>
+                    <td><input name="location_security" type="radio" value="Pre" <?=($restaurant["location_security"]=="Pre")?'checked="checked"':''?>/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </table>
+            </div>
+            <div class="save-btn">
+                <input name="Save" type="image" src="<?=base_url()?>images/save.jpg" style="margin-right:10px;" />
+                <!--<input name="Cancel" type="image" src="<?=base_url()?>images/cancel.jpg" style="margin-right:10px;" />-->
+            </div>
+        </div>
+<!-- End Mid Right -->
+</form>
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

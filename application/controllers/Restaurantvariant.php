@@ -1,0 +1,458 @@
+<?
+/**
+* Iphone service for restaurant section
+* This class returns the any kind of restaurant related data
+* @author Mustafa Mahmood
+* @category Iphone Service
+*/
+class RestaurantVariant extends CI_Controller {
+
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->library('core/menuitemvariant');
+		$this->load->library('core/menuitemvariantcategory');
+		$this->load->library('core/menuitemgroup');
+		
+		
+		$this->load->library('form_validation');	
+		$this->load->library('pagination');	
+		$this->load->helper( array('dropdown_helper') );
+		
+		if( $this->session->userdata('restaurant')== FALSE ) {
+		   redirect(base_url()."restaurantportal",true);
+		}
+		else {
+			$restaurantArr = $this->session->userdata('restaurant');
+        	$subscription_status = check_user_subscription($restaurantArr);
+        	//
+        	if ($subscription_status == 'expired') {
+        		redirect(base_url()."dashboard",true);
+        	}
+		}
+	}
+	
+/**
+.........................................................................................................
+									Start Restaurant Food Variant Section 
+.........................................................................................................
+*/	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function index()
+	{
+		$data	=	array();
+//		$this->load->view('admin/terminals/index',$data);
+	}
+
+	function variantitems($state = '')
+	{
+		$data	=	array();
+		$filters	=	array("status"=> "All","sortby"=>"id","alphabet"=>"","category_id" => "select");
+		
+
+		$data["activemenu"]	=	"variantitems";
+		$data["activetab"]	=	"variantitems";
+		
+		$filters = ($this->session->userdata('search_criteria3'))?$this->session->userdata('search_criteria3'):$filters;
+		$restaurantArr = $this->session->userdata('restaurant');
+		$restaurantID	=	$restaurantArr["id"];
+
+		if ($_POST)
+		{
+
+			if ($this->input->post("updatestatus"))//update status{
+			{				
+				//update or add here
+				if ($this->input->post("updateid"))
+				{
+					
+					$variantGroup["id"]	=	trim($this->input->post("updateid"));
+					$variantGroup["status"]	=	$this->input->post("updatestatus");
+					//$categoryId	=	$this->menucategory->updateMenuCategory($categoryArr);
+					$this->menuitemgroup->updateMenuItemGroup($variantGroup);
+					
+					if($variantGroup["status"] == "Deleted")
+						$data["success"]=array("msg"=>$this->input->post("variantgroupname")." Deleted Successfully");
+					
+					else
+						$data["success"]=array("msg"=>$this->input->post("variantgroupname")."Status Updated Successfully");
+	
+				}
+			}
+			else
+			{
+				$filters["category_id"]	=	($this->input->post("category_id")!="select")?$this->input->post("category_id"):"";
+				$filters["alphabet"]	=	$this->input->post("alphabet");
+				$filters["status"]	=	$this->input->post("status");
+			
+				$this->session->set_userdata('search_criteria3',$filters);
+			/*	$filters["category_id"]	=	$this->input->post("category_id");
+				$filters["alphabet"]	=	$this->input->post("alphabet");
+				$filters["status"]	=	$this->input->post("status");*/
+			}			
+			
+		}
+
+		if ($state	==	"added")
+		{
+			$data["success"]=array("msg"=>"Variant Added Successfully");
+		}
+		else if ($state	==	"updated")
+		{
+			$data["success"]=array("msg"=>"Variant Updated Successfully");
+		}
+
+
+		$per_page	=	$this->config->item("PER_PAGE");
+
+		$data["ncounter"]	=	1;
+		$data["ncounter"]	=	$data["ncounter"];
+		//+$this->uri->segment(3);
+		
+		$data["variants"]	=	$this->menuitemgroup->getVariantItemGroups($restaurantID,$filters,"No",$per_page, $this->uri->segment(3));
+		
+		$total	=	$this->menuitemgroup->getVariantItemGroups($restaurantID,$filters,"Yes");
+		
+		
+		$config['base_url'] = base_url().'/restaurantvariant/variantitems';
+		$config['total_rows'] = $total;
+		$config['per_page'] = $per_page;
+		$config['uri_segment'] = '3';
+		$config['next_link'] = 'Next';
+		$config['prev_link'] = 'Back';
+
+		if( $total > $per_page )
+		{
+			$this->pagination->initialize($config);
+		}
+		
+		$data['paginationLinks']=$this->pagination->create_links();
+		
+		$data['totalcount']=$total;
+		
+
+		$data["filters"]	=	$filters;
+//		print_r($filters);
+		$data["categorylist"]	=	$this->menuitemvariantcategory->getVariantItemCategories($restaurantID);
+		
+		$this->load->view('restaurantportal/foodvariants/variantitems',$data);
+	
+	}	
+
+	function editvariant($variantGroupId)
+	{
+		$data	=	array();
+		$variantGroup	=	array(
+			'id' => 0,
+			'group_name' => '',
+			'category_id' => 0,
+			'selection' => '',
+			'required' => false,
+
+		);
+
+		$restaurantArr = $this->session->userdata('restaurant');
+		$restaurantID	=	$restaurantArr["id"];
+
+		if ($variantGroupId!=0)
+		{
+			$variantGroups	=	$this->menuitemgroup->getMenuItemForDashboard($variantGroupId);
+			$variantGroup	=	$variantGroups[0];
+			
+		}
+
+		$data["variantItems"]	=	array();
+		$data["variantitem_count"]	=	0;	
+		if (isset($variantGroup["id"]) && $variantGroup["id"]!="")
+		{
+			$filters["group_id"]	=	$variantGroup["id"];
+			$data["variantItems"]	=	$this->menuitemvariant->getVariantItems($restaurantID,$filters);
+			$data["variantitem_count"]	=	count($data["variantItems"]);	
+			
+//			print_r ($data["variantItems"]);
+		}
+
+		if ($_POST)
+		{
+			$this->form_validation->set_rules('group_name', 'Variant Group Title', 'trim|required');
+			$this->form_validation->set_rules('category_id', 'Variant Group Category', 'trim|required');
+			$this->form_validation->set_rules('selection', 'Selection Type', 'trim|required');
+			$this->form_validation->set_rules('required', 'Required', 'trim|required');
+			
+			$variantGroup["group_name"]	=	$this->input->post("group_name");
+			$variantGroup["category_id"]	=	$this->input->post("category_id");
+			$variantGroup["selection"]	=	$this->input->post("selection");
+			$variantGroup["required"]	=	$this->input->post("required");
+			$variant_totalcount	=	$this->input->post("variant_totalcount");
+
+			$data["variantitem_count"]	=	$variant_totalcount;	
+			if($variant_totalcount == 0){
+				$this->form_validation->set_rules("variant_name1", 'Variant Name 1', 'trim|required');
+			}
+				
+			$variantItems	=	array();
+			if ($variant_totalcount	!=	"" && $variant_totalcount > 0)
+			{
+//				$data["variantItems"]	=	$this->menuitemvariant->getVariantItems($restaurantID,$filters=NULL);				
+				for ($i=1; $i<=$variant_totalcount;$i++)
+				{
+					//$this->form_validation->set_rules("variant_name".$i, 'Variant Name'.$i, 'trim|required');
+					if(!empty($this->input->post("variant_name".$i)) && !empty($this->input->post("price".$i))){
+						$variantItem["name"]	=	$this->input->post("variant_name".$i);
+						$variantItem["price"]	=	$this->input->post("price".$i);
+						$variantItem["id"]	=	$this->input->post("variant_id".$i);
+						
+						$variantItem["restaurant_id"]	=	$restaurantID;
+						$variantItems[]	=	$variantItem;
+					}
+					
+//					$variantItem["group_id"]	=	$group_id;
+					
+				}//end foreach ($addedGroups as $groupId)
+				$data["variantItems"]	=	$variantItems;
+			}//end if ($added_group	!=	"")
+			
+
+			$added_group	=	$this->input->post("added_group");
+			
+			
+			
+			if ($this->form_validation->run() == FALSE)
+			{
+				$this->form_validation->set_error_delimiters('<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> <strong>Alert:</strong> ', '</p>');
+				
+				$errorsArray['group_name']	=	form_error('group_name');
+				$errorsArray['category_id']	=	form_error('category_id');
+				$errorsArray['selection']	=	form_error('selection');
+				$errorsArray['required']	=	form_error('required');
+
+				for ($i=1; $i<=$variant_totalcount;$i++)
+				{
+					$errorsArray["variant_name".$i]	=	form_error("variant_name".$i);
+				}
+				if($variant_totalcount == 0)
+					$errorsArray["variant_name1"]	=	"Add at least one variant choice";
+				$data["errors"]=$errorsArray;
+			
+			}
+			else
+			{
+				if ($variantGroupId!=0 && $variantGroupId!="")
+				{
+					//update
+					$this->menuitemgroup->updateMenuItemGroup($variantGroup);
+					$data["success"]=array("msg"=>"Updated Successfully");
+				}
+				else
+				{
+					//add
+					$variantGroup["restaurant_id"]	=	$restaurantID;
+					$variantGroupId	=	$this->menuitemgroup->addNewMenuItemGroup($variantGroup);
+					$data["success"]=array("msg"=>"Added Successfully");
+					$variantGroup["id"]	=$variantGroupId;
+					
+				}
+				$this->menuitemvariant->deleteMenuItemVariantByGroupId($variantGroupId);
+				foreach ($data["variantItems"] as $variantItem)
+				{
+					$arrInfoItem	=	array();
+					// if ($variantItem["id"]!="")
+					// {
+					// 	$this->menuitemvariant->updateMenuItemVariant($variantItem);
+					// }
+					// else
+					// {
+						$arrInfoItem["restaurant_id"]	=	$variantItem["restaurant_id"];
+						$arrInfoItem["name"]	=	$variantItem["name"];
+						$arrInfoItem["price"]	=	$variantItem["price"];
+						$arrInfoItem["group_id"]	=	$variantGroupId;
+//						$arrInfoItem["id"]	=	$this->input->post("variant_id".$i);
+						$this->menuitemvariant->addNewMenuItemVariant($arrInfoItem);
+					// }
+						
+
+				}
+			}
+
+		}
+
+		$data["variantGroup"]	=	$variantGroup;
+		
+
+		$data["categorylist"]	=	$this->menuitemvariantcategory->getVariantItemCategories($restaurantID);
+/*		if ($itemId!=0)
+		{
+			$data["attached_variant_groups"]	=	$this->menuitemgroup->listMenuItemDetails($itemId,"No");
+		}		
+*/		
+		
+		$this->load->view('restaurantportal/foodvariants/editvariant',$data);
+	}
+
+	function viewvariant($variantId)
+	{
+		$data	=	array();
+
+		$variantGroups	=	$this->menuitemgroup->getMenuItemForDashboard($variantId);
+		$data["variantGroup"]	=	$variantGroups[0];
+		
+		$restaurantArr = $this->session->userdata('restaurant');
+		$restaurantID	=	$restaurantArr["id"];
+		$filters["group_id"]	=	$variantId;
+
+		$data["variantItems"]	=	$this->menuitemvariant->getVariantItems($restaurantID,$filters);
+				
+		$this->load->view('restaurantportal/foodvariants/viewvariant',$data);
+	}
+
+	function variantcategories()
+	{
+		$data	=	array();
+		$filters = array();
+		$data["activemenu"]	=	"variantcategories";
+		$data["activetab"]	=	"variantcategories";
+
+		$restaurantArr = $this->session->userdata('restaurant');
+		$restaurantID	=	$restaurantArr["id"];
+		
+		if ($_POST)
+		{
+			if ($this->input->post("add"))//add category
+			{
+				
+				$categoryArr["category_name"]	=	trim($this->input->post("category_name"));
+				$this->form_validation->set_rules('category_name', 'Category Name', 'trim|required');
+
+				if ($this->form_validation->run() == FALSE)
+				{
+					$this->form_validation->set_error_delimiters('<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span> <strong>Alert:</strong> ', '</p>');
+					
+					$errorsArray['category_name']	=	form_error('category_name');
+					$data["errors"]=$errorsArray;
+				}
+				else
+				{
+					//update or add here
+					if ($this->input->post("id"))
+					{
+						$categoryArr["id"]	=	trim($this->input->post("id"));
+						$categoryId	=	$this->menuitemvariantcategory->updateMenuItemVariantCategory($categoryArr);
+						$data["success"]=array("msg"=>"Updated Successfully");
+						
+					}
+					else
+					{
+						$categoryArr["restaurant_id"]	=	$restaurantArr["id"];
+						$categoryArr["status"]	=	"Active";
+						$categoryId	=	$this->menuitemvariantcategory->addNewMenuItemVariantCategory($categoryArr);
+						$data["success"]=array("msg"=>"Added Successfully");
+					}
+					$categoryArr["category_name"]	=	"";
+					
+//					$data["success"]	=	($categoryId > 0 && $categoryId !="")?"Yes":"No";
+	
+				}
+				$data["category"]	=	$categoryArr;
+			}
+			else if ($this->input->post("updatestatus"))//update status{
+			{				
+				//update or add here
+				if ($this->input->post("updateid"))
+				{
+					$categoryArr["id"]	=	trim($this->input->post("updateid"));
+					$categoryArr["status"]	=	$this->input->post("updatestatus");
+					$categoryId	=	$this->menuitemvariantcategory->updateMenuItemVariantCategory($categoryArr);
+					
+					if($categoryArr["status"] == "Deleted")
+						$data["success"]=array("msg"=>$this->input->post("variantcategoryname")." Deleted Successfully");
+						
+					else
+						$data["success"]=array("msg"=>"Status Updated Successfully");	
+				}
+			}			
+			
+		}
+		
+		$per_page	=	$this->config->item("PER_PAGE");
+		
+		//getVariantItems($groupId=NULL,$restaurantId,$filters=NULL,$count="No",$limit = NULL, $offset = NULL)
+		$data["ncounter"]	=	1;
+		$data["ncounter"]	=	$data["ncounter"]+$this->uri->segment(3);
+		
+		$data["variants"]	=	$this->menuitemvariantcategory->getVariantItemCategories($restaurantID,$filters,"No",$per_page, $this->uri->segment(3));				
+		
+	
+		
+		$total	=	$this->menuitemvariantcategory->getVariantItemCategories($restaurantID,$filters,"Yes");
+		
+		$config['base_url'] = base_url().'/restaurantvariant/variantcategories';
+		$config['total_rows'] = $total;
+		$config['per_page'] = $per_page;
+		$config['uri_segment'] = '3';
+		$config['next_link'] = 'Next<span class="arrow-right">&raquo;</span>';
+		$config['prev_link'] = '<span class="arrow-left">&laquo;</span>Back';
+
+		if( $total > $per_page )
+		{
+			$this->pagination->initialize($config);
+		}
+		
+		$data['paginationLinks']=$this->pagination->create_links();
+
+		$data["filters"]	=	$filters;
+		$data['totalcount']=$total;
+		$this->load->view('restaurantportal/foodvariants/variantcategories',$data);
+	
+	}
+	
+	function addCategoryVariant()
+	{
+		$variant_name =  $this->input->get_post("varia");
+		$categoryArr["category_name"]	=	$variant_name;
+		$restaurantArr = $this->session->userdata('restaurant');
+		$restaurantID	=	$restaurantArr["id"];
+		
+		if($variant_name != "")
+		{
+			$categoryArr["restaurant_id"]	=	$restaurantArr["id"];
+			$categoryArr["status"]	=	"Active";
+			$data = $this->menuitemvariantcategory->addNewMenuItemVariantCategory($categoryArr);
+			//echo $variant_name;
+			echo "RECORD_ADDED";
+		//	exit();
+			
+		}
+		else
+			echo "variant name Required";
+
+		exit();
+	}
+
+	function getVariantCategoryById()
+	{
+		$category_id =  $this->input->get_post("category_id");
+		$variantCategory = $this->menuitemvariantcategory->getMenuItemVariantCategoryById($category_id);
+		if (empty($variantCategory)) {
+			$variantCategory = "No_Record_Found";
+		}
+		header('Content-type: application/json');
+        echo json_encode($variantCategory[0]);
+        exit(0);
+	}
+
+/**
+.........................................................................................................
+									End Restaurant Food Variant Section
+.........................................................................................................
+*/	
+
+
+}
+
+
+/* End of file irestaurant.php */
+/* Location: ./system/application/controllers/irestaurant.php */
+?>

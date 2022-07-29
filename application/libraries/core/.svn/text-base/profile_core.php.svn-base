@@ -1,0 +1,73 @@
+<?php
+
+class Profile_Core
+{
+	private $_obj;
+	
+	function Profile_Core()
+	{
+		$this->_obj =& get_instance();
+		$paramArray["login"]	=	$this->_obj->config->item("x_login");
+		$paramArray["transkey"]	=	$this->_obj->config->item("x_trans_key");
+		$paramArray["test_mode"]	=	TRUE;
+		$this->_obj->load->library('authnetcim',$paramArray);
+		
+		$this->_obj->load->library('AuthNetAim');
+		$this->_obj->load->library('core/authorize_core');
+		$this->_obj->load->library('core/user');
+	}
+	function createCustomerProfile($arrInfo)
+	{	//print_r($arrInfo);
+		$authProfile = array();
+		$userInfo = $this->_obj->user->getUserById($arrInfo["userid"]);
+	//	echo "dfsd";
+		$cardData["cardnumber"] = $arrInfo["cardnumber"];
+		$expyear = $arrInfo["expyear"];
+		$expmonth = $arrInfo["expmonth"];
+		$cardData["expiryDate"] = $expyear."-".$expmonth;
+	//	print_r($userInfo[0]);
+	//	exit();
+	
+		if($userInfo[0]["customer_profile_id"] != "" && $userInfo[0]["customer_profile_id"] != 0)
+		{	
+			$authProfile = $this->_obj->authorize_core->getCustomerProfileRequest($userInfo[0]["customer_profile_id"]);
+			//print_r($authProfile);exit();
+			$info["customer_payment_profile_id"] = $authProfile["customerPaymentProfileId"];
+			$info["customer_profile_id"] = $userInfo[0]["customer_profile_id"];
+			$newauthProfile = $this->_obj->authorize_core->createCustomerPaymentProfileRequest($userInfo[0],$cardData);
+//			print_r($newauthProfile);exit();	
+			if($info["customer_payment_profile_id"] != "" && $newauthProfile["validation"] == "YES")
+				$deleteProfile = $this->_obj->authorize_core->deleteCustomerPaymentProfileRequest($info);//echo "here";
+			
+		//	print_r($newauthProfile);
+			$list["validation"] = $newauthProfile["validation"];
+			$list["text"] = $newauthProfile["text"];
+			$list["paymentProfile"] = $newauthProfile["customerPaymentProfileId"];
+		//	print_r($list);exit();
+			return $list;
+	//		echo json_encode($list);
+	//		exit ();
+		}
+		else
+		{
+			$newauthProfile = $this->_obj->authorize_core->createCustomerProfileRequest($userInfo[0],$cardData);
+	//		print_r($newauthProfile);exit();
+			$arr = $this->_obj->authorize_core->getCustomerProfileRequest($newauthProfile["customerProfileId"]);
+		//	print_r($newauthProfile); // customerProfileId , customerPaymentProfileId , validation(YES/NO) , text(successful if yes)
+//			$newuserInfo = $this->user->getUserById($userId);
+			$userInfo[0]["customer_profile_id"]	= $newauthProfile["customerProfileId"];
+			$this->_obj->user->updateUser($userInfo[0]);
+			
+			$list["validation"] = $newauthProfile["validation"];
+			$list["text"] = $newauthProfile["text"];
+			$list["paymentProfile"] = $arr["customerPaymentProfileId"];
+		//	print_r($list);
+			return $list;
+		//	echo json_encode($list);
+		//	exit ();
+		}
+		
+	}
+}
+
+?>

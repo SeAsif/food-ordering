@@ -1,0 +1,20 @@
+/**
+
+*	Admin area styles: Start
+
+*/
+@charset "utf-8";
+body {
+	margin:0px;
+	background-image:url(../images/bdy-bg.gif);
+	background-repeat:repeat-x;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+body a{
+	outline:none;
+	color:#1779D4;
+	text-decoration:none;
+}
+

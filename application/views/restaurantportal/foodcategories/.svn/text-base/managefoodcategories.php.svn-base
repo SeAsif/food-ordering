@@ -1,0 +1,317 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+?>
+<script language="javascript">
+var categoryName;
+var renameVariant	;
+function renameCategory(nId)
+{
+	viewVariant	=	nId;
+
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurantcategoryitem/getMenuCategoryById", data: "category_id="+nId+"", success: function(variantCategory){ 
+	
+		if (variantCategory=="No_Record_Found")
+		{
+			alert ("Sorry! No record found");
+		}
+		else
+		{
+			var obj = jQuery.parseJSON(variantCategory);
+			$("#category_name").val(obj.category_name);
+			$("#id").val(obj.id);
+			$('#rename_food_category').dialog('open');
+			
+			
+		}
+	}//end function
+	});	
+	
+	return false;
+}
+
+var deleteCat	;
+function deleteCategory(nItemId, strCategoryName)
+{
+	categoryName	=	strCategoryName;
+	deleteCat	=	nItemId;
+//	document.getElementById('delete_category').value=strCategoryName;
+//	alert(categoryName);
+	
+	$('#span_categoryName').html(categoryName);
+	$('#delete_category').dialog('open');
+	return false;
+}
+var disableCat	;
+var disableType	;
+function disableCategory(nItemId,strCategoryName, type)
+{
+	categoryName	=	strCategoryName;
+	if (type	==	undefined)
+	{
+		$('#disable_category_text').html("Disable");
+		disableType	=	"Inactive";
+	}
+	else
+	{
+		$('#disable_category_text').html("Activate");
+		disableType	=	"Active";
+	}
+	disableCat	=	nItemId;
+	$('#newspan_categoryName').html(strCategoryName);
+	$('#disable_category').dialog('open');
+	return false;
+}
+
+</script>
+
+
+<!-- Start Dialog Popups -->
+<script type="text/javascript">
+			$(function(){
+				// Dialog	( Start Edit Variant Popup Window Here )
+				$('#rename_food_category').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 580,
+				});
+
+				// Dialog	( Start Delete Popup Window Here )
+				$('#delete_category').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Yes": function() { 
+							$("#categoryName").val(categoryName);
+							$("#updatestatus").val("Deleted");
+							$("#updateid").val(deleteCat);
+							document.statuschange.submit();
+						}, 
+						"No": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+				// Dialog	( Start Delete Popup Window Here )
+				$('#disable_category').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Yes": function() { 
+							
+							$("#categoryName").val(categoryName);
+							$("#updatestatus").val(disableType);
+							$("#updateid").val(disableCat);
+							 
+							document.statuschange.submit();
+						}, 
+						"No": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+			});
+		</script>
+<!-- End Dialog Popups -->
+
+                       <?PHP
+			echo form_open(base_url().'restaurantcategory/managefoodcategories',array('id' => 'statuschange','name'=>'statuschange'));
+
+?>            
+            <input type="hidden" name="updatestatus" id="updatestatus" />
+            <input type="hidden" name="updateid" id="updateid" />
+            <input type="hidden" name="categoryName" id="categoryName" />
+            
+             </form>    
+        <!-- Start Delete Popup Window Here -->
+ 
+        <div id="delete_category" title="Delete Category" style="display:none">
+            <br />
+           
+            <span style="float: left; margin: 0pt 7px 10px 0pt;" class="ui-icon ui-icon-info"></span>
+            <strong>Are you want to Delete <span id="span_categoryName"></span> category?</strong>
+        </div>
+			   
+        <!-- End Delete Popup Window Here -->
+
+        <!-- Start Disable Popup Window Here -->
+ 
+        <div id="disable_category" title="Disable Category" style="display:none">
+            <br />
+            <span style="float: left; margin: 0pt 7px 10px 0pt;" class="ui-icon ui-icon-info"></span>
+            <strong>Are you want to <span id="disable_category_text"></span> <span id="newspan_categoryName"></span> category?</strong>
+        </div>
+
+        <!-- End Disable Popup Window Here -->
+    
+        <!-- Start Rename Popup Window Here -->
+        <div id="rename_food_category" title="Rename Food Category" style="display:none">
+            <div class="add-item">
+                <?PHP
+			echo form_open(base_url().'restaurantcategory/managefoodcategories',array('id' => 'categoryformedit','name'=>'categoryformedit'));
+
+?>            
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="width:33%;">Rename Variant Category:</td>
+                    <td><input name="category_name" id="category_name" type="text" class="txt-field" style="width:365px;" /><input name="id" id="id" type="hidden" class="txt-field" style="width:365px;" /><input type="hidden" name="add" value="yes" /></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                        <a href="javascript:void(null);" class="global-link float-left" style="margin-right:10px;" onclick="document.categoryformedit.submit();"><span>Save</span></a>
+                        <a href="javascript:void(null)" onclick="$('#rename_food_category').dialog('close');" class="global-link float-left"><span>Cancel</span></a>
+                    </td>
+                  </tr>
+                </table>
+             </form>
+            </div>
+        </div>
+        <!-- End Rename Popup Window Here -->
+
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>Manage Food Categories</h1>
+            <?PHP
+            if (count($success))
+			{
+			?>
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                    <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <strong><?=$success["msg"]?></strong></p>
+                </div>
+            </div>
+            <?PHP
+            }
+			?>
+            <?PHP
+            if (count($errors))
+			{
+			?>
+            <br/>
+            <div class="ui-widget">
+                <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+                	<?PHP
+                    foreach ($errors as $error)
+					{
+						echo $error;
+					}
+					?>
+                    
+                </div>
+                
+            </div>
+            <?PHP
+            }
+			?>
+            <br />
+            <br class="clear" />
+            <div class="creat-fld-wrap">
+<?PHP
+			echo form_open(base_url().'restaurantcategory/managefoodcategories',array('id' => 'categoryform','name'=>'categoryform'));
+
+?>            
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td colspan="2" style="padding-bottom:5px;"><strong>Creat New Category</strong></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" class="txt-field01" name="category_name" value="<?=$category["category_name"]?>"><input type="hidden" name="add" value="yes" />
+                    </td>
+                    <td><a href="javascript:void(null);" title="Add" class="global-link" onclick="document.categoryform.submit();"><span>Add</span></a></td>
+                  </tr>
+                </table>
+           </form>    
+            </div>
+        	<div class="drop-wrap">
+            	<span class="float-left">Current Categories</span>
+                <div class="drop-list" style="width:370px;">
+                <?PHP
+          			echo form_open(base_url().'restaurantcategory/managefoodcategories',array('id' => 'categoryfilterform','name'=>'categoryfilterform'));
+				?>
+                	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td><strong>Show:</strong></td>
+                        <td>
+                        	<select name="status" class="combwd01">
+                            	<option value="All" <?=($categoriesfilter["status"]=="All")?'selected="selected"':''?>>All</option>
+                            	<option value="Active" <?=($categoriesfilter["status"]=="Active")?'selected="selected"':''?>>Active</option>
+                            	<option value="Inactive" <?=($categoriesfilter["status"]=="Inactive")?'selected="selected"':''?>>Disable</option>
+                            </select>
+                        </td>
+                        <td><strong>Sort By:</strong></td>
+                        <td>
+                        	<select name="sortby" class="combwd01">
+                            	<option value="category_name" <?=($categoriesfilter["sortby"]=="category_name")?'selected="selected"':''?>>Name</option>
+                            	<option value="stamp desc" <?=($categoriesfilter["sortby"]=="stamp desc")?'selected="selected"':''?>>Latest</option>
+                            	<option value="stamp asc" <?=($categoriesfilter["sortby"]=="stamp asc")?'selected="selected"':''?>>Oldest</option>
+                            </select>
+                        </td>
+                        <td style="width:80px;">
+                        	<a href="javascript:void(null);" class="global-link" onclick="document.categoryfilterform.submit();"><span>Search</span></a>
+                        </td>
+                      </tr>
+                    </table>
+				</form>
+                </div>
+            </div>
+            
+            <div class="ctgry-table">
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr class="ctgry-rowbg01">
+                    <td style="width:7%; text-align:center;">No</td>
+                    <td style="width:60%;">Category Name</td>
+                    <td>Actions</td>
+                  </tr>
+                  <?PHP
+//				$nCount	=	1;
+				$nCount	=	$ncounter;
+
+                  foreach ($categories as $category)
+				  {
+				  ?>
+                  <tr class="<?=($category["status"]=="Inactive")?'ctgry-disable':'ctgry-rowbg02'?>">
+                    <td align="center"><?=$nCount?></td>
+                    <td><?=$category["category_name"]?> <span><?=$category["item_count"]?> (items)</span></td>
+                    <td class="action">
+                    	<a href="javascript:void(null);" onclick="deleteCategory(<?=$category["id"]?>,'<?=$category["category_name"]?>');">Delete</a><span>l</span>
+                    	<a href="javascript:void(null);" onclick="renameCategory(<?=$category["id"]?>);">Rename</a><span>l</span>
+                        <?PHP
+                        if ($category["status"]=="Inactive")
+						{
+						?>
+                    	<a href="javascript:void(null);" onclick="disableCategory(<?=$category["id"]?>,'<?=$category["category_name"]?>','Activate');" class="disable-active">Activate</a>
+                        <?PHP
+						}else
+						{
+						?>
+                        <a href="javascript:void(null);" onclick="disableCategory(<?=$category["id"]?>,'<?=$category["category_name"]?>');">Disable</a>
+                        <?PHP
+						}                        
+						?>
+                    </td>
+                  </tr>
+				  <?PHP
+						$nCount++;
+                  }
+				  ?>	
+                  <tr>
+                    <td colspan="3" class="td-height"></td>
+                  </tr>
+                </table>
+            </div>
+            <div class="paging">                
+            <?=$paginationLinks?>
+            </div>
+        </div>
+<!-- End Mid Right -->
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

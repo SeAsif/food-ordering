@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/useraccount
+END
+accountsetting.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/useraccount/accountsetting.php
+END
+paymentpreferences.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/useraccount/paymentpreferences.php
+END
+updateaccount.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/useraccount/updateaccount.php
+END
+createaccount.php
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/useraccount/createaccount.php
+END
+forgotpassword.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/useraccount/forgotpassword.php
+END

@@ -1,0 +1,97 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+?>
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>Logo / Slogan</h1>
+            <?PHP
+            if (count($success))
+			{
+			?>
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                    <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <strong><?=$success["msg"]?></strong></p>
+                </div>
+            </div>
+            <?PHP
+            }
+			?>
+            <?PHP
+            if (count($errors))
+			{
+			?>
+            <br/>
+            <div class="ui-widget">
+                <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+                	<?PHP
+                    foreach ($errors as $error)
+					{
+						echo $error;
+					}
+					?>
+                    
+                </div>
+                
+            </div>
+            <?PHP
+            }
+			?>
+            <br/>
+            <div class="slogan-left">
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="width:30%; vertical-align:top; padding-top:6px;"><strong>Upload New Logo</strong></td>
+                    <td>
+<?PHP
+echo form_open_multipart(base_url().'restaurantsettings/logoslogan');
+?>
+                    	<input name="logo" type="file" /><input type="submit" value="Upload" /><input type="hidden" value="logoupload" name="logoupload" /><br />
+                        <span class="red-txt">Only JPG, GIF or PNG</span>
+</form>                        
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>New Uploaded Logo</strong></td>
+                    <td>
+                    	<div class="upload-logo">
+                        	<img src="<?=($restaurant["templogo"]!="")?base_url()."uploads/restaurant/logo/".$restaurant["templogo"]:base_url()."images/upload-logo01.jpg"?>" alt="logo" />
+                            <img src="<?=($restaurant["templogo"]!="")?base_url()."uploads/restaurant/logo/thumb/".$restaurant["templogo"]:base_url()."images/upload-logo02.jpg"?>" alt="logo" /><br class="clear" />
+                        </div>
+                    </td>
+                  </tr>
+<?PHP
+echo form_open(base_url().'restaurantsettings/logoslogan');
+?>
+                  <tr>
+                    <td style="vertical-align:top; padding-top:7px;"><strong>Restaurant Slogan</strong></td>
+                    <td>
+                    	<input name="restaurant_slogan" type="text" class="txt-field" value="<?=$restaurant["restaurant_slogan"]?>" /><input type="hidden" name="logo" value="<?=$restaurant["templogo"]?>" /><br />
+                        <span class="red-txt">Leave empty if not required</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                        <div class="save-btn">
+                            <input name="Save" type="image" src="<?=base_url()?>images/save.jpg" style="margin-right:10px;" />
+                            <!--<a href="<?=base_url()?>restaurantsettings/logoslogan"><img name="Cancel" src="<?=base_url()?>images/cancel.jpg" style="margin-right:10px;" border="0" /></a>-->
+                        </div>
+                    </td>
+                  </tr>
+</form>
+                </table>
+            </div>
+            <div class="current-logo">
+            
+                <img src="<?=($restaurant["logo"]!="" && $restaurant["logo"]!="noimage.jpg")?base_url()."uploads/restaurant/logo/".$restaurant["logo"]:base_url()."images/current-logo01.jpg"?>" alt="logo" />
+                
+                <img src="<?=($restaurant["logo"]!="" && $restaurant["logo"]!="noimage.jpg")?base_url()."uploads/restaurant/logo/thumb/".$restaurant["logo"]:base_url()."images/current-logo02.jpg"?>" alt="logo" /><br class="clear" />
+                <strong>Current Logo</strong>
+            </div>
+        </div>
+<!-- End Mid Right -->
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

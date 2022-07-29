@@ -1,0 +1,13 @@
+	Hi <?=$arrInfo["firstname"]?>,
+	
+	Your account has successfully been created on http://wwww.starvved.com
+	
+	Your login credentials are given below:
+	
+	Email:<?=$arrInfo["email"]?>
+	
+	Password:<?=$password?>
+	
+	Thanks,
+	
+	Starvved Team.

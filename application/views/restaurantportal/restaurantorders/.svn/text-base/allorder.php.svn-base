@@ -1,0 +1,305 @@
+<?PHP
+if($userType == "admin")
+	$this->load->view( 'admin/header_view');
+else
+{	
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+}
+?>
+<script language="javascript">
+var path='<?=base_url();?>';
+</script>
+
+<script>
+	$(function() {
+		$( "#accordion" ).accordion({ collapsible: true, hide: true , active: false});
+	});
+</script>
+
+<!--................. Start Orders Drop Menu ..............-->
+<script src="<?=base_url()?>js/drop-menu.js" type="text/javascript"></script>
+<!--................. End Orders Drop Menu ..............-->
+<?php
+if($userType == "admin")
+{
+?>
+<div class="trl-menu">
+	<?php 
+	if(isset($breadcrumbs))
+	{
+			echo $breadcrumbs;
+	}else{
+		echo "No Data";
+	}
+	?>
+                
+            </div>
+            <br class="clear" />
+<?php
+}
+?>
+
+
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>
+            	Manage Orders
+            </h1>
+            <br class="clear" />
+          <br/>
+      <br/>
+<!--            <a href="<?=base_url()."restaurantorders/allorder/history"?>" <?=($activetab=="ordernew")?'class="creat-active"':'class="creat-ctgry"'?>>Order History</a>-->
+<?PHP
+if($userType != "admin")
+{	
+?>             
+            <a href="<?=base_url()."restaurantorders/allorder"?>" <?=($activetab=="allorder")?'class="creat-active"':'class="creat-ctgry"'?>>All Orders </a>
+<?
+}
+?>            
+            <a href="<?=base_url()."restaurantorders/paymentreport"?>" <?=($activetab=="orderreport" || $activetab=="ordernew")?'class="creat-active"':'class="creat-ctgry"'?>>Monthly Statements </a>
+            <div class="date-time"><strong><?=date("l, M dS , Y")?>&nbsp;<span><?=date("h:i A")?></span></strong></div>
+            <br class="clear" />
+            <div class="variant-wrap">
+                <div class="itemdrop-list" style="padding-top:20px;">
+                
+                <?PHP
+				if ($activetab!="orderreport")
+				{
+					if (!(isset($filters["month"]) && isset($filters["year"])) )
+					{
+				
+					//	$attributes	=	array("id"=>"frmAddItem","name"=>"frmAddItem")
+					$attributes = array('id' => 'frmsearchorder','name' => 'frmsearchorder');
+					echo form_open(base_url().'restaurantorders/allorder',$attributes);
+                ?>
+				<script type="text/javascript">
+                            $(function(){
+                
+                                // Datepicker
+                                $('#datepicker').datepicker({
+                                    inline: true
+                                });
+                                $('#datepicker1').datepicker({
+                                    inline: true
+                                });
+                                
+                                
+                            });
+                </script>
+                
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="18%" style="width:13%;">View Orders:</td>
+                      <td width="32%" style="width:23%;">
+                  <select name="order_status" class="combwd01" style="width:120px;">
+                                <option value="All" <?=($filters["order_status"]	==	"All")?'selected="selected"':''?> >All</option>
+                                <option value="Pending" <?=($filters["order_status"]	==	"Pending")?'selected="selected"':''?>>Pending</option>
+                                <option value="Unpaid" <?=($filters["order_status"]	==	"Unpaid")?'selected="selected"':''?>>Un Paid</option>
+                                <option value="Confirmed" <?=($filters["order_status"]	==	"Confirmed")?'selected="selected"':''?>>Accepted</option>
+                                <option value="Rejected" <?=($filters["order_status"]	==	"Rejected")?'selected="selected"':''?>>Rejected</option>
+                            </select>                        </td>
+                        <td width="16%" style="width:14%;">Order Code:</td>
+                        <td width="34%" style="width:29%;"><input name="order_code" type="text" class="txt-field" style="width:130px; padding:4px;" value="<?=$filters["order_code"]?>" /></td>
+                      </tr>
+                      <tr>
+                        <td style="width:13%;">&nbsp;</td>
+                        <td style="width:23%;">&nbsp;</td>
+                        <td style="width:14%;">&nbsp;</td>
+                        <td style="width:29%;">&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td style="width:13%;"><span style="width:14%;">Deilivery From Date:</span></td>
+                        <td style="width:23%;"><span style="width:29%;">
+                          <?
+							$date	=	"";
+                            if ($filters["from_delivery_date"]	!=	"")
+								$date	=	date("m/d/Y",strtotime($filters["from_delivery_date"]));
+							?>
+                          <input name="from_delivery_date" type="text" id="datepicker" class="txt-field" style="width:130px; padding:4px;" value="<?=$date?>" />
+                        </span></td>
+                        <td style="width:14%;">Deilivery To Date:</td>
+                        <td style="width:29%;"><?
+							$date	=	"";
+                            if ($filters["to_delivery_date"]	!=	"")
+								$date	=	date("m/d/Y",strtotime($filters["to_delivery_date"]));
+							?>
+                        <input name="to_delivery_date" type="text" id="datepicker1" class="txt-field" style="width:130px; padding:4px;" value="<?=$date?>" /><a href="javascript:void(null);" onclick="document.frmsearchorder.submit();" class="global-link" style="float:right;"><span>Search</span></a>        </td>
+                      </tr>
+                    </table>
+                </form>
+                <?PHP
+                	}//end if (!(isset($filters["month"]) && isset($filters["year"])))
+					else
+					{
+						$attributes = array('id' => 'frmsearchorder','name' => 'frmsearchorder');
+						echo form_open(base_url().'restaurantorders/allorder/history',$attributes);
+				?>
+                <table>
+                    <tr>
+                    
+                        <td>Selected Month: <?=date("F",mktime(1,1,1,$filters["month"],1,2010))?></td>
+                        <td>Selected Year: <?=$filters["year"]?></td>
+                        <td><input type="hidden" name="month" value="<?=$filters["month"]?>" /><input type="hidden" name="year" value="<?=$filters["year"]?>" /><input type="hidden" name="export" value="Yes" /><input type="submit" value="Export To CSV" /></td>
+                    </tr>
+                </table>
+                	</form>
+
+                <?PHP	
+					}
+				
+				?>
+                </div>
+<div class="ctgry-table">
+			
+			<div class="order-hed">
+                	<span class="orderCode font13" style="padding-left:0px !important;">Order Code</span>
+                    <span class="orderStatus font14">
+                    	Status
+                    </span>
+                    <span class="orderType font13">
+                    	Type
+                    </span>
+                    <span class="orderReceived font13">
+                    	Received On
+                    </span>
+                    <span class="orderDelivery font13">
+                    	Pickup Time
+                    </span>
+                    <span class="orderTotal font13">
+                    	Total
+                    </span>
+                     <span class="orderTotal font13">
+                    	Total Tax
+                    </span>
+                    <span class="orderTgb font13">
+                    	TGB<br />Commission
+                    </span>
+                    <span class="netAmount font13">
+                    	Net<br />Receivable
+                    </span>
+                </div>
+            <div id="accordion">
+			  <?PHP
+                  $nCount	=	$ncounter;
+				  $grandTotal = 0;
+				  
+                  foreach ($orders as $order)
+                  {
+                  //	$totalTax = 0;
+					//					  print_r ($order);
+              ?>
+
+            	<div class="orderRow">
+                	<a href="" class="orderCode"><?=$order["order_code"]?></a>
+                    <span class="orderStatus" style="padding-top:3px;">
+						<? if ($order["order_status"]=="Delivered")
+							echo "<img src='".base_url()."images/delivered.png' alt='mark' border='0' title='Delivered' />";
+							else if ($order["order_status"]=="Unpaid")
+							echo "<img src='".base_url()."images/newest.png' alt='mark' border='0' title='UnPaid' />";
+							else if ($order["order_status"]=="Pending")
+							echo "<img src='".base_url()."images/under-process.png' alt='mark' border='0' title='Pending' />";
+							else if ($order["order_status"]=="Rejected")
+							echo "<img src='".base_url()."images/rejected.png' alt='mark' border='0' title='Rejected' />";
+							else if ($order["order_status"]=="Confirmed")
+							echo "<img src='".base_url()."images/delivered.png' alt='mark' border='0' title='Confirmed' />";
+                        ?>
+                    </span>
+                    <span class="orderType" style="padding-top:7px;">
+                    	<?=$order["order_type"]?>
+                    </span>
+                    <span class="orderReceived">
+                    	<?=date("m-d-Y ",strtotime($order["stamp"]))?>
+                        <br />
+                        <?=date("h:i a",strtotime($order["stamp"]))?>
+                    </span>
+                    <span class="orderDelivery">
+                    	<?=date("m-d-Y ",strtotime($order["delivery_time"]))?>
+                        <br />
+                        <?=date("h:i a",strtotime($order["delivery_time"]))?>
+                    </span>
+                    <span class="orderTotal" style="padding-top:7px;">
+                    <?php $totalPrice = $order["totalprice"] - ($order["city_tax"] + $order["state_tax"])?>
+                     <?php $english_format_number = number_format($totalPrice, 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                     <span class="orderTotal" style="padding-top:7px;">
+                    <?php $totalTax = $order["city_tax"] + $order["state_tax"]?>
+                     <?php // $english_format_number = number_format($order["totalprice"], 2, '.', '');?>
+                    	$<?=$totalTax?>
+                    </span>
+                    <span class="orderTgb" style="padding-top:7px;">
+                    <?php $english_format_number = number_format($order["tgb_comission"], 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                    <span class="netAmount" style="padding-top:7px;">
+                    <?php $net = $order["totalprice"]-$order["tgb_comission"];
+					$grandTotal = $grandTotal + $order["totalprice"];
+					 $english_format_number = number_format($net, 2, '.', '');?>
+                    	$<?=$english_format_number?>
+                    </span>
+                </div>
+                <iframe allowtransparency="true" frameborder="0" width="682" height="492" style="background:0px none;" id="itemIframe" name="itemIframe" src="<?=base_url()?>restaurantorders/ordersdetail/<?=$order["id"]?>/history" >
+	                <noscript>
+                Your browser doesn't appear to support frames.  Please see the <a href="<?=base_url()?>restaurantitem/addItem">non-framed version</a> of this page.
+                </noscript> 
+                </iframe>
+
+			  <?PHP
+              $nCount++;
+              }
+              ?>
+            </div>
+            <?php
+			if($type == "history")
+			{
+			?>
+            <div class="orderRow ui-accordion-header ui-helper-reset ui-state-default ui-corner-all">
+                    
+                    <span class="orderTgb float-right" style="padding-top:7px; width:40%;">
+						<?php
+                            $english_format_number = number_format($grandTotal, 2);
+                                
+							echo "<strong style='padding-right:20px;'>GrandTotal  </strong>";
+							echo "$";
+							echo $english_format_number;
+                               
+                            ?>
+                    </span>
+                </div>
+              </div>
+              <div class="clr"></div>
+            
+             <div style="float:right;"> <b>
+          </b>   </div>
+            
+              <? 
+			  }?>      
+             
+              	<div class="status-bar" style="padding-top:40px;">
+                	<span class="rejected">Rejected</span>
+                	<span class="delivered01">Confirmed</span>
+                	<span class="underprocess">Pending</span>
+                	<!--<span class="newest">Newest</span>-->
+                </div><br class="clear" />
+                <div class="paging">
+                    <?=$paginationLinks?>
+                </div>                
+				<?PHP
+                }
+				else
+				{
+					$this->load->view ("restaurantportal/restaurantorders/reports");
+				?>
+                </div>
+                <?PHP	
+				}
+				?>
+                
+            </div>
+        </div>
+<!-- End Mid Right -->
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

@@ -1,0 +1,229 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+?>
+
+
+<script language="javascript">
+var renameVariant	;
+var variantcategoryname;
+function renameVariants(nId, strvariantItem)
+{
+	viewVariant	=	nId;
+	categoryName	=	strvariantItem;
+
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurantvariants/getVariantCategoryById", data: "category_id="+nId+"", success: function(variantCategory){ 
+	
+		if (variantCategory=="No_Record_Found")
+		{
+			alert ("Sorry! No record found");
+		}
+		else
+		{
+			var obj = jQuery.parseJSON(variantCategory);
+			$.each(obj, function() {
+//				alert (this.category_name);
+				$("#category_name").val(this.category_name);
+				$("#id").val(this.id);
+				$('#rename_food_variant').dialog('open');
+			 });		
+			
+			
+		}
+	}//end function
+	});	
+	
+	return false;
+}
+
+var deleteVariant	;
+function deleteVariants(nItemId, strvariantItem)
+{
+	deleteVariant	=	nItemId;
+	categoryName	=	strvariantItem;
+	$('#span_variantItem').html(strvariantItem);
+	$('#delete_food_variant').dialog('open');
+	return false;
+}
+
+</script>
+
+
+<!-- Start Dialog Popups -->
+<script type="text/javascript">
+			$(function(){
+				// Dialog	( Start Edit Variant Popup Window Here )
+				$('#rename_food_variant').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 580,
+				});
+
+				// Dialog	( Start Delete Popup Window Here )
+				$('#delete_food_variant').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Yes": function() { 
+//							$(this).dialog("close"); 
+							$("#variantcategoryname").val(categoryName);
+							$("#updatestatus").val("Deleted");
+							$("#updateid").val(deleteVariant);
+							document.statuschange.submit();
+							
+						}, 
+						"No": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+			});
+		</script>
+<!-- End Dialog Popups -->
+                       <?PHP
+			echo form_open(base_url().'restaurantvariant/variantcategories',array('id' => 'statuschange','name'=>'statuschange'));
+
+?>            
+           <input type="hidden" name="variantcategoryname" id="variantcategoryname" />
+            <input type="hidden" name="updatestatus" id="updatestatus" />
+            <input type="hidden" name="updateid" id="updateid" />
+                    </form>
+
+        <!-- Start Delete Popup Window Here -->
+        <div id="delete_food_variant" title="Delete Variant Category">
+            <br />
+            <span style="float: left; margin: 0pt 7px 10px 0pt;" class="ui-icon ui-icon-info"></span>
+            <strong>Are you want to Delete <span id="span_variantItem"></span> variant category</strong>
+        </div>
+        <!-- End Delete Popup Window Here -->
+    
+        <!-- Start Rename Popup Window Here -->
+        <div id="rename_food_variant" title="Rename Food Variant">
+            <div class="add-item">
+                <?PHP
+			echo form_open(base_url().'restaurantvariant/variantcategories',array('id' => 'categoryformedit','name'=>'categoryformedit'));
+
+?>            
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="width:33%;">Rename Variant Category:</td>
+                    <td><input name="category_name" id="category_name" type="text" class="txt-field" style="width:365px;" /><input name="id" id="id" type="hidden" class="txt-field" style="width:365px;" /><input type="hidden" name="add" value="yes" /></td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                        <a href="javascript:void(null);" class="global-link float-left" style="margin-right:10px;" onclick="document.categoryformedit.submit();"><span>Save</span></a>
+                        <a href="#" class="global-link float-left"><span>Cancel</span></a>
+                    </td>
+                  </tr>
+                </table>
+             </form>
+            </div>
+        </div>
+        <!-- End Rename Popup Window Here -->
+
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>
+            	Manage Food Variants
+            </h1>
+            <?PHP
+            if (count($success))
+			{
+			?>
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                    <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <strong><?=$success["msg"]?></strong></p>
+                </div>
+            </div>
+            <?PHP
+            }
+			?>
+            <?PHP
+            if (count($errors))
+			{
+			?>
+            <br/>
+            <div class="ui-widget">
+                <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+                	<?PHP
+                    foreach ($errors as $error)
+					{
+						echo $error;
+					}
+					?>
+                    
+                </div>
+                
+            </div>
+            <?PHP
+            }
+			?>
+            <br />
+            <br class="clear" />
+            <br/>
+            <a href="<?=base_url()."restaurantvariant/variantitems"?>" <?=($activetab=="variantitems")?'class="creat-active"':'class="creat-ctgry"'?>>Current Food Variants (200)</a>
+            <a href="<?=base_url()."restaurantvariant/variantcategories"?>" <?=($activetab=="variantcategories")?'class="creat-active"':'class="creat-ctgry"'?>>Manage Variant Categories</a>
+            <br class="clear" />
+            <div class="variant-wrap">
+                <div class="creat-fld-wrap" style="width:677px;">
+                <?PHP
+			echo form_open(base_url().'restaurantvariant/variantcategories',array('id' => 'categoryform','name'=>'categoryform'));
+
+?>            
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td colspan="2" style="padding-bottom:5px; width:596px;"><strong>Creat New Variant Category</strong></td>
+                      </tr>
+                      <tr>
+                        <td>
+                        	<input type="text" class="txt-field01" style="width:598px;" name="category_name" value="<?=$category["category_name"]?>">
+                            <input type="hidden" name="add" value="yes" />
+                        </td>
+                        <td><a href="javascript:void(null);" title="Add" class="global-link" onclick="document.categoryform.submit();"><span>Add</span></a></td>
+                      </tr>
+                    </table>
+			</form>
+                </div>
+                <br class="clear" />
+                <div class="ctgry-table">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr class="ctgry-rowbg01">
+                        <td style="width:7%;">No</td>
+                        <td style="width:70%;">Category Name</td>
+                        <td>Actions</td>
+                      </tr>
+                      <?PHP
+				  		$nCount	=	$ncounter;
+                      foreach ($variants as $variant)
+					  {
+					  ?>
+                      <tr class="ctgry-rowbg02">
+                        <td align="center"><?=$nCount?></td>
+                        <td><?=$variant["category_name"]?></span></td>
+                        <td class="action">
+                                <a href="javascript:void(null);" onclick="deleteVariants(<?=$variant["id"]?>, '<?=$variant["category_name"]?>');">Delete</a><span>l</span>
+						        <a href="javascript:void(null);" onclick="renameVariants(<?=$variant["id"]?>, '<?=$variant["category_name"]?>');">Rename</a>                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="3" class="td-height"></td>
+                      </tr>
+                      
+                      <?PHP
+                      $nCount++;
+					  }
+					  
+					  ?>
+                    </table>
+              </div>
+                <div class="paging"><?=$paginationLinks?></div>
+            </div>
+        </div>
+<!-- End Mid Right -->
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

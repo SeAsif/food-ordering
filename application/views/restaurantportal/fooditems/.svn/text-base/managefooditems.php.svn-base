@@ -1,0 +1,437 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+?>
+
+<script language="javascript">
+var urladd	=	'<?=base_url()?>restaurantitem/managefooditems/';
+function refreshItemPage(msg)
+{
+//refresh item page
+//close item popup
+	if (msg	==	"Added Successfully")
+	{
+		document.location.href	=urladd+"added";	
+	}
+	else
+	{
+		document.location.href	=urladd+"updated";	
+	}
+}
+function closeEditItemDialog()
+{
+$('#dialog-message-edit').dialog('close');
+}
+
+function closeItemDialog()
+{
+$('#dialog-message').dialog('close');
+}
+var itemId	;
+var itemName	;
+var url	=	'<?=base_url()?>restaurantitem/addItem/';
+function openItem(nItemId)
+{
+	itemId	=	nItemId;
+	var pageFrame = document.getElementById('itemIframe'); 
+	
+	pageFrame.src 	=	url+nItemId;
+	
+//	alert (window.frames[ "itemIframe" ].src);
+	
+//	window.frames[ "itemIframe" ].document;
+	
+	$('#dialog-message').dialog('open');
+	return false;
+}
+
+function openItemEdit(nItemId , nItemName)
+{
+	itemId	=	nItemId;
+	itemName = nItemName;
+	$('#newspan_itemName').html(nItemName);
+	var pageFrame = document.getElementById('itemIframeEdit'); 
+	
+
+	pageFrame.src 	=	url+nItemId;
+	
+//	alert (window.frames[ "itemIframe" ].src);
+	
+//	window.frames[ "itemIframe" ].document;
+	
+	$('#dialog-message-edit').dialog('open');
+//	 alert ($("div.dialog-message-edit").html());
+	return false;
+}
+
+/*var addItem	;
+function addItems(nItemId)
+{
+	addItem	=	nItemId;
+	$('#add_food_item').dialog('open');
+	return false;
+}
+*/
+var disableItem	;
+function disableItems(nItemId, strItemName)
+{
+	disableItem	=	nItemId;
+	itemName	=	strItemName;
+	$('#newspan_itemNameDis').html(strItemName);
+	$('#disable_food_item').dialog('open');
+	return false;
+}
+
+var activeItem	;
+function activeItems(nItemId, strItemName)
+{
+	activeItem	=	nItemId;
+	itemName	=	strItemName;
+	$('#newspan_itemNameAct').html(strItemName);
+	$('#active_food_item').dialog('open');
+	return false;
+}
+
+var deleteItem	;
+function deleteItems(nItemId, strItemName)
+{
+	deleteItem	=	nItemId;
+	itemName	=	strItemName;
+	$('#span_itemName').html(strItemName);
+	$('#delete_food_item').dialog('open');
+	return false;
+}
+
+var addCategory	;
+function addCategory(nItemId)
+{
+	addCategory	=	nItemId;
+	$('#add_new_category').dialog('open');
+	return false;
+}
+
+</script>
+<!-- Start Dialog Popups -->
+<script type="text/javascript">
+			$(function(){
+				// Dialog	( Start Edit Variant Popup Window Here )
+				$('#dialog-message').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 530
+				});
+				$('#dialog-message-edit').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 530
+				});
+
+				$('#add_food_item').dialog({
+					autoOpen: false,
+					modal: false,
+					width: 400,
+					buttons: {
+						"Save": function() { 
+							$(this).dialog("close"); 
+						}, 
+						"Cancel": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+				// Dialog	( Start Disable Popup Window Here )
+				$('#disable_food_item').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Yes": function() { 
+						
+							$("#itemName").val(itemName);
+							$("#updatestatus").val("Inactive");
+							$("#updateid").val(disableItem);
+							 
+							document.statuschange.submit();
+														
+						}, 
+						"No": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+				// Dialog	( Start Active Popup Window Here )
+				$('#active_food_item').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Yes": function() { 
+							$("#itemName").val(itemName);
+							$("#updatestatus").val("Active");
+							$("#updateid").val(activeItem);
+							 
+							document.statuschange.submit();
+						}, 
+						"No": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+				// Dialog	( Start Delete Popup Window Here )
+				$('#delete_food_item').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Yes": function() { 
+							$("#itemName").val(itemName);
+							$("#updatestatus").val("Deleted");
+							$("#updateid").val(deleteItem);
+							 
+							document.statuschange.submit();
+						}, 
+						"No": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+				// Dialog	( Start Delete Popup Window Here )
+				$('#add_new_category').dialog({
+					autoOpen: false,
+					modal: true,
+					width: 600,
+					height: 180,
+					buttons: {
+						"Save": function() { 
+							$(this).dialog("close"); 
+						}, 
+						"Cancel": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+				});
+
+			});
+		</script>
+<!-- End Dialog Popups -->
+
+<!-- Start Mid Right -->
+                       <?PHP
+			echo form_open(base_url().'restaurantitem/managefooditems',array('id' => 'statuschange','name'=>'statuschange'));
+
+?>            
+            <input type="hidden" name="updatestatus" id="updatestatus" />
+            <input type="hidden" name="updateid" id="updateid" />
+             <input type="hidden" name="itemName" id="itemName" />
+                    </form>
+		<div class="mid-right">
+        	<h1>
+            	Manage Food Items
+                <a href="javascript:void(null);" onclick="openItem(0);" class="global-link float-right"><span>Add New Item</span></a>
+            </h1>
+			<?PHP
+            if (count($success))
+            {
+            ?>
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                    <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <strong><?=$success["msg"]?></strong></p>
+                </div>
+            </div>
+            <?PHP
+            }
+            ?>
+            <br class="clear" />
+            <br/>
+            <div class="itemdrop-list">
+			<?PHP
+            //	$attributes	=	array("id"=>"frmAddItem","name"=>"frmAddItem")
+            $attributes = array('id' => 'frmsearchitem','name' => 'frmsearchitem');
+            echo form_open(base_url().'restaurantitem/managefooditems',$attributes);
+            ?>
+            
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="width:17%;">Within Category:</td>
+                    <td>
+                    <?=getFoodCategoryDropDown($categorylist,$filters["category_id"],'class="combwd01" style="width:200px;"')?>
+                    </td>
+                    <td>By Letter:</td>
+                    <td>
+                      <select name="alphabet" class="combwd01" style="width:56px;">
+                        <option <?=($filters["alphabet"]=="")?'selected="selected"':''?> value="">All</option>
+                        <?PHP
+                        for ($char=0;$char<26;$char++)
+                        {
+                            $val	=	chr($char+65);
+                            $isSelected	=	($filters["alphabet"]	==	$val)?'selected="selected"':'';
+                        ?>
+                        <option value="<?=$val?>" <?=$isSelected?>><?=$val?></option>
+                        <?
+                        }
+                        ?>
+                        
+                      </select>
+                    </td>
+                    <td>Show:</td>
+                    <td>
+                        <select name="status" class="combwd01">
+                            <option value="All" <?=($filters["status"]=="All")?'selected="selected"':''?>>All</option>
+                            <option value="Active" <?=($filters["status"]=="Active")?'selected="selected"':''?>>Active</option>
+                            <option value="Inactive" <?=($filters["status"]=="Inactive")?'selected="selected"':''?>>Disable</option>
+                        </select>
+                    </td>
+                    <td style="width:75px;">
+                        <a href="javascript:void(null);" onclick="document.frmsearchitem.submit();" class="global-link" style="float:right;"><span>Search</span></a>
+                    </td>
+                  </tr>
+                </table>
+                </form>
+            </div>
+            
+            <div class="ctgry-table">
+                        <!-- Start Edit Food Item Popup Window Here -->
+                        <div id="dialog-message" title="Creat New Food Item">
+							<iframe allowtransparency="true" frameborder="0" width="510" height="896" style="background:0px none;" id="itemIframe" name="itemIframe">
+                            <script type="text/javascript">
+								document.location = "<?=base_url()?>restaurantitem/addItem";
+							</script>
+							<noscript>
+							Your browser doesn't appear to support frames.  Please see the <a href="<?=base_url()?>restaurantitem/addItem">non-framed version</a> of this page.
+							</noscript> 
+                            </iframe>
+                        </div>
+                        
+                        
+                        <div id="dialog-message-edit" title="Edit Food Item">
+							<iframe allowtransparency="true" frameborder="0" width="510" height="896" style="background:0px none;" id="itemIframeEdit" name="itemIframeEdit">
+                            <script type="text/javascript">
+								document.location = "<?=base_url()?>restaurantitem/addItem";
+							</script>
+							<noscript>
+							Your browser doesn't appear to support frames.  Please see the <a href="<?=base_url()?>restaurantitem/addItem">non-framed version</a> of this page.
+							</noscript> 
+                            </iframe>
+                        </div>
+                       <!-- End Edit Food Item Popup Window Here -->  
+                        
+                        <div id="add_new_category" title="Creat New Category">
+                        	<br />
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td style="width:28%;">New Category:</td>
+                                <td><input name="fld" type="text" class="txt-field" style="width:250px;" /></td>
+                              </tr>
+                            </table>
+                            <table width="100%" border="0" cellspacing="2" cellpadding="0" class="ajax-loader" style="display:none;">
+  <tr>
+    <td><img src="<?=base_url()?>/images/ajax-loader.gif" alt="loader" /></td>
+  </tr>
+</table>
+                        </div>
+                        <!-- End Edit Food Item Popup Window Here -->
+
+                        <!-- Start Disable Popup Window Here -->
+                        <div id="disable_food_item" title="Disable Food Item">
+                        	<br />
+							<span style="float: left; margin: 0pt 7px 10px 0pt;" class="ui-icon ui-icon-info"></span>
+                            <strong>Are you want to disable <span id="newspan_itemNameDis"></span> food item</strong>
+                            <table width="100%" border="0" cellspacing="2" cellpadding="0" class="ajax-loader" style="display:none;">
+  <tr>
+    <td><img src="<?=base_url()?>/images/ajax-loader.gif" alt="loader" /></td>
+  </tr>
+</table>
+                        </div>
+                        <!-- End Disable Popup Window Here -->
+
+                        <!-- Start Active Popup Window Here -->
+                        <div id="active_food_item" title="Active Food Item">
+                        	<br />
+							<span style="float: left; margin: 0pt 7px 10px 0pt;" class="ui-icon ui-icon-info"></span>
+                            <strong>Are you want to Active <span id="newspan_itemNameAct"></span> food item</strong>
+                            <table width="100%" border="0" cellspacing="2" cellpadding="0" class="ajax-loader" style="display:none;">
+  <tr>
+    <td><img src="<?=base_url()?>/images/ajax-loader.gif" alt="loader" /></td>
+  </tr>
+</table>
+                        </div>
+                        <!-- End Active Popup Window Here -->
+
+                        <!-- Start Delete Popup Window Here -->
+                        <div id="delete_food_item" title="Delete Food Item">
+                        	<br />
+							<span style="float: left; margin: 0pt 7px 10px 0pt;" class="ui-icon ui-icon-info"></span>
+                            <strong>Are you want to Delete <span id="span_itemName"></span> food item</strong>
+                            <table width="100%" border="0" cellspacing="2" cellpadding="0" class="ajax-loader" style="display:none;">
+  <tr>
+    <td><img src="<?=base_url()?>/images/ajax-loader.gif" alt="loader" /></td>
+  </tr>
+</table>
+                        </div>
+                        <!-- End Delete Popup Window Here -->                                
+            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr class="ctgry-rowbg01">
+                    <td>No</td>
+                    <td style="width:33%;">Item Name</td>
+                    <td style="width:31%;">Category</td>
+                    <td style="padding-right:0px;">Actions</td>
+                  </tr>
+                  
+                  <?PHP
+				  $nCount	=	$ncounter;
+                  foreach ($items as $item)
+				  {
+				  ?>
+                  <tr>
+                    <td colspan="4" class="td-height"></td>
+                  </tr>
+                  <tr class="<?=($item["status"]=="Inactive")?"ctgry-disable":"ctgry-rowbg02"?>">
+                    <td align="center"><?=$nCount?></td>
+                    <td><?=$item["item_name"]?></td>
+                    <td><span><?=$item["category_name"]?></span></td>
+                    <td class="action">
+                    	<a href="javascript:void(null);" onclick="openItemEdit(<?=$item["id"]?> , '<?=$item["item_name"]?>');">Edit Item</a><span>l</span>        
+                                        
+                        <?PHP
+                        if ($item["status"]=="Inactive")
+						{
+						?>
+                    	<a href="javascript:void(null);" onclick="activeItems(<?=$item["id"]?>, '<?=$item["item_name"]?>');" class="disable-active">Activate</a><span>l</span>
+                        <?PHP
+                        }
+						else
+						{
+						?>
+                      	<a href="javascript:void(null);" onclick="disableItems(<?=$item["id"]?>, '<?=$item["item_name"]?>');">Disable</a><span>l</span>
+                        <?PHP
+						}
+						?>
+						<a href="javascript:void(null);" onclick="deleteItems(<?=$item["id"]?>, '<?=$item["item_name"]?>');">Delete</a>                    </td>
+                  </tr>
+                  <?PHP
+					  $nCount++;
+                  }//end foreach
+				  ?>
+                  
+                  <tr>
+                    <td colspan="4" class="td-height"></td>
+                  </tr>
+                  
+                </table>
+          </div>
+            <div class="paging">
+            <?=$paginationLinks?>            	
+            </div>
+        </div>
+<!-- End Mid Right -->
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

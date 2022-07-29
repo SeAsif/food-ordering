@@ -1,0 +1,86 @@
+<?PHP
+		$this->load->view( 'admin/header_view');
+
+?>
+		<script>
+			function Caution(terminalId,terminal)
+			{
+				answer = window.confirm("Are you sure you want to delete "+terminal+" terminal?");
+				
+				if(answer == true)
+				{
+					document.location="<?=base_url()?>adminterminal/delete_terminal/"+terminalId;
+				}
+			}
+		</script>
+<div class="trl-menu">
+	<?php 
+	if(isset($breadcrumbs))
+	{
+			echo $breadcrumbs;
+	}else{
+		echo "No Data";
+	}
+	?>
+                
+            </div>
+            <br class="clear" />
+		<table align="center" width="775" cellpadding="5" cellspacing="1">
+			<tr>
+				<td align="left" colspan="3">&nbsp;</td>
+				<td width="571" colspan="2" align="right">
+					<a href="<?=base_url()?>adminterminal/add_terminal" class="linkMain"
+						onMouseOver="window.status='Add Terminal'; return true;"
+						onMouseOut="window.status=''; return true;">Add Terminal</a>				</td>
+			</tr>
+	</table>
+		<table align="center" width="775" cellpadding="5" cellspacing="1" class="tablebg">
+			<tr>
+				<td align="center" colspan="7" class="tdHead"><strong>Manage Terminals </strong></td>
+			</tr>
+			<tr>
+				<td align="center" class="tdTitle" width="3%"></td>
+				<td align="center" class="tdTitle">Terminal Name</td>
+				
+                <td align="center" class="tdTitle">Airport Name</td>
+                <td align="center" class="tdTitle" width="8%">Edit</td>
+				<td align="center" class="tdTitle" width="9%">Delete</td>
+			</tr>
+			<?
+			$count=0;
+	//		print_r($terminalList);
+	//		print_r($airportList);
+            foreach($terminalList as $itemTerminal)
+			{
+				$count++;
+			?>			
+			<tr>
+                <td class='tdRow' align='center'><?=$count?></td>
+                <td class='tdRow' align='center'><?=$itemTerminal["terminal_name"]?></td>
+                <?php
+				foreach ($airportList as $itemAirport)
+				{
+					if($itemTerminal["airport_id"] == $itemAirport["id"])
+					{
+					?>
+                         <td class='tdRow' align='center'><?=$itemAirport["airport_name"]?>
+                         </td>
+					<?php
+					}
+				}	
+					?>
+                
+                <td class='tdRow' align='center'>
+                    <a href='<?=base_url()?>adminterminal/edit_terminal/<?=$itemTerminal["id"]?>' class='link'>Edit</a>
+                </td>
+                <td class='tdRow' align='center'>
+                    <a href='javascript: Caution(<?=$itemTerminal["id"]?> , "<?=$itemTerminal["terminal_name"]?>");' class='link'>Delete</a>
+                </td>
+            </tr>
+            <?
+            }
+			?>
+		</table>
+<?PHP
+		$this->load->view( 'admin/footer_view');
+?>

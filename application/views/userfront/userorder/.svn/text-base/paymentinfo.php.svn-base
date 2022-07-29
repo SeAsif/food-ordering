@@ -1,0 +1,452 @@
+<?PHP
+$this->load->view("userfront/header_view");
+?>
+<script type="text/javascript" src="<?=base_url()?>js/frontfunctions.js"></script>
+<script>
+var url	=	'<?=base_url()?>userrestaurant/itemdetail/';
+function openItem(nItemId)
+{
+	itemId	=	nItemId;
+	var pageFrame = document.getElementById('itemIframe'); 
+	
+	pageFrame.src 	=	url+nItemId;
+		
+	$('#dialog-message').dialog('open');
+	return false;
+}
+	$(function(){
+		// Dialog	( Start Edit Variant Popup Window Here )
+		$('#dialog-message').dialog({
+			autoOpen: false,
+			modal: true,
+			width: 560
+		});
+
+	});
+function profileCheck(userid)
+{
+//	alert(selectedOption);
+	showProfile(userid);
+//	$.ajax({ type: "POST", url: "<?=base_url()?>userorder/getProfile", data:{id : userid}, success: function(response)
+//	{
+	//	alert(response);
+//	}
+			
+//	});
+}
+function startTransaction(userid)
+{
+	
+	paymentProfile = $('#profile_id').val();
+	amount = $('#chargetotal').val();
+//	alert(amount);
+//	exit();
+//	alert(paymentProfile);
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/createCustomerProfileTransaction", data:{id : userid , totalAmount : amount , paymentProfileId : paymentProfile}, success: function(response)
+	{
+		var obj = eval("(" + response + ")");
+		 alert(obj.text);
+	}
+			
+	});
+}
+function startTransactionAim()
+{
+	amount = $('#chargetotal').val();
+	cardnumber = $('#cardnumber').val();
+	expyear = $('#cardexpyear').val();
+	expmonth = $('#cardexpmonth').val();
+	userid = $('#user_id').val();
+	if($('#addToProfile').attr('checked'))
+	{
+			$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/createCustomerProfile/"+userid, data:{cardnumber : cardnumber , expyear : expyear , expmonth : expmonth}, success: function(response)
+		{
+			var obj = eval("(" + response + ")");
+			if(obj.validation == "YES")
+				alert('Added to profile Successfully.');
+			else
+				alert(obj.text);	
+				
+			if(obj.validation == "YES")
+			{
+				$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/createCustomerProfileTransaction", data:{totalAmount : amount , paymentProfileId : obj.paymentProfile , userid : userid}, success: function(response)
+	{
+		var obj = eval("(" + response + ")");
+			alert(obj.text);
+	}
+			
+	});
+			} // end if(obj.validation == "YES")
+		}
+				
+		});
+	} // end if($('#addToProfile').attr('checked'))
+	else
+	{
+		$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/createCustomerProfileTransactionAim", data:{totalAmount : amount , cardnumber : cardnumber , expyear : expyear , expmonth : expmonth}, success: function(response)
+		{
+			alert(response);
+		}
+				
+		}); 
+	} // end else
+}
+function addProfile(userId)
+{
+	cardnumber = $('#cardnumber').val();
+	expyear = $('#cardexpyear').val();
+	expmonth = $('#cardexpmonth').val();
+//	alert(userId);
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/createCustomerProfile/"+userId, data:{cardnumber : cardnumber , expyear : expyear , expmonth : expmonth}, success: function(response)
+	{
+		alert(response);
+	}
+			
+	});
+}
+function deleteProfile(userId)
+{
+	paymentProfile = $('#paymentProfileId').val();
+	$.ajax({ type: "POST", url: "<?=base_url()?>irestaurant/deleteCustomerPaymentProfile/"+userId, data:{paymentProfile : paymentProfile}, success: function(response)
+	{
+		var obj = eval("(" + response + ")");
+		 if(obj.resultCode == "Ok")
+		 {
+		 	alert(obj.text);
+			document.location.href	=	document.location.href;
+		 }
+	}
+			
+	});
+}
+
+</script>
+<!-- Start Menu Popup -->
+    <div id="dialog-message" title="Item Details">
+        <iframe allowtransparency="true" frameborder="0" width="526" height="590" style="background:0px none; padding-top:10px;" id="itemIframe" name="itemIframe">
+        </iframe>
+    </div>
+
+    	<div class="crum-menu">
+        	<a href="<?=base_url()?>home">Home</a><span>&gt;</span>
+            <a href="<?=base_url()?>usersearch/searchresult">Search Result</a><span>&gt;</span>
+        	Payment Information
+        </div>
+		<div class="cont-wrap">
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-top.jpg" alt="top" border="0" /></div>
+        	<div class="rest-mid">
+
+            <!-- Start Restaurant Head -->
+				<div class="account-hed">
+                	<h1>
+                    	Payment Information 
+                        <!--<span>
+                        	(<strong style="color:#FF0000;">*</strong>Required)
+                        </span>-->
+                    </h1>
+                </div>
+            <!-- End Restaurant Head -->
+				<br class="clear" />
+       <?PHP
+			 if(isset($errors))  	
+			 {
+			   if (count($errors) > 0)
+			   {
+			   ?>
+                <div class="ui-widget">
+                <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">                                               
+			   <?PHP
+				   foreach ($errors as $error)
+				   {
+					echo $error;
+				   }
+				?>
+		</div>
+	</div>
+				<?PHP
+			   }
+			 } 
+			?>      
+
+            <!-- Start Content Section -->
+            	<div class="paymment">
+	                	<h2>Total Amount</h2>
+                        <span>
+                        <!--$<? //$orderDetail["totalprice"]?>-->
+			<?PHP
+            if (count($cartItems) > 0)
+			{
+			?>
+            <!-- Start Content Section -->
+				<div class="account" style="float:left;width:844px;">
+                    <?PHP
+					$grandTotal	=	0;
+					
+                    foreach ($cartItems as $cartItem)
+					{
+					?>
+                    	<div class="Italiano-Piza" style="padding-bottom:0px; width:844px;">
+                        	<h3><?=$cartItem["item_name"]?></h3>
+                            <p><?=$cartItem["item_description"]?></p>
+                            	<a href="javascript:void(null);" onclick="openItem(<?=$cartItem["id"]?>);">View Details</a>
+                                	<div class="qty-price" style="width:173px;">
+                                	<table border="0" cellspacing="0" cellpadding="0" style="min-width:173px; margin-bottom:10px;">
+                                          <tr>
+                                            <td>Qty: <strong style="color:#5B5B5B;"><?=$cartItem["quantity"]?></strong></td>
+                                            <td style="padding:2px 10px 0px 10px; vertical-align:top;">
+                                            <img src="<?=base_url()?>images/front/Review-sprtr.gif" alt="sprtr" /></td>
+                                             <?php $english_format_number = number_format($cartItem["totalprice"], 2, '.', '');?>
+                                            <td>Price: <strong style="color:#5B5B5B;">$<?=$english_format_number?></strong></td>
+                                          </tr>
+                                        </table>
+                                </div>       
+                        </div>
+					<?PHP
+						$grandTotal	=	$grandTotal+$cartItem["totalprice"];
+                    }//end foreach ($cartItems as $cartItem)
+					?>
+                    <table border="0" cellspacing="0" cellpadding="0" style="min-width:143px; margin-bottom:10px;" align="right">
+                    <tr>
+                    <?php $english_format_number = number_format($orderDetail["city_tax"], 2, '.', '');?>
+                    <td><span style="padding-right:10px;">Total City Tax: $<?=$english_format_number?></span> </td>
+                    </tr>
+                    <tr>
+                    <?php $english_format_number = number_format($orderDetail["state_tax"], 2, '.', '');?>
+                    <td><span style="padding-right:10px;">Total State Tax: $<?=$english_format_number?></span> <br /> </td>
+                    </tr>
+                    <tr>
+                    <?php $english_format_number = number_format($grandTotal, 2, '.', '');?>
+                           <td><span style="padding-right:10px;">Total : $<?=$orderDetail["totalprice"]?></span></td>
+                    </tr>
+                    </table>
+                </div>
+				<?	
+				}	
+					?>
+                        
+                        </span><br /><br />
+
+
+						<?
+                        echo form_open($this->config->item('base_url_https').'userorder/processorder_gateway/',$attributes);
+                        ?>
+        <input type="hidden" name="oid" value="<?=$orderDetail['id']?>">
+        <input type="hidden" name="ordertype" value="SALE" />
+        <input type="hidden" name="orderoptions" value="GOOD" />
+    	<input type="hidden" name="chargetotal" id="chargetotal" value="<?=$orderDetail['totalprice']?>">
+<br class="clear" />
+        					<br />
+		                	<h2>Payment Options</h2>
+				      
+                        <table width="28%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td valign="top">
+                            	<label onclick="$('#cardInfo').show(); $('#cardInfo1').show();  $('#paypalInfo').hide(); $('#cardInfo2').hide();">
+                                	<input name="btn" type="radio" value="" class="float-left" checked="checked"/> 
+                                    <span style="display:block; padding:2px 0 0 28px;">Credit Card</span>                                </label>                            </td>
+                            <td valign="top">
+                            	<label onclick="$('#cardInfo').hide(); $('#cardInfo2').hide(); $('#cardInfo1').hide(); $('#cardInfo3').hide(); $('#paypalInfo').show(); ">
+                                	<input name="btn" type="radio" value="" class="float-left" /> 
+                                    <span style="display:block; padding:2px 0 0 28px;">
+                                    	<img src="<?=base_url()?>images/front/paypal.jpg" alt="top" border="0" />                                    </span>
+                                </label>
+                            </td>
+                          </tr>
+                          
+                        </table>
+                     
+                    <br class="clear" />
+						<div id="cardInfo1">
+                 <?
+                 	if($this->session->userdata('id'))
+					{
+						if($profile_id == 1)
+						{
+				 ?>       
+                            <h2>Want to use your customer profile?</h2>
+                            <table width="17%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td valign="top">
+                                    <label onclick="$('#cardInfo2').show();  $('#cardInfo').hide();  profileCheck(<?=$this->session->userdata('id')?>)">
+                                        <input name="profile" id="profile" type="radio" value="" class="float-left" /> 
+                                        <span style="display:block; padding:2px 0 0 28px;">Yes</span>
+                                    </label>
+                                </td>
+                                <td valign="top">
+                                    <label onclick="$('#cardInfo').show();  $('#cardInfo2').hide(); $('#cardInfo3').hide(); ">
+                                        <input name="profile" id="profile" type="radio" value="" class="float-left" checked="checked"/> 
+                                        <span style="display:block; padding:2px 0 0 28px;">No</span>
+                                    </label>
+                                </td>
+                              </tr>
+                            </table>
+                  <?
+				  		}	
+				  	}
+				  ?>      
+                        </div>
+                        <div id="cardInfo2" style="display:none;">
+	                	<h2>Your Payment Profile</h2>
+                        <table width="58%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+                            <td>Card Number:</td></tr>
+                            <tr>
+                                <td>
+                          <!--          <select name="allprofiles" id="allprofiles" style="width:200px;" class="combowd float-left" onchange="startTransaction(<?=$orderDetail["user_id"]?>)">
+                                        <option value="Select Profile">Select Profile</option>
+                                   
+                                    </select> -->
+                                  <input name="card_number" id="card_number" style="width:200px;" class="combowd float-left" />  
+                                </td>
+                            </tr>
+                        <tr>
+                        <td>Expiration Date:</td>
+                        </tr>
+                        <tr>
+                        <td><input name="expiry_date" id="expiry_date" style="width:200px;" class="combowd float-left" />
+                        </td><input type="hidden" name="paymentProfileId" id="paymentProfileId"/>
+                        <input type="hidden" name="have_error" id="have_error"/>
+                        </tr>  
+                        
+                        </table>
+                        <br class="clear" />
+                       
+                        <input name="btn" type="submit" class="add-btn float-left" value="Submit" style="margin-right:10px;" />
+                        <input name="btn" type="submit" class="add-btn float-left" value="Cancel" />
+                <!--        <input name="btn" type="button" onclick="deleteProfile(<?=$this->session->userdata('id')?>)" class="add-btn float-left" value="Delete this payment profile" style="margin-left:10px;" /> -->
+                        </div>
+                        <div id="cardInfo3" style="display:none;">
+	                	<h2>Your Profile Information</h2>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td valign="top">
+                            	<table width="90%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:0px !important;">
+                                  <tr>
+                                    <td>Card Number:</td>
+                                    <td style="padding-left:10px; font-weight:bold;">4111111111111111</td>
+                                  </tr>
+                                  <tr>
+                                    <td>Expiration Date:</td>
+                                    <td style="padding-left:10px; font-weight:bold;">
+                                    	01/2011
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>CVV:</td>
+                                    <td style="padding-left:10px; font-weight:bold;">12345</td>
+                                  </tr>
+                                </table>
+                            </td>
+                            <td valign="top">
+                            	<a href="#" class="remove float-right">Delete Your Profile</a>
+                            </td>
+                          </tr>
+                        </table>
+                        <br class="clear" />
+                        <input name="btn" type="submit" class="add-btn float-left" value="Submit" style="margin-right:10px;" />
+                        <input name="btn" type="submit" class="add-btn float-left" value="Cancel" />
+                        </div>
+                        <div id="cardInfo">
+	                	<h2>Credit Card Information</h2>
+                        <table width="58%" border="0" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td valign="top" style="padding-bottom:30px;">
+                            	<img src="<?=base_url()?>images/front/cards.jpg" alt="top" border="0" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td valign="top">
+                    
+                            </td>
+                          </tr>
+                          <tr>
+                            <td valign="top">
+                            	<table width="90%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:0px !important;">
+                                  <tr>
+                                    <td>Card Number <strong>*</strong></td>
+                                    <td style="padding-left:10px;">Expiration Date <strong>*</strong></td>
+                                  </tr>
+                                  <tr>
+                                    <td><input name="cardnumber" id="cardnumber" value="4111111111111111"></td>
+                                    <td style="padding-left:10px;">
+                                    	<select name="cardexpmonth" id="cardexpmonth" class="" style="width:70px;">
+                                        	<option value="01">01</option>
+                                            <option value="02">02</option>
+                                            <option value="03">03</option>
+                                            <option value="04">04</option>
+                                            <option value="05">05</option>
+                                            <option value="06">06</option>
+                                            <option value="07">07</option>
+                                            <option value="08">08</option>
+                                            <option value="09">09</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    	<select name="cardexpyear" id="cardexpyear" class="" style="width:100px;">
+                                        <?php
+											for($i=2011;$i<2020;$i++)
+											{
+										?>
+                                        		<option value="<?=$i?>" <?=($newyear == $i)?'selected="selected"':''?>><?=$i?></option>
+											<?PHP
+                                            }
+                                            ?>	
+                                            <!--<option value="2011">2011</option>
+                                            <option value="2012">2012</option>
+                                            <option value="2013">2013</option>
+                                            <option value="2014">2014</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>-->
+                                        </select>                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td>CVV <strong>*</strong></td>
+                                    <td style="padding-left:10px;">&nbsp;</td>
+                                  </tr>
+                                  <tr>
+                                    <td><input name="cvmvalue" value="123"></td>
+                                    <td style="padding-left:10px;">&nbsp;</td>
+                                  </tr>
+                                  <tr>
+                                  <td>
+                             <?
+							 	if($this->session->userdata('id'))
+								{
+							 ?>    
+                             	  <input type="hidden" name="user_id" id="user_id" value="<?=$this->session->userdata('id')?>"  />
+                                  <input name="use_payment_profile" id="use_payment_profile" type="checkbox" value="1" class="float-left" /> 
+                                        <span style="display:block; padding:2px 0 0 28px;">Add to my Payment Profile.</span>
+                             <?
+                             	}
+							 ?>           
+                                  </td>
+                                  </tr>
+                                </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <br class="clear" />
+                        <input name="btn" type="submit" class="add-btn float-left" value="Submit" style="margin-right:10px;" />
+                        <input name="btn" type="submit" class="add-btn float-left" value="Cancel" />
+                               
+                        </div>
+                    </form>
+						<div id="paypalInfo" style="display:none;">
+	                        <p>Please click the pay now button below to pay through paypal</p>
+							<a href="../processOrder/<?=$order?>" class="add-btn float-left" style="padding:6px 25px 6px 25px;">
+                            	Submit Order
+                            </a>                        
+                        </div>
+                </div>
+            <!-- End Content Section -->
+
+            </div>
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-bottom.jpg" alt="top" border="0" /></div>
+        </div>
+
+<?PHP
+$this->load->view("userfront/footer_view");
+?>

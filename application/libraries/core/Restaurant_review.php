@@ -1,0 +1,69 @@
+<?
+/**
+* Restaurants Library
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Menu
+* 
+*/
+
+	class Restaurant_Review {
+
+		private $_obj;
+		
+		/**
+		* @method constructor		
+		*/
+		function __construct()
+		{
+			$this->_obj =& get_instance();
+			$this->_obj->load->model('restaurant_review_model');	
+			$this->_obj->load->model('restaurant_model');	
+		}
+		
+		/**
+		* @method This method will add resturants reviews
+		* @params array of review
+		*/
+		function addRestaurantReviews($arrInfo)
+		{
+			$list=$this->_obj->restaurant_review_model->addReview($arrInfo);
+			if($list!="" && $list!=0)
+			{
+				$list_return["response"]="RECORD_ADDED";
+				$list_return["insert_id"]=$list;
+				
+			}
+			else
+			{
+				$list_return["response"]="RECORD_ADDED";
+				$list_return["insert_id"]=0;
+			}	
+			return $list_return;
+		}
+
+		/**
+		* @method This method will return resturants reviews
+		* @params restaurant id will be passed as parameter
+		*/
+		function listRestaurantReviews($restaurantId,$count="No",$limit = NULL, $offset = NULL)
+		{
+			$list=$this->_obj->restaurant_review_model->getRestaurantReviews($restaurantId,$count,$limit, $offset);
+			return $list;
+		}
+		
+
+		/**
+		* @method This method will return resturants reviews
+		* @params restaurant id will be passed as parameter
+		*/
+		function listYelpRestaurantReviews($restaurantId)
+		{
+			$list=$this->_obj->restaurant_model->getRestaurantById($restaurantId);
+			
+			$list=$this->_obj->restaurant_review_model->getYelpRestaurantReviews($list);
+			return $list;
+		}
+
+	}
+?>

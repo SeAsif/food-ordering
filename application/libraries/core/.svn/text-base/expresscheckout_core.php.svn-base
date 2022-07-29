@@ -1,0 +1,76 @@
+<?php
+class ExpressCheckOut_Core
+{
+	private $_obj;
+	
+	function ExpressCheckOut_core()
+	{
+		$this->_obj =& get_instance();
+		$this->_obj->load->library('core/paypalfunctions');
+	}
+	
+	function CallShortcutExpressCheckout($arrinfo)
+	{
+		$returnURL	=	$this->_obj->config->item("returnURL");
+		$cancelURL	=	$this->_obj->config->item("cancelURL");
+		$currencyCodeType = "USD";
+		$paymentType = "Sale";
+
+		$resArray = array();
+		
+		$resArray = $this->_obj->paypalfunctions->CallShortcutExpressCheckout($arrinfo["paymentAmount"], $currencyCodeType, $paymentType, $returnURL, $cancelURL,$arrinfo["orderId"], $arrinfo["item_name"],$arrinfo["drt"]);
+		
+		$ack = strtoupper($resArray["ACK"]);
+		if($ack=="SUCCESS" || $ack=="SUCCESSWITHWARNING")
+		{
+			$this->_obj->paypalfunctions->RedirectToPayPal ( $resArray["TOKEN"] );
+		} 
+		else  
+		{
+			//Display a user friendly Error on the page using any of the following error information returned by PayPal
+			$arrReturn["ErrorCode"] = urldecode($resArray["L_ERRORCODE0"]);
+			$arrReturn["ErrorShortMsg"] = urldecode($resArray["L_SHORTMESSAGE0"]);
+			$arrReturn["ErrorLongMsg"] = urldecode($resArray["L_LONGMESSAGE0"]);
+			$arrReturn["ErrorSeverityCode"] = urldecode($resArray["L_SEVERITYCODE0"]);
+			
+		/*	echo "SetExpressCheckout API call failed. ";
+			echo "Detailed Error Message: " . $ErrorLongMsg;
+			echo "Short Error Message: " . $ErrorShortMsg;
+			echo "Error Code: " . $ErrorCode;
+			echo "Error Severity Code: " . $ErrorSeverityCode;*/
+			
+			return $arrReturn;
+		}
+	}
+	
+	function ConfirmPayment($finalPaymentAmount )
+	{
+		$resArray = array();
+		
+		$resArray = $this->_obj->paypalfunctions->ConfirmPayment ( $finalPaymentAmount );
+		
+		$ack = strtoupper($resArray["ACK"]);
+		if( $ack == "SUCCESS" || $ack == "SUCCESSWITHWARNING" )
+		{
+			$resArray["PaymentDone"] = "Yes";
+			return $resArray;
+		}
+		else
+		{
+			$resArray["ErrorCode"] = urldecode($resArray["L_ERRORCODE0"]);
+			$resArray["ErrorShortMsg"] = urldecode($resArray["L_SHORTMESSAGE0"]);
+			$resArray["ErrorLongMsg"] = urldecode($resArray["L_LONGMESSAGE0"]);
+			$resArray["ErrorSeverityCode"] = urldecode($resArray["L_SEVERITYCODE0"]);
+			$resArray["PaymentDone"] = "No";
+			
+	/*		echo "<br />GetExpressCheckoutDetails API call failed. ";
+			echo "<br />Detailed Error Message: " . $ErrorLongMsg;
+			echo "<br />Short Error Message: " . $ErrorShortMsg;
+			echo "<br />Error Code: " . $ErrorCode;
+			echo "<br />Error Severity Code: " . $ErrorSeverityCode;
+	*/
+			return $resArray;		
+		}
+	}
+}
+?>

@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Waive Inc Administration</title>
+<link href="<?=base_url()?>css/admin.css" rel="stylesheet" type="text/css">
+<link href="<?=base_url()?>css/admin_style.css" rel="stylesheet" type="text/css">
+<script type="text/JavaScript">
+</script>
+<!-- <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script> -->
+</head>
+
+<body>
+
+<!-- Start Admin Main Wrap -->
+<div id="main-wrap">
+
+<!-- Start Admin Header Wrap -->
+	<div id="hed-wrap">
+    	<div class="logo"><a href="<?=base_url()?>admin/dashboard">Waive Inc Admin Management</a></div>
+        <div class="login-wrap01">
+            <span class="login"><a href="<?=base_url()?>admin/logout/" title="logout">Log Out</a></span>
+        	<span class="login-name"><strong>Welcome Admin User</strong></span>
+        </div>
+    </div>
+    <br class="clear" />
+<!-- End Admin Header Wrap -->
+
+<!-- Start Admin Mid Wrap -->
+	<div id="mid-wrap">
+
+
+
+
+
+
+

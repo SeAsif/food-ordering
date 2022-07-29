@@ -1,0 +1,153 @@
+<?
+/**
+* Order Management Model
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Menu
+* 
+*/
+class Order_Item_Model extends Model
+{
+	/**
+	 * Enter description here...
+	 *
+	 * @return Page_Model
+	 */
+	function Order_Item_Model()
+	{
+		parent::Model();
+	}
+	/*
+	Add		
+	*/
+	
+	function addNewOrderItem($arrInfo)
+	{
+      	$this->db->insert("order", $arrInfo);  
+		return $this->db->insert_id();
+	}
+
+	/*
+	Update
+	*/
+	function updateOrderItem($arrInfo)
+	{
+		$this->db->where(array("id"=>$arrInfo["id"]));
+		$this->db->set($arrInfo); 
+		
+		$this->db->update('order_item');
+	}
+
+	/*
+	Delete
+	*/
+	function deleteOrderItem($arrInfo)
+	{
+		$this->db->where('id',$arrInfo["id"]);
+		$this->db->delete('menu_item'); 		
+	}
+
+	/**
+	* @method This method is returning Menu Items for a Restaurant 
+	* @params Item Id will be passed as parameter
+	*/
+	function getOrderItems($orderItemFilter)
+	{
+		if (isset($orderItemFilter["order_id"]))
+			$this->db->where(array('order_id'=>$orderItemFilter["order_id"]));
+
+		if (isset($orderItemFilter["session_id"]))
+			$this->db->where(array('session_id'=>$orderItemFilter["session_id"]));
+
+		$query=$this->db->get("order_item");
+
+		// Declare Array to pass data
+		$list = array();
+		foreach ($query->result_array() as $row)
+		{
+			$list[]	=	$row;
+		}		
+		// Return Array
+		return $list;
+	}
+
+	/**
+	* @method This method is returning Menu Items for a Restaurant 
+	* @params Item Id will be passed as parameter
+	*/
+	function getOrderItemWithVariants($orderItemFilter,$withVariants="Yes")
+	{
+		if (isset($orderItemFilter["order_id"]))
+			$this->db->where(array('order_id'=>$orderItemFilter["order_id"]));
+
+		if (isset($orderItemFilter["session_id"]))
+			$this->db->where(array('session_id'=>$orderItemFilter["session_id"]));
+
+		$this->db->select('order_item.*, menu_item.item_name, menu_item.item_description');
+		$this->db->from('order_item');
+		$this->db->join('menu_item', 'menu_item.id = order_item.item_id');
+
+//		$this->db->where('1');
+	
+		$query=$this->db->get();
+
+
+		// Declare Array to pass data
+		$list = array();
+		$nCount	=	0;
+		foreach ($query->result_array() as $row)
+		{
+			if ($withVariants	==	"Yes")
+				$row["variant_list"]	=	$this->getVariantsByOrderItemID($row["id"], $row["order_id"]);
+
+			$list[$nCount]	=	$row;
+			
+			$nCount++;
+		}		
+		// Return Array
+		return $list;
+	}
+
+	function getVariantsByOrderItemID($orderItemID, $orderId)
+	{
+//		$this->db->where('1');
+		$this->db->where('order_id',$orderId);
+		$this->db->where('order_item_id',$orderItemID);
+		
+//		$this->db->select('*');
+		$this->db->select('order_item_detail.*,menu_variant.name variant_name,menu_variant.group_id, menu_variant_group.group_name');
+		$this->db->from('order_item_detail');
+		$this->db->join('menu_variant', 'menu_variant.id = order_item_detail.variant_id');
+		$this->db->join('menu_variant_group', 'menu_variant_group.id = menu_variant.group_id');
+
+
+		
+//		$query = $this->db->get('order_item_detail');
+		$query = $this->db->get();
+
+		return $query->result_array();
+	}
+	/**
+	* @method This method will return specific menu item details 
+	* @params Item Id will be passed as parameter
+	*/
+	function getOrderItemById($Id)
+	{
+		$this->db->where('id',$Id);
+		$this->db->select('*');
+		
+		$query = $this->db->get('order_item');
+
+		return $query->result_array();
+	}
+	function getOrderItemByOrderId($Id)
+	{
+		$this->db->where('order_id',$Id);
+		$this->db->select('*');
+		
+		$query = $this->db->get('order_item');
+
+		return $query->result_array();
+	}
+}
+?>

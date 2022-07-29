@@ -1,0 +1,25 @@
+
+    </div>
+<!-- End Mid Section -->
+
+<!-- Start Footer -->
+<div id="footer-wrap">
+	<div class="logo"><a href="<?=base_url()?>">Starvved<br /><span>slogan!</span></a></div>
+    <div class="menu">
+    	<a href="<?=base_url()?>" class="active">HOME</a><span>|</span>
+        <a href="<?=base_url();?>page/aboutus">ABOUT</a><span>|</span>
+        <a href="<?=base_url();?>page/contactus">CONTACT US</a><span>|</span>
+        <a href="<?=base_url();?>page/refundandcancelationpolicy">Refund / Cancellation policy</a><span>|</span>
+        <a href="<?=base_url();?>page/privacystatement">Privacy Statement</a>
+    </div>
+    <br class="clear" />
+    <span class="copy">copyright 2010-2011, All rights reserved</span>
+</div>
+<!-- End Footer -->
+
+</div>
+<!-- End Main Body -->
+
+
+</body>
+</html>

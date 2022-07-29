@@ -1,0 +1,148 @@
+<?PHP
+$this->load->view("userfront/header_view");
+
+?>
+
+    	<div class="crum-menu">
+        	<a href="<?=base_url()?>home">Home</a><span>&gt;</span>
+            Create Account
+        </div>
+		<div class="cont-wrap">
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-top.jpg" alt="top" border="0" /></div>
+        	<div class="rest-mid">
+
+            <!-- Start Restaurant Account Settings Head -->
+				<div class="account-hed">
+                	<h1>Create Account<br /></h1>
+                    
+                </div>
+            <!-- End Restaurant Account Settings Head -->
+				<br class="clear" />
+            
+                <!-- Start Error Success Msg -->
+						<?PHP
+                        if (count($success))
+                        {
+                        ?>
+                        <div class="ui-widget">
+                            <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                                <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                                <strong><?=$success["msg"]?></strong></p>
+                            </div>
+                        </div>
+                        <?PHP
+                        }
+                        ?>
+                        <?PHP
+                        if (count($errors))
+                        {
+                        ?>
+                        <br/>
+                        <div class="ui-widget">
+                            <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+                                <?PHP
+                                foreach ($errors as $error)
+                                {
+                                    echo $error;
+                                }
+                                ?>
+                                
+                            </div>
+                            
+                        </div>
+                        <?PHP
+                        }
+                        ?>
+                        <br class="clear" />
+                <!-- End Error Success Msg -->
+
+			
+            <!-- Start Update Account Form Section -->
+            <?
+//			print_r($userDetail);
+			if($flag==0)            
+			{
+			?>
+            <form action="" method="post">
+				<div class="account-form" style="">
+                	<div class="float-left">
+                        <h2>Create Profile Name</h2>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+                          <tr>
+                            <td><strong>First Name</strong></td>
+                          </tr>
+                          <tr>
+                            <td>
+                            <input name="firstname" type="text" class="txt-field" value="<?=$userDetail["firstname"]?>" /></td>
+                          </tr>
+                          <tr>
+                            <td style="padding-top:10px;"><strong>Last Name</strong></td>
+                          </tr>
+                          <tr>
+                            <td><input name="lastname" type="text" class="txt-field" value="<?=$userDetail["lastname"]?>"/></td>
+                          </tr>
+                        </table>
+                        <h2>Create Email Address</h2>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+                          <tr>
+                            <td style="padding-top:10px;"><strong>New Email Address</strong></td>
+                          </tr>
+                          <tr>
+                            <td><input name="newemail" type="text" class="txt-field" value="<?=$userDetail["email"]?>"/></td>
+                          </tr>
+                          <tr>
+                            <td style="padding-top:10px;"><strong>Retype Email Address</strong></td>
+                          </tr>
+                          <tr>
+                            <td><input name="confemail" type="text" class="txt-field" /></td>
+                          </tr>
+                        </table>
+                    </div>
+                	<div class="float-right">
+                        <h2>Create Password</h2>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+                          <tr>
+                            <td style="padding-top:10px;"><strong>New Password</strong></td>
+                          </tr>
+                          <tr>
+                            <td><input name="newpass" type="password" class="txt-field" /></td>
+                          </tr>
+                          <tr>
+                            <td style="padding-top:10px;"><strong>Retype Password</strong></td>
+                          </tr>
+                          <tr>
+                            <td><input name="confpass" type="password" class="txt-field" /></td>
+                          </tr>
+                        </table>
+                    </div>
+                    <br class="clear" />
+					<div style="width:129px; float:left;">
+                    	<input name="btn" type="submit" class="btn" value="Create Account"  />
+                    </div>
+                </div>
+            </form>    
+            <?
+            }else
+			{
+			?>
+			
+                        <div class="ui-widget">
+                            <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+                                <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                                <strong>Thankyou! for signing up with starvved. Please <a href="javascript:void(null);" onclick="openSign(0);" class="active" style="color:#0033FF">click here</a> to signin</strong></p>
+                            </div>
+                        </div>
+			
+			<?
+
+			}
+			?>
+            <!-- End Update Account Form Section -->
+
+            </div>
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-bottom.jpg" alt="top" border="0" /></div>
+        </div>
+
+<?PHP
+$this->load->view("userfront/footer_view");
+?>

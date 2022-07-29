@@ -1,0 +1,187 @@
+<html xmlns="http://www.w3.org/1999/xhtml" style="border:0px none;">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="<?=base_url()?>css/frontstyle.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?=base_url()?>js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/jquery-ui-1.8.6.custom.min.js"></script>
+
+<script>
+var base_url	=	"<?=base_url()?>";
+</script>
+<script type="text/javascript" src="<?=base_url()?>js/frontfunctions.js"></script>
+<style type="text/css">
+
+body { background:0px none !important;}
+
+</style>
+<?
+//print_r($order);
+?>
+    <!-- Start Restaurant Account Settings Head -->
+        <div class="account-hed" style="padding-left:0px;">
+            <?PHP
+            if ($order["is_favorite"]	==	"Yes")
+			{
+			?>
+                <a href="javascript:void(null);" onClick="alert ('Remove from favorite flow.');" class="remove" style="padding:6px 20px 6px 20px; margin-top:6px;">Remove From Fav</a>
+	            
+            <?
+				$arrSearchCriteria	=	$this->session->userdata('search_criteria');
+				if($arrSearchCriteria['pickup_time_hour']=="")
+				{
+			?>
+                
+                <a href="javascript:void(null);" onClick="parent.document.getElementById('flagPickup').value=<?=$order["id"]?>;parent.orderPickUp(0);" class="add-btn" style="padding:6px 20px 6px 20px; margin-top:6px;">Re Order</a>
+			            
+			<?PHP
+				}else{
+				?>
+                <a href="javascript:void(null);" onClick="reOrder(<?=$order["id"]?>);" class="add-btn" style="padding:6px 20px 6px 20px; margin-top:6px;">Re Order</a>
+                <?
+				}
+            }
+			?>
+            <a href="javascript:window.print()" onClick="alert('Printing');" class="add-btn" style="padding:6px 20px 6px 20px; margin-top:6px; margin-right:15px;">Print</a>
+        </div>
+    <!-- End Restaurant Account Settings Head -->
+        <br class="clear" />
+        <div class="main-form">
+            <div class="form-order-details">
+             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+                  <tr>
+                      <td style="width:17%;">Airport:</td>
+                      <td><strong><?=$airport[0]["airport_name"]?></strong></td>
+                  </tr>
+                  <tr>
+                        <td>Terminal:</td>
+                        <td><strong><?=$terminal[0]["terminal_name"]?></strong></td>
+                  </tr>
+                  <tr style="margin-bottom:10px;">
+                            <td>Restaurant:</td>
+                            <td><strong style="margin-right:3px; float:left;">
+                                <?=$order["restaurant_name"]?></strong>(<?=$order["address"]?>)
+                            </td>
+                  </tr>
+                  <tr style="margin-bottom:10px;">
+                        <td valign="top" style="padding-top:7px;">Purchased:</td>
+                        <td>
+                         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="blueTxt">
+                         <?PHP
+						 $totalItems = 0;
+						 $totalTax = 0;
+						 $totalPrice = 0;
+						 $total = 0;
+                         foreach ($orderitems as $orderitem)
+						 {
+						 ?>
+                           <tr>
+                                <td style="width:66%;">
+                                	<strong><?=$orderitem["item_name"]?></strong>
+                                    <?PHP
+                                    foreach ($orderitem["variant_list"] as $variantitem)
+									{
+									?>
+                                    <span class="font11" style="padding-left:10px;">
+                                    	<?=$variantitem["variant_name"]?> ($<?=$variantitem["price"]?>)
+                                    </span>
+                                    <?PHP
+                                    }
+									?>
+                                </td>
+                                <td>QTY: <?=$orderitem["quantity"]?></td>
+                                <td>$<?=$orderitem["totalprice"]?></td>
+                            </tr>
+                         <?PHP	
+						 	$totalItems++;	
+							$totalTax = $totalTax + $orderitem["city_tax"] + $orderitem["state_tax"];
+							$totalPrice = $totalPrice + $orderitem["totalpricewithtax"];
+							$total = $total + $orderitem["totalprice"];
+                         }//end foreach ($orderitems as $orderitem)
+						 
+						 ?>
+                         
+                         </table>
+                        </td>
+                  </tr>
+                  <tr>
+                        <td>Order Number:</td>
+                        <td><strong><?=$order["order_code"]?></strong></td>
+                  </tr>
+                  <tr>
+                        <td>Order Date:</td>
+                        <td><strong><?=date("d M Y",strtotime($order["stamp"]))?></strong></td>
+                  </tr>
+                  <tr>
+                        <td>Order Pickup Time:</td>
+                        <td><strong><?=date("h:i a",strtotime($order["delivery_time"]))?></strong> on <strong><?=date("d M Y",strtotime($order["delivery_time"]))?></strong></td>
+                  </tr>
+                  <tr>
+                        <td>Order Type:</td>
+                        <td><strong><?=$order["order_through"]?></strong></td>
+                  </tr>
+             </table>
+             </div>
+         </div>
+        <div class="main-form" style="margin-bottom:20px;">
+            <div class="form-order-details" style="margin-bottom:10px; margin-top:20px;">
+                <span style="color:#5b5b5b;"><strong>Billed To:</strong></span>
+                <br class="clear" />
+                <p style="color:#5b5b5b; margin-bottom:8px;">Muhammad Ishtiaq Hussain</p>
+                <p style="color:#5b5b5b;">House-4, Street 22, Shahdrah, Lahore, Pakistan</p>
+            </div>
+        </div>
+        <div class="main-form" style="margin-bottom:20px;">
+            <div class="form-order-details">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td valign="top" style="width:65%;">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+                          <tr>
+                              <td style="width:27%;"><strong>Payment:</strong></td>
+                              <td></td>
+                           </tr>
+                              <tr>
+                                <td>Master Card:</td>
+                                <td><strong>Master Card: # ****************445</strong></td>
+                             </tr>
+                     <!--            <tr>
+                                    <td>Amout Charged:</td>
+                                    <td><strong>$<?=$totalPrice?></strong></td>
+                                </tr> -->
+                </table>
+                    </td>
+                    <td valign="top">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+                          <tr>
+                              <td style="width:40%;"><strong>Order:</strong></td>
+                              <td></td>
+                           </tr>
+                              <tr>
+                                <td>Item:</td>
+                                <td><strong><?=$totalItems?></strong></td>
+                             </tr>
+                                <tr>
+                                    <td>Tax:</td>
+                                    <?php $english_format_number = number_format($totalTax, 2, '.', '');?>
+                                    <td><strong>$<?=$english_format_number?></strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Sub Total :</td>
+                                     <?php $english_format_number = number_format($total, 2, '.', '');?>
+                                    <td><strong>$<?=$english_format_number?></strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Total:</td>
+                                    <?php $english_format_number = number_format($totalPrice, 2, '.', '');?>
+                                    <td><strong>$<?=$english_format_number?></strong></td>
+                                </tr>
+                </table>
+                    </td>
+                  </tr>
+                </table>
+            </div>
+        </div>
+        <a href="javascript:window.print()" class="add-btn" style="padding:6px 20px 6px 20px; margin-right:30px;">Print</a>
+
+</body>
+</html>

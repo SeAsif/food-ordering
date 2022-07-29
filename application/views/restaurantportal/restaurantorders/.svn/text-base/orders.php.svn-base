@@ -1,0 +1,176 @@
+<?PHP
+$this->load->view("restaurantportal/header_view");
+$this->load->view("restaurantportal/sidepanel_view");
+?>
+
+<!-- Start Mid Right -->
+		<div class="mid-right">
+        	<h1>
+            	Dash Board
+            </h1>
+            <br class="clear" />
+            <div class="ctgry-table">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr class="ctgry-rowbg01">
+                    <td style="width:30%;">New Orders</td>
+                    <td align="center"></td>
+                    <td align="center"></td>
+                    <td align="center"></td>
+                    <td align="center"></td>
+                    <td align="right"><a href="#" style="font-size:11px; color:#025AAB;">View All</a></td>
+                  </tr>
+                  <tr class="ctgry-rowbg02">
+                    <td>
+                        
+                    	Prawn soup with chili sauce (1)         
+
+                    </td>
+                    <td align="center">*</td>
+                    <td align="center"><span>Take Out</span></td>
+                    <td align="center"><span>10:20am</span></td>
+                    <td align="center"><span>11:30am</span></td>
+                    <td align="right"><span>$120.00</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" class="td-height"></td>
+                  </tr>
+                  <tr class="ctgry-rowbg02">
+                    <td>Prawn soup with chili sauce (1)</td>
+                    <td align="center">*</td>
+                    <td align="center"><span>Take Out</span></td>
+                    <td align="center"><span>10:20am</span></td>
+                    <td align="center"><span>11:30am</span></td>
+                    <td align="right"><span>$120.00</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" class="td-height"></td>
+                  </tr>
+                  <tr class="ctgry-rowbg02">
+                    <td>Prawn soup with chili sauce (1)</td>
+                    <td align="center">*</td>
+                    <td align="center"><span>Take Out</span></td>
+                    <td align="center"><span>10:20am</span></td>
+                    <td align="center"><span>11:30am</span></td>
+                    <td align="right"><span>$120.00</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" class="td-height"></td>
+                  </tr>
+                  <tr class="ctgry-rowbg02">
+                    <td>Prawn soup with chili sauce (1)</td>
+                    <td align="center">*</td>
+                    <td align="center"><span>Take Out</span></td>
+                    <td align="center"><span>10:20am</span></td>
+                    <td align="center"><span>11:30am</span></td>
+                    <td align="right"><span>$120.00</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" class="td-height"></td>
+                  </tr>
+                  <tr class="ctgry-rowbg02">
+                    <td>Prawn soup with chili sauce (1)</td>
+                    <td align="center">*</td>
+                    <td align="center"><span>Take Out</span></td>
+                    <td align="center"><span>10:20am</span></td>
+                    <td align="center"><span>11:30am</span></td>
+                    <td align="right"><span>$120.00</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="7" class="td-height"></td>
+                  </tr>
+                </table>
+            </div>
+            <div class="dash-orders">
+            	<h1>Food Categories</h1>
+                <div class="dash-orderItem">
+                	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>Available Food Categories</td>
+                        <td>45</td>
+                      </tr>
+                      <tr>
+                        <td>Disable Food Categories</td>
+                        <td>5</td>
+                      </tr>
+                      <tr>
+                        <td>Total Food Categories</td>
+                        <td>50</td>
+                      </tr>
+                    </table>
+                </div>
+                <a href="#" class="dash-link">View</a>
+                <em class="dash-link" style="padding:0px 5px 0px 5px;">l</em>
+                <a href="#" class="dash-link">Edit</a>
+            </div>
+            <div class="dash-orders">
+            	<h1>Food Categories</h1>
+                <div class="dash-orderItem">
+                	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>Available Food Categories</td>
+                        <td>45</td>
+                      </tr>
+                      <tr>
+                        <td>Disable Food Categories</td>
+                        <td>5</td>
+                      </tr>
+                      <tr>
+                        <td>Total Food Categories</td>
+                        <td>50</td>
+                      </tr>
+                    </table>
+                </div>
+                <a href="#" class="dash-link">View</a>
+                <em class="dash-link" style="padding:0px 5px 0px 5px;">l</em>
+                <a href="#" class="dash-link">Edit</a>
+            </div>
+            <div class="dash-orders">
+            	<h1>Food Categories</h1>
+                <div class="dash-orderItem">
+                	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>Available Food Categories</td>
+                        <td>45</td>
+                      </tr>
+                      <tr>
+                        <td>Disable Food Categories</td>
+                        <td>5</td>
+                      </tr>
+                      <tr>
+                        <td>Total Food Categories</td>
+                        <td>50</td>
+                      </tr>
+                    </table>
+                </div>
+                <a href="#" class="dash-link">View</a>
+                <em class="dash-link" style="padding:0px 5px 0px 5px;">l</em>
+                <a href="#" class="dash-link">Edit</a>
+            </div>
+            <div class="dash-orders">
+            	<h1>Food Categories</h1>
+                <div class="dash-orderItem">
+                	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td>Available Food Categories</td>
+                        <td>45</td>
+                      </tr>
+                      <tr>
+                        <td>Disable Food Categories</td>
+                        <td>5</td>
+                      </tr>
+                      <tr>
+                        <td>Total Food Categories</td>
+                        <td>50</td>
+                      </tr>
+                    </table>
+                </div>
+                <a href="#" class="dash-link">View</a>
+                <em class="dash-link" style="padding:0px 5px 0px 5px;">l</em>
+                <a href="#" class="dash-link">Edit</a>
+            </div>
+        </div>
+<!-- End Mid Right -->
+
+<?PHP
+$this->load->view("restaurantportal/footer_view");
+?>

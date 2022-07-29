@@ -1,0 +1,80 @@
+<?
+		$this->load->view( 'admin/header_view');
+
+?>
+		<script>
+			function check()
+			{
+				if(document.add.name.value == "")
+				{
+					alert("Event Name not given");
+					document.add.name.focus();
+					return;
+				}
+				if(document.add.detail.value == "")
+				{
+					alert("Detail not given");
+					document.add.detail.focus();
+					return;
+				}
+				
+				document.add.submit();
+			}
+		</script>
+		<?=form_open_multipart(base_url().'admin/edit_brand/'.$brandDetail["id"])?>
+			<div class="trl-menu">
+	<? 
+	if(isset($breadcrumbs))
+	{
+			echo $breadcrumbs;
+	}
+	?>
+                
+            </div>
+            <br class="clear" />
+			<table align="center" cellpadding="5" cellspacing="1" class="tablebg">
+
+				<tr>
+					<td align="center" colspan="5" class="tdHead"><strong>Edit Restaurant Brand </strong></td>
+				</tr>
+				<tr>
+				  <td colspan="2" class="tdRow" style="color:#FF0000">
+                  <div align="center">
+					<?
+					 if(isset($errors))  	
+					 {
+					   if (isset($errors) && count($errors) > 0)
+					   {
+						   foreach ($errors as $error)
+						   {
+							echo $error;
+						   }
+					   }
+					 } 
+					?>                                    
+                  </div>                  </td>
+			  </tr>
+				
+
+				<tr>
+					<td align="left" class="tdRow" width="179">Restaurant Brand Name</td>
+					<td align="left" class="tdRow">
+					<input name="name" type="text" class="input" size="56" maxlength="255" value="<?=$brandDetail["brand_name"]?>">	
+                    <input type="hidden" name="id" value="<?=$brandDetail["id"]?>">                    </td>
+					<input type="hidden" name="hidden">
+				</tr>
+				<tr>
+				  <td align="left" class="tdRow">Detail</td>
+				  <td width="352" align="left" class="tdRow"><textarea name="detail" id="textarea" cols="35" rows="5"><?=nl2br($brandDetail["brand_detail"])?></textarea></td>
+			  </tr>
+				<tr>
+					<td align="center" class="tdRow"></td>
+					<td align="center" class="tdRow">
+							<input type="submit" class="btn" value="Submit" >
+                    </td>
+				</tr>
+			</table>
+	</form>
+<?
+$this->load->view( 'admin/footer_view');
+?>

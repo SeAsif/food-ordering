@@ -1,0 +1,128 @@
+<?php
+/**
+* Iphone service for restaurant section
+* This class returns the any kind of restaurant related data
+* @author Mustafa Mahmood
+* @category Iphone Service
+*/
+class AdminDefaultVariants extends Controller {
+
+	function AdminDefaultVariants()
+	{
+		parent::Controller();
+		$this->load->library('core/defaultvariant');
+		$this->load->library('form_validation');	
+		$this->load->helper( array('dropdown_helper') );
+		if( $this->session->userdata('type')== FALSE || $this->session->userdata('type') != "admin")
+		redirect(base_url()."admin",true);
+	}
+	
+/**
+.........................................................................................................
+									Manage Terminals Section 
+.........................................................................................................
+*/	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function index()
+	{
+		$data["errors"]	=	"";
+		$data["list"]=$this->defaultvariant->getDefaultVariant();
+		
+		//create breadcrumbs
+		$bc = array(
+		   'title' => 'Default Variants',
+		   'url' => base_url()."admindefaultvariants",
+		   'isRoot' => false
+		);
+		$this->breadcrumb->setBreadCrumb($bc);
+		$data['breadcrumbs'] = get_Instance()->breadcrumblist->display();  		
+		$this->load->view('admin/defaultvariant/index',$data);
+	}
+	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function edit($variantId)
+	{
+		$variantInfo	=	array();
+		
+		if ($variantId!=0 && $variantId!="")
+		{
+			$variantInfo=$this->defaultvariant->getDefaultVariantById($variantId);
+			
+		}
+		
+
+		if($_POST)
+		{
+			$this->form_validation->set_rules('name', 'Name', 'required');
+			$this->form_validation->set_rules('price', 'Price', 'required|numeric');
+			$this->form_validation->run();
+
+			$variantInfo["id"]= trim($this->input->post("id"));
+			$variantInfo["name"]= trim($this->input->post("name"));
+			$variantInfo["price"]= trim($this->input->post("price"));
+			$variantInfo["status"]= trim($this->input->post("status"));
+							
+			if ($this->form_validation->run() == FALSE)
+			{
+				//------------errors stored in array------------//
+				$errorsArray['name']	=	form_error('name');
+				$errorsArray['price']	=	form_error('price');
+				
+				$data["errors"]=$errorsArray;
+			}
+			else
+			{
+				if (is_numeric($variantInfo["id"]))
+					$this->defaultvariant->updateDefaultVariant($variantInfo);
+				else
+					$this->defaultvariant->addNewDefaultVariant($variantInfo);
+					
+				redirect (base_url()."admindefaultvariants");
+			}//end else if ($this->form_validation->run() == FALSE)
+			
+		}
+		
+		$arrList=array(
+                  'Active'  => 'Active',
+                  'Inactive'    => 'Inactive',
+                );
+				
+		$data['status']=form_dropdown('status',$arrList,$variantInfo["status"]);
+
+		$data["variantInfo"]=$variantInfo;
+		
+		//create breadcrumbs
+		$bc = array(
+		   'title' => 'Add/Edit Default Variants',
+		   'url' => base_url()."admindefaultvariants/edit",
+		   'isRoot' => false
+		);
+		$this->breadcrumb->setBreadCrumb($bc);
+		$data['breadcrumbs'] = get_Instance()->breadcrumblist->display();  		
+		$this->load->view('admin/defaultvariant/edit',$data);
+	}
+	
+	function delete($id)
+	{
+		$this->defaultvariant->deleteDefaultVariant($id);
+		redirect (base_url()."admindefaultvariants");
+	}
+/**
+.........................................................................................................
+									End Of Terminal Management 
+.........................................................................................................
+*/	
+
+
+}
+
+
+/* End of file irestaurant.php */
+/* Location: ./system/application/controllers/irestaurant.php */
+?>

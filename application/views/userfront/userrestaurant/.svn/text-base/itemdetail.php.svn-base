@@ -1,0 +1,110 @@
+<link href="<?=base_url()?>css/frontstyle.css" rel="stylesheet" type="text/css" />
+<link type="text/css" href="<?=base_url()?>css/cupertino/jquery-ui-1.8.6.custom.css" rel="stylesheet" />	
+<script type="text/javascript" src="<?=base_url()?>js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="<?=base_url()?>js/jquery-ui-1.8.6.custom.min.js"></script>
+
+<script language="javascript">
+<?PHP
+if (isset($success["msg"]))
+{
+?>
+	var successMgs	=	'<?=$success["msg"]?>';
+
+<?
+}
+else
+{
+?>
+var successMgs	=	'';
+
+<?PHP
+}
+?>
+
+	if (successMgs!="")
+	{
+		var objRef = parent.window;
+		objRef.refreshItemPage(successMgs);
+
+	}
+
+
+</script>
+
+<style type="text/css">
+
+body { background:0px none !important;}
+
+</style>
+
+<?PHP
+//	$attributes	=	array("id"=>"frmAddItem","name"=>"frmAddItem")
+$attributes = array('id' => 'frmAddItem','name' => 'frmAddItem');
+echo form_open(base_url().'userrestaurant/itemdetail/'.$item["id"],$attributes);
+?>
+<div class="add-item">
+<div class="popcont">
+	<?PHP
+    if (count($success))
+    {
+    ?>
+    <div class="ui-widget">
+        <div class="ui-state-highlight ui-corner-all" style="width:90%; margin-bottom: 20px; padding: 0 .7em;"> 
+            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+            <strong><?=$success["msg"]?></strong></p>
+        </div>
+    </div>
+    <?PHP
+    }
+    ?>
+    <?PHP
+    if (count($errors))
+    {
+    ?>
+    <br/>
+    <div class="ui-widget">
+        <div class="ui-state-error ui-corner-all" style="width:90%; margin-bottom:20px; padding: 0 .7em;"> 
+            <?PHP
+            foreach ($errors as $error)
+            {
+                echo $error;
+            }
+            ?>
+            
+        </div>
+        
+    </div>
+    <?PHP
+    }
+	?>
+	<!--	$data["cartItem"] = $cartItem;
+		$data["itemDetail"] = $itemDetail; -->
+	<h4><?=$itemDetail["item_name"]?></h4>
+    <br />
+	<h5>Price: <strong>$<?=$itemDetail["item_price"]?></strong></h5>
+    <p><?=$itemDetail["item_description"]?></p>
+    
+    <div class="extraCont">
+   
+        <?php
+		foreach($menuitemdetail as $item){
+		?>
+        	<?=$item["group_name"]?> &nbsp;
+            <?=$item["name"]?>
+        
+			 <br />	
+        <?
+        }?>    
+        <div class="extraWrap">
+            <h1>Special Instructions</h1>
+          <p><?=($cartItem[0]["instructions"]!="")?$cartItem[0]["instructions"]:"N/A"?></p>
+        </div>
+    </div>
+    
+    <div class="extraWrap">
+        <h1>Quantity: <span><?=$cartItem[0]["quantity"]?></span></h1>
+    </div>
+</div>
+
+
+</div>

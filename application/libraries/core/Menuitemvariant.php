@@ -1,0 +1,75 @@
+<?
+/**
+* Menu Item Variant Library
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Menu
+* 
+*/
+
+	class MenuItemVariant {
+
+		private $_obj;
+		
+		/**
+		* @method constructor		
+		*/
+		function __construct()
+		{
+			$this->_obj =& get_instance();
+			$this->_obj->load->model('menuitemvariant_model');	
+		}
+		
+
+		/**
+		* @method This method will return menu item variants
+		* @params group will be passed as parameter
+		*/
+		function getVariantItems($restaurantId,$filters=NULL,$count="No",$limit = NULL, $offset = NULL)
+		{
+			$list=$this->_obj->menuitemvariant_model->getVariantItems($restaurantId ,$filters ,$count,$limit , $offset);
+			
+			return $list;
+		}
+
+		/**
+		* @method This method will return menu item variant
+		* @params variant will be passed as parameter
+		*/
+		function menuItemVariantById($Id)
+		{
+			$list=$this->_obj->menuitemvariant_model->getMenuItemVariantById($Id);
+			
+			return $list;
+		}
+		/*
+		Add		
+		*/
+		
+		function addNewMenuItemVariant($arrInfo)
+		{
+			return $this->_obj->menuitemvariant_model->addNewMenuItemVariant($arrInfo);  
+			
+		}
+	
+		/*
+		Update
+		*/
+		function updateMenuItemVariant($arrInfo)
+		{
+			return $this->_obj->menuitemvariant_model->updateMenuItemVariant($arrInfo);
+		}
+		function deleteMenuItemVariantByGroupId($arrInfo)
+		{
+			return $this->_obj->menuitemvariant_model->deleteMenuItemVariantByGroupId($arrInfo);
+		}
+		
+		function deleteAttachment($arrInfo)
+		{
+			$list=$this->_obj->menuitemvariant_model->deleteAttachment($arrInfo);
+			
+			return $list;
+		}
+
+	}
+?>

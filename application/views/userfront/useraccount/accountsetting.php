@@ -1,0 +1,52 @@
+<?
+$this->load->view("userfront/header_view");
+?>
+
+    	<div class="crum-menu">
+        	<a href="<?=base_url()?>home">Home</a><span>&gt;</span>
+            Account Settings
+        </div>
+		<div class="cont-wrap">
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-top.jpg" alt="top" border="0" /></div>
+        	<div class="rest-mid">
+
+            <!-- Start Restaurant Account Settings Head -->
+				<div class="account-hed">
+                	<h1>Account Settings</h1>
+                </div>
+            <!-- End Restaurant Account Settings Head -->
+				<br class="clear" />
+			
+            <!-- Start Account Settings Content Section -->
+				<div class="account">
+                	<div class="account-cont">
+                    	<a href="<?=base_url()."useraccount/updateaccount"?>">Update Account</a>
+                        <br class="clear" />
+                        <p>Change Name, change your password and email address.</p>
+                    </div>
+                	<div class="account-cont">
+                    	<a href="<?=base_url()."useraccount/paymentpreferences"?>">Payment Preferences</a>
+                        <br class="clear" />
+                        <p>keep your payment preferences save, it helps you to make quick orders</p>
+                    </div>
+                	<div class="account-cont">
+                    	<a href="<?=base_url()."userorder/orderhistory"?>">Order History</a>
+                        <br class="clear" />
+                        <p>Keep save your order history and order details</p>
+                    </div>
+                	<!-- <div class="account-cont">
+                    	<a href="<?=base_url()."userfavorites/favoritemenu"?>">My Favorites</a>
+                        <br class="clear" />
+                        <p>Keep save your Favorite Restaurants, Menu and Orders.</p>
+                    </div> -->
+                    <br class="clear" />
+                </div>
+            <!-- End Account Settings Content Section -->
+
+            </div>
+        	<div class="cont-round"><img src="<?=base_url()?>images/front/rest-bottom.jpg" alt="top" border="0" /></div>
+        </div>
+
+<?
+$this->load->view("userfront/footer_view");
+?>

@@ -1,0 +1,77 @@
+<?PHP
+/**
+* Restaurants Library
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Menu
+* 
+*/
+
+	class Airport_Core {
+
+		private $_obj;
+		public 	$user 			= NULL;
+		public 	$user_id 		= FALSE;
+		
+		/**
+		* @method constructor		
+		*/
+		function Airport_Core()
+		{
+			$this->_obj =& get_instance();
+			$this->_obj->load->model('airport_model');	
+		}
+		
+		/**
+		* @method This method will return resturants for terminals
+		* @params terminal id will be passed as parameter
+		*/
+		function listAirport($searchString="")
+		{
+			$list=$this->_obj->airport_model->getAirport($searchString);
+			return $list;
+		}
+		
+
+		/**
+		* @method This method will return restaurants details
+		* @params restaurant id will be passed as parameter
+		*/
+		function listAirportById($airportId)
+		{
+			$list=$this->_obj->airport_model->getAirportById($airportId);
+			
+			return $list;
+		}
+		/**
+		* @method This method will return resturants for terminals
+		* @params terminal id will be passed as parameter
+		*/
+		function addAirport($arrInfo)
+		{
+			
+			$list=$this->_obj->airport_model->addNewAirport($arrInfo);
+			return $list;
+		}
+		/**
+		* @method This method will return resturants for terminals
+		* @params terminal id will be passed as parameter
+		*/
+		function updateAirport($arrInfo)
+		{
+			$list=$this->_obj->airport_model->updateAirport($arrInfo);
+			return $list;
+		}
+		/**
+		* @method This method will return resturants for terminals
+		* @params terminal id will be passed as parameter
+		*/
+		function deleteAirport($airportId)
+		{
+			$list=$this->_obj->airport_model->deleteAirport($airportId);
+			return $list;
+		}
+		
+		
+	}
+?>

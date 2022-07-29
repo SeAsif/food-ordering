@@ -1,0 +1,9 @@
+	Hi <?=$firstName?>,
+	
+	Your order at <?=$restaurantName?> for  <?=$date?> has been Rejected by the admin.
+	
+    Reject Reason : <?=$reason?>
+		
+	Thanks,
+	
+	Starvved Team.

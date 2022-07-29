@@ -1,0 +1,212 @@
+body{
+
+	
+
+	margin-top:0;
+
+	margin-bottom:0;
+
+	margin-left:0;
+
+	margin-right:0;
+
+	/*background-image:url(../images/bg.jpg); 
+
+	background-repeat:repeat-x;*/
+
+}
+
+
+
+.header{
+
+	/*background-image:url(../images/header.jpg);*/
+
+}
+
+
+
+.table{
+
+	background-color:#ffffff;
+
+	font-family:Tahoma, Arial, Helvetica, sans-serif;
+
+	font-size:12px;
+
+	color:#666666;;
+
+}
+
+
+
+.leftborder{
+
+	background-image:url(../images/left-line.jpg);
+
+}
+
+
+
+.rightborder{
+
+	background-image:url(../images/right-line.jpg);
+
+}
+
+
+
+.tdHead
+
+{
+
+	background-color:#1E8157;
+
+    text-align:center;
+
+	font-family:Tahoma, Arial, Helvetica, sans-serif;
+
+	font-size:12px;
+
+	font-weight:bold;
+
+	color:#ffffff;
+
+}
+
+
+
+.tdTitle
+
+{
+
+	background-color:;
+
+	font-family:Tahoma, Arial, Helvetica, sans-serif;
+
+	font-size:12px;
+
+	font-weight:bold;
+
+	color:#FFFFFF;
+
+}
+
+
+
+.tdRow
+
+{
+
+	background-color:#1E8157;
+
+	font-family:Tahoma, Arial, Helvetica, sans-serif;
+
+	font-size:12px;
+
+	font-weight:;
+
+	color:#454444;
+
+}
+
+	
+
+.texto 
+
+{
+
+	FONT-SIZE: 10px; 
+
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+
+	color:#3C8110;
+
+}
+
+
+
+.HeadTitle 
+
+{
+
+	FONT-SIZE: 11px; 
+
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+
+	color:#ffffff;
+
+	font-weight:bold;
+
+}
+
+
+
+.link
+
+{
+
+	FONT-SIZE: 12px; 
+
+	FONT-FAMILY: Arial, Helvetica, sans-serif; 
+
+	COLOR: #000000; 
+
+	TEXT-DECORATION: none;
+
+}
+
+	
+
+.link:hover 
+
+{
+
+	COLOR:#1E8157; TEXT-DECORATION:none;
+
+}
+
+	
+
+.input 
+
+{
+
+	FONT-FAMILY:  Tahoma, Arial, Helvetica, sans-serif;
+
+	color:#888888;
+
+	height:19;
+
+	border: 1px solid #767171;
+
+	border-collapse:collapse;
+
+}
+
+
+
+.err
+
+{
+
+	font-family:Tahoma, Arial, Helvetica, sans-serif;
+
+	font-size:12px;
+
+	font-weight:bold;
+
+	color:#FF0000;
+
+}
+
+.input1
+
+{
+
+	FONT-SIZE: 11px; 
+
+	FONT-FAMILY:  Tahoma, Arial, Helvetica, sans-serif;
+
+}
+

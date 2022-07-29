@@ -1,0 +1,180 @@
+<?
+/**
+* Iphone service for restaurant section
+* This class returns the any kind of restaurant related data
+* @author Mustafa Mahmood
+* @category Iphone Service
+*/
+class UserFavorites extends CI_Controller {
+
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->library('core/item_favorites');
+		$this->load->library('core/restaurant');
+		$this->load->library('core/restaurant_favorites');
+		$this->load->library('pagination');		
+		$this->load->library('form_validation');	
+		
+		$this->load->helper( array('dropdown_helper') );
+
+		if (!$this->session->userdata('id'))
+			redirect(base_url()."home");		
+	}
+	
+/**
+.........................................................................................................
+									Start Restaurant Favorites Section 
+.........................................................................................................
+*/	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function index()
+	{
+		$data	=	array();
+//		$this->load->view('userfront/home',$data);
+	}
+
+	function favoritemenu()
+	{
+		$data	=	array();
+		$data["activemenu"]	=	"favoritemenu";
+		
+		if ($this->session->userdata('id'))
+		{
+			$userId	=	$this->session->userdata('id');
+		}else
+		{
+			$userId	=	0;
+		}		
+//		print_r ($this->item_favorites->listItemFavorites($userId));
+		$listItemFavorites	=	$this->item_favorites->listItemFavorites($userId, "restaurant_id");
+//		print_r ($listItemFavorites);
+		$data["listItemFavorites"]	=	$listItemFavorites;
+				
+		$this->load->view('userfront/userfavorites/favoritemenu',$data);
+	}
+
+	function favoriterestaurant()
+	{
+		$arrReturn['terminal'] = '';
+		$data["activemenu"]	=	"favoriterestaurant";
+		$isfavorite="Yes";
+		if ($this->session->userdata('id'))
+		{
+			$arrFilters["userId"]	=	$this->session->userdata('id');
+			$favrests=$this->restaurant_favorites->listRestaurantFavorites($arrFilters);
+		}
+		
+ 		
+		$favRestaurantIDs	=	array();
+		$favIDs	=	array();
+		
+		foreach ($favrests as $favRest)
+		{
+			$favRestaurantIDs[]	=	$favRest["restaurant_id"];
+			$favIDs[]	=	$favRest["favid"];
+			
+		}
+
+		$per_page	=	$this->config->item("PER_PAGE");
+		$data["ncounter"]	=	1;
+		$data["ncounter"]	=	$data["ncounter"]+$this->uri->segment(3);
+		$data["total"]= $total	=	$this->restaurant->listRestaurant($arrReturn["terminal"],"Active", "", $isfavorite,"Yes");
+		if( $total > $per_page )
+		{
+			$data["records"] = $per_page + $this->uri->segment(4);
+			if($data["records"]>$total)
+				$data["records"]=$total;
+		
+		}else{
+			$data["records"] = $total;
+		}
+		
+		$config['base_url'] = base_url().'/userfavorites/favoriterestaurant';
+		$config['total_rows'] = $total;
+		$config['per_page'] = $per_page;
+		$config['uri_segment'] = '3';
+		$config['full_tag_open'] = '<ul>';
+		$config['full_tag_close'] = '</ul>';
+
+		$config['next_link'] = '<li>Next >></li>';
+		$config['prev_link'] = '<li><< Back</li>';
+		$config['num_tag_open'] = '<li>';
+		$config['num_tag_close'] = '</li>';		
+		$config['cur_tag_open'] = '<li class="active">';
+		$config['cur_tag_close'] = '</li>';
+
+		if( $total > $per_page )
+		{
+			$this->pagination->initialize($config);
+		}
+		
+		$data['paginationLinks']=$this->pagination->create_links();
+		$logoPath	=	$this->config->item("restaurant_logo_path");
+//		$list=$this->restaurant->listRestaurant($arrReturn["terminal"],"Active", $pickup_time="");
+		$list=$this->restaurant->listRestaurant($arrReturn["terminal"],"Active", "", $isfavorite,"No",$per_page, $this->uri->segment(3));
+		
+		$data["restaurants"]=$list;
+		$data["favRestaurantIDs"]=$favRestaurantIDs;
+		$data["favIDs"]=$favIDs;
+		$data["isfavorite"]	=	$isfavorite;
+		$data["logoPath"] = $logoPath;
+
+		$this->load->view('userfront/userfavorites/favoriterestaurant',$data);
+	}
+
+	function restaurantlegend()
+	{
+		$data	=	array();
+		$this->load->view('userfront/userfavorites/restaurantlegend',$data);
+	}
+
+
+	function favoriteorder()
+	{
+		$data	=	array();
+		$data["activemenu"]	=	"favoriteorder";
+
+		$this->load->library('core/order');
+		$orderFilter["user_id"]	=	$this->session->userdata('id');
+		$orderFilter["is_favorite"]	=	"Yes";
+		$orderFilter["sortby"]	=	"order.restaurant_id";
+
+		$list=$this->order->getOrdersByUser($orderFilter);
+		
+		$orders	=	array();
+		$restaurants	=	array();
+		foreach ($list as $item)
+		{
+			$restaurants[$item["restaurant_id"]]["id"]	=	$item["restaurant_id"];
+			$restaurants[$item["restaurant_id"]]["name"]	=	$item["restaurant_name"];
+//			$restaurants[$item["restaurant_id"]]["name"]	=	$item["restaurant_name"];
+			
+			$orders[$item["restaurant_id"]][]	=	$item;
+		}
+//		print_r ($orders);
+		$logoPath	=	$this->config->item("restaurant_logo_path");
+		$data["favoriateorders"]	=	$orders;
+		$data["restaurants"]	=	$restaurants;
+		$data["logoPath"] = $logoPath;
+
+		$this->load->view('userfront/userfavorites/favoriteorder',$data);
+	}
+
+	
+/**
+.........................................................................................................
+									End Restaurant Favorites Section 
+.........................................................................................................
+*/	
+
+
+}
+
+
+/* End of file irestaurant.php */
+/* Location: ./system/application/controllers/irestaurant.php */
+?>

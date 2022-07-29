@@ -1,0 +1,53 @@
+.ui-timepickr {
+    position:absolute;
+    width:360px; 
+}
+
+.ui-timepickr-row {
+    margin:0;
+    padding:0;
+    margin-top:2px; 
+    display:none;
+    position:relative;
+	clear:both;
+}
+
+.ui-timepickr-button {
+    float:left;
+    margin:0;
+    padding:0;
+    list-style:none;
+    list-style-type:none;
+}
+
+.ui-timepickr-button span {
+    font-size:11px;
+    padding:4px 6px 4px 6px;
+    margin-left:2px;
+    text-align:center;
+    cursor:pointer;
+    display:block;
+	color:#0d73da;
+    text-align:center;
+	background-color:#deedf7;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+    /* system theme (default) */
+    border-width:1px;
+    border-style:solid;
+	border:solid 1px #aed0ea;
+    /*border-color:ThreeDLightShadow ThreeDShadow ThreeDShadow ThreeDLightShadow;
+    color:ButtonText;
+    background:ButtonFace;*/
+}
+
+.ui-timepickr-button span.ui-state-hover {
+    /*color:HighlightText;
+    background:Highlight;*/
+}
+
+.ui-state-hover span {
+    /*background:#c30;*/
+}

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userfavorites
+END
+favoriteorder.php
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userfavorites/favoriteorder.php
+END
+favorite_navigation.php
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userfavorites/favorite_navigation.php
+END
+favoritemenu.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userfavorites/favoritemenu.php
+END
+restaurantlegend.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userfavorites/restaurantlegend.php
+END
+favoriterestaurant.php
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/repos/starvved/!svn/ver/2/trunk/system/application/views/userfront/userfavorites/favoriterestaurant.php
+END

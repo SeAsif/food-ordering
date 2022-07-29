@@ -1,0 +1,139 @@
+<script>
+var base_url	=	"<?=base_url()?>";
+function setSessions()
+{
+
+	$.ajax({ type: "POST", url: base_url+"userrestaurant/setPickupTime", data: "flight_date="+document.getElementById('flight_date').value+"&"+"flight_time_hour="+document.getElementById('flight_time_hour').value+"&"+"flight_time_minute="+document.getElementById('flight_time_minute').value+"&"+"flight_time_type="+document.getElementById('flight_time_type').value+"&"+"pickup_time_hour="+document.getElementById('pickup_time_hour').value+"&"+"pickup_time_minute="+document.getElementById('pickup_time_minute').value+"&"+"pickup_time_type="+document.getElementById('pickup_time_type').value+"", success: function(setSessions){ 
+		//alert(addFavoriteRestaurant);
+		var status="";
+		var obj = jQuery.parseJSON(setSessions);
+		$.each(obj, function() {
+			status=obj.status;
+		});
+		
+		if (status=="SUCCESS")
+		{
+			
+			if(document.getElementById('flagPickup').value>0)
+			{
+				document.getElementById('itemIframe').contentWindow.reOrder(document.getElementById('flagPickup').value);
+			}
+			else
+			{
+				document.getElementById('itemIframe').contentWindow.submitForm();
+			}
+		}
+	}//end function
+	});	
+}
+
+</script>
+<!-- Start Error Success Msg -->
+        <br/>
+        <div class="ui-widget" id="error" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Username or password is invalid                
+            </div>
+            
+        </div>
+        <div class="ui-widget" id="error_guest" style="display:none">
+            <div class="ui-state-error ui-corner-all" style="padding:10px;"> 
+			<strong>Alert:</strong> Email addresses does not match                
+            </div>
+            
+        </div>
+
+        <br class="clear" />
+<!-- End Error Success Msg -->
+
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="signin">
+<tr>
+<td style="padding-right:20px; vertical-align:top;">
+    <form method="post" id="signin-form">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td style="padding-top:6px;"><strong>Flight Date:</strong></td>
+      </tr>
+      <tr>
+        <td><input name="flight_date" type="text" class="txt-field" id="flight_date" value="<?=$arrReturn["flight_date"]?>"/></td>
+      </tr>
+      <tr>
+        <td style="padding-top:8px;"><strong>Flight Time</strong></td>
+      </tr>
+      <tr>
+        <td>
+            <select id="flight_time_hour" class="combowd float-left" style="width:78px; margin-right:10px;">
+                <option value="">HH</option>
+                <?PHP
+                for ($i=1;$i<=12;$i++)
+                {
+                
+                ?>
+                <option value="<?=$i?>" <?=($arrReturn["flight_time_hour"] == $i)?'selected="selected"':''?>><?=$i?></option>
+                <?PHP
+                }
+                ?>
+            </select>
+            <select id="flight_time_minute" class="combowd float-left" style="width:80px; margin-right:10px;">
+                <option value="">MM</option>
+                <?PHP
+                for ($i=1;$i<=60;$i++)
+                {
+                ?>                                    	
+                <option value="<?=$i?>" <?=($arrReturn["flight_time_minute"] == $i)?'selected="selected"':''?>><?=$i?></option>                                        
+                <?PHP
+                }
+                ?>
+            </select>
+            <select id="flight_time_type" class="combowd float-left" style="width:78px;">
+                <option value="AM" <?=($arrReturn["flight_time_type"] == "AM")?'selected="selected"':''?>>AM</option>
+                <option value="PM" <?=($arrReturn["flight_time_type"] == "AM")?'selected="selected"':''?>>PM</option>
+            </select>
+        </td>
+      </tr>                              
+      <tr>
+        <td style="padding-top:8px;"><strong>Order Pickup Time</strong></td>
+      </tr>
+      <tr>
+        <td>
+            <select id="pickup_time_hour" class="combowd float-left" style="width:78px; margin-right:10px;">
+                <option value="">HH</option>
+                <?PHP
+                for ($i=1;$i<=12;$i++)
+                {
+                ?>
+                <option value="<?=$i?>" <?=($arrReturn["pickup_time_hour"] == $i)?'selected="selected"':''?>><?=$i?></option>
+                <?PHP
+                }
+                ?>
+            </select>
+            <select id="pickup_time_minute" class="combowd float-left" style="width:80px; margin-right:10px;">
+                <option value="">MM</option>
+                <?PHP
+                for ($i=1;$i<=60;$i++)
+                {
+                ?>
+                <option value="<?=$i?>" <?=($arrReturn["pickup_time_minute"] == $i)?'selected="selected"':''?>><?=$i?></option>
+                <?PHP
+                }
+                ?>
+            </select>
+            <select id="pickup_time_type" class="combowd float-left" style="width:78px;">
+                <option value="AM" <?=($arrReturn["pickup_time_type"] == "AM")?'selected="selected"':''?>>AM</option>
+                <option value="PM" <?=($arrReturn["pickup_time_type"] == "AM")?'selected="selected"':''?>>PM</option>
+            </select>
+        </td>
+      </tr>                              
+      <tr>
+        <td>
+            <a class="add-btn" href="javascript:void(null);" style="float:left;" onclick="setSessions();">
+                Submit
+            </a>
+        </td>
+      </tr>
+    </table>
+    </form>
+</td>
+</tr>
+</table>

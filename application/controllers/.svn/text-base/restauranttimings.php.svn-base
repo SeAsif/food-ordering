@@ -1,0 +1,158 @@
+<?php
+/**
+* Iphone service for restaurant section
+* This class returns the any kind of restaurant related data
+* @author Mustafa Mahmood
+* @category Iphone Service
+*/
+class RestaurantTimings extends Controller {
+
+	function RestaurantTimings()
+	{
+		parent::Controller();
+		$this->load->library('core/restaurant_timings');
+		$this->load->library('form_validation');	
+		$this->load->library('pagination');	
+		$this->load->helper( array('dropdown_helper') );
+		if( $this->session->userdata('restaurant')== FALSE )
+		   redirect(base_url()."restaurantportal",true);
+	}
+	
+/**
+.........................................................................................................
+									Start Restaurant Food Items Section 
+.........................................................................................................
+*/	
+	/*
+	* @method This method will login the admin
+	* @params username and password will be passed as parameter 	
+	*/
+	function index()
+	{
+		$data	=	array();
+//		$this->load->view('admin/terminals/index',$data);
+	}
+
+	function operetionalhours($state)
+	{
+
+		$data	=	array();
+
+		$data["activemenu"]	=	"operetionalhours";
+		$restaurantArr = $this->session->userdata('restaurant');
+		
+		$restaurantID	=	$restaurantArr["id"];
+		
+		if ($state	==	"added")
+		{
+			$data["success"]=array("msg"=>"Item Added Successfully");
+		}
+		else if ($state	==	"updated")
+		{
+			$data["success"]=array("msg"=>"Item Updated Successfully");
+		}
+		
+		$per_page	=	3;//$this->config->item("PER_PAGE");
+//		$per_page	=	1;
+		$data["ncounter"]	=	1;
+		$data["ncounter"]	=	$data["ncounter"]+$this->uri->segment(3);
+		
+		$data["timings"]	=	$this->restaurant_timings->listRestaurantTimingsByRestaurantId($restaurantID,"No",$per_page, $this->uri->segment(3));
+		
+		$total	=	$this->restaurant_timings->listRestaurantTimingsByRestaurantId($restaurantID,"Yes");
+		$config['base_url'] = base_url().'/restauranttimings/operetionalhours';
+		$config['total_rows'] = $total;
+		$config['per_page'] = $per_page;
+		$config['uri_segment'] = '3';
+		$config['next_link'] = 'Next<span class="arrow-right">&raquo;</span>';
+		$config['prev_link'] = '<span class="arrow-left">&laquo;</span>Back';
+
+		if( $total > $per_page )
+		{
+			$this->pagination->initialize($config);
+		}
+		
+		$data['paginationLinks']=$this->pagination->create_links();
+
+		
+//		print_r ($data);
+
+		$this->load->view('restaurantportal/restauranttimings/operetionalhours',$data);
+	
+	}	
+
+	
+	function addtiming($itemId)
+	{
+		$data	=	array();
+				
+		$restaurantArr = $this->session->userdata('restaurant');
+		$restaurantID	=	$restaurantArr["id"];
+		
+		if ($itemId!=0)
+		{
+			$item	=	$this->restaurant_timings->listTimingById($itemId);
+		}
+		
+		if ($_POST)
+		{
+			$start_hours = $this->input->post("start_hour");
+			$start_min = $this->input->post("start_min");
+			$startMKTime=mktime($start_hours,$start_min,0);
+			$start= $start_hours.":".$start_min."00";
+			
+			$end_hours = $this->input->post("end_hour");
+			$end_min = $this->input->post("end_min");
+			$endMKTime=mktime($end_hours,$end_min,0);
+			$end=$end_hours.":".$end_min.":"."00"; 
+			
+			$item["start"]	= $start;
+			$item["end"]	= $end;
+			$item["restaurant_id"]	=	$restaurantID;
+			
+			
+			
+			if($startMKTime>$endMKTime)
+			{
+				$errorsArray['time_error']	=	"Start time should be lesser than end time";
+				$data["errors"]=$errorsArray;
+			}else
+			{				
+				if ($itemId!=0 && $itemId!="")
+				{
+					//update
+					$this->restaurant_timings->updateRestaurantTiming($item);
+					$data["success"]=array("msg"=>"Updated Successfully");
+				}
+				else
+				{
+					//add
+					
+					$itemId	=	$this->restaurant_timings->addNewRestaurantTiming($item);
+					$data["success"]=array("msg"=>"Added Successfully");
+					$item["id"]	=$itemId;
+					
+				}
+				
+			}
+		}
+		$data["item"]	=	$item;
+
+		
+		$this->load->view('restaurantportal/restauranttimings/addtiming',$data);
+	}
+	
+
+/**
+.........................................................................................................
+									End Restaurant Food Items Section
+.........................................................................................................
+*/	
+
+
+}
+
+
+/* End of file irestaurant.php */
+/* Location: ./system/application/controllers/irestaurant.php */
+?>

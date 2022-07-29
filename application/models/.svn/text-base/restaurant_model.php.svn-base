@@ -1,0 +1,283 @@
+<?
+/**
+* Menu Item Model
+* This is a model class for variant Groups
+* @author Mustafa Mahmood
+* @category Restaurants
+* 
+*/
+class Restaurant_Model extends Model
+{
+	/**
+	 * Enter description here...
+	 *
+	 * @return Page_Model
+	 */
+	function Restaurant_Model()
+	{
+		parent::Model();
+	}
+	/**
+		Add	
+	*/
+	function addNewRestaurant($arrInfo)
+	{
+      	$this->db->insert("restaurant", $arrInfo);  
+		return $this->db->insert_id();
+	}
+
+	/**
+		Update
+	*/
+	function updateRestaurant($arrInfo)
+	{
+		$this->db->where(array("id"=>$arrInfo["id"]));
+		$this->db->set($arrInfo); 
+		$this->db->update('restaurant');
+	}
+
+	/**
+		Delete
+	*/
+	function deleteRestaurant($arrInfo)
+	{	
+	//	$this->db->where('id',$arrInfo["id"]);
+		$this->db->query('update restaurant set status = "Deleted" where id = '.$arrInfo["id"].'');
+		$this->db->query('update menu_item set status = "Deleted" where restaurant_id = '.$arrInfo["id"].'');
+		$this->db->query('update menu_category set status = "Deleted" where restaurant_id = '.$arrInfo["id"].'');
+	//	$this->db->delete('restaurant'); 		
+	}
+
+	/**
+	* @method This method is returning Restaurants against terminal id 
+	* @params Terminal Id will be passed as parameter
+	*/
+	function getRestaurants($terminalId	=	0,$status="Active",$pickup_time="", $is_favorite="No",$count="No",$limit = NULL, $offset = NULL)
+	{
+		if ($terminalId	!=	0)
+		$this->db->where(array('restaurant.terminal_id'=>$terminalId));
+		
+		if ($status!="All")
+		$this->db->where(array('restaurant.status'=>$status));
+		
+		if ($pickup_time!="")
+		{
+//		$this->db->where('1');
+			$this->db->where('(start is NULL OR ( time(start)<= "'.$pickup_time.'" AND time(end)>="'.$pickup_time.'"))');
+			$this->db->join('restaurant_timing', 'restaurant.id = restaurant_timing.restaurant_id', "left outer");
+		}
+		if ($is_favorite=="Yes")
+		{
+			if ($this->session->userdata('id')!="")
+			{
+				$this->db->where(array('favorite_restaurant.user_id'=>$this->session->userdata('id')));
+			
+				$this->db->join('favorite_restaurant', 'favorite_restaurant.restaurant_id = restaurant.id');
+				
+			}
+			
+//			$this->db->where("1");
+			
+		}
+		$this->db->limit($limit, $offset);
+
+		$this->db->select('restaurant.*');
+		$this->db->from('restaurant');
+
+		$query=$this->db->get();
+//		print_r($query);
+		//Return Disabled in case of not matching in menu timings....
+//		$query=$this->db->get("restaurant");
+
+		// Declare Array to pass data
+		$list = array();
+		if ($count	==	"Yes")		
+		{
+			return $query->num_rows();
+		}else
+		{
+
+			
+			foreach ($query->result_array() as $row)
+			{
+				$list[]	=	$row;
+			}		
+		}	
+		// Return Array
+		return $list;
+	}
+	/**
+	Restaurant Timing Authentication
+	**/
+	function restaurantTimeAuthentication($restaurantId, $pickup_time)
+	{
+		$this->db->where(array('restaurant.id'=>$restaurantId));
+
+		$this->db->where('(start is NULL OR ( time(start)<= "'.$pickup_time.'" AND time(end)>="'.$pickup_time.'"))');
+			$this->db->join('restaurant_timing', 'restaurant.id = restaurant_timing.restaurant_id', "left outer");
+		$this->db->select('restaurant.*');
+		$this->db->from('restaurant');
+
+		$query=$this->db->get();
+		
+		// Declare Array to pass data
+		$list = array();
+		
+		if ($query->num_rows() > 0)
+		{
+			$list["response"]="Available";
+		}else{
+			$list["response"]="Not Available";
+		}	
+		
+		return $list;
+	}
+	/**
+	* @method This method will return restaurant's full details
+	* @params Terminal Id will be passed as parameter
+	*/
+	function getRestaurantById($restaurantId,$status="Active")
+	{
+		$this->db->where(array('id'=>$restaurantId));
+
+		if ($status	!=	"All")
+			$this->db->where(array('status'=>$status));
+		
+		$query=$this->db->get("restaurant");
+
+		// Declare Array to pass data
+		$list = array();
+		
+		foreach ($query->result_array() as $row)
+		{
+			return $row;
+		}		
+		// Return Array
+		return $list;
+	}
+	/**
+	* @method This method will return restaurant's full details
+	* @params Terminal Id will be passed as parameter
+	*/
+	function getRestaurantByUserId($userId,$status="Active")
+	{
+		$this->db->where(array('user_id'=>$userId));
+
+		if ($status	!=	"All")
+			$this->db->where(array('status'=>$status));
+		
+		$query=$this->db->get("restaurant");
+
+		// Declare Array to pass data
+		$list = array();
+		
+		foreach ($query->result_array() as $row)
+		{
+			return $row;
+		}		
+		// Return Array
+		return $list;
+	}
+
+	function getRestaurantByIdWithTerminal($restaurantId,$status="Active")
+	{
+		$this->db->where(array('restaurant.id'=>$restaurantId));
+
+		if ($status	!=	"All")
+			$this->db->where(array('restaurant.status'=>$status));
+		
+		$this->db->select('restaurant.* , airport_terminal.terminal_name , airport_terminal.terminal_image , airport_terminal.airport_id , airport_terminal.terminal_description');
+		$this->db->from('restaurant');
+		$this->db->join('airport_terminal', 'airport_terminal.id = restaurant.terminal_id');
+		$query=$this->db->get();
+//		$query=$this->db->get("restaurant");
+		// Declare Array to pass data
+		$list = array();
+		
+		foreach ($query->result_array() as $row)
+		{
+			return $row;
+		}		
+		// Return Array
+		return $list;
+	}
+	/**
+	* @method This method will return User's Payment Prefrences 
+	* @params User Id will be passed as parameter
+	*/
+	function login($arrInfo)
+	{
+		$this->db->where(array('email'=>$arrInfo['email']));
+		$this->db->where(array('password'=>$arrInfo['password']));
+		$this->db->where(array('type'=>"restaurantowner"));
+		
+		$query=$this->db->get("user");
+		
+		$count	=	$query->num_rows();
+		// Declare Array to pass data
+		$list = array();
+		
+		$this->session->unset_userdata('email');
+		$this->session->unset_userdata('id');
+		$this->session->unset_userdata('type');
+//		$this->session->unset_userdata('sessionData');
+		if ($count > 0)
+		{
+			$row = $query->row();
+			$sessionData["fullname"]=$row->firstname." ".$row->lastname;
+			$sessionData["email"]=$arrInfo['email'];
+			$sessionData["id"]=$row->id;
+			$sessionData["type"]="restaurant";
+			$sessionData["restaurant"]=	$this->getRestaurantByUserId($row->id);
+			
+			$this->session->set_userdata($sessionData);
+			$list	=	$sessionData;
+		}
+		else
+		{		
+			$list = "Login_Error";
+			return $list;
+		}
+		return $list;
+	}
+	
+/*	function verifyEmail($arrInfo)
+	{
+		$this->db->where(array('email'=>$arrInfo['email']));
+//		$this->db->where(array('password'=>$arrInfo['password']));
+//		$this->db->where(array('type'=>"restaurantowner"));
+		
+		$query=$this->db->get("user");
+		
+		$count	=	$query->num_rows();
+		// Declare Array to pass data
+		$list = array();
+		
+//		$this->session->unset_userdata('email');
+//		$this->session->unset_userdata('id');
+//		$this->session->unset_userdata('type');
+//		$this->session->unset_userdata('sessionData');
+		if ($count > 0)
+		{
+			$row = $query->row();
+		//	$sessionData["fullname"]=$row->firstname." ".$row->lastname;
+			$list["email"]=$arrInfo['email'];
+		//	$sessionData["id"]=$row->id;
+		//	$sessionData["type"]="restaurant";
+		//	$sessionData["restaurant"]=	$this->getRestaurantByUserId($row->id);
+			
+		//	$this->session->set_userdata($sessionData);
+		//	$list	=	$sessionData;
+			$token = md5(uniqid(""));
+			$this->db->insert("security_code", $token);
+			
+		}
+		else
+		{		
+			$list = "Login_Error";
+			return $list;
+		}
+		return $list;
+	}*/
+}
+?>
